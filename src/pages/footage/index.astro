@@ -54,11 +54,11 @@ const typeColors: Record<string, string> = {
             <div class="aspect-video bg-pitch-light flex items-center justify-center relative overflow-hidden">
               <div class="absolute inset-0 bg-gradient-to-t from-pitch/80 to-transparent"></div>
               <svg class="w-16 h-16 text-gold/30 group-hover:text-gold/60 transition-colors relative z-10" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-              <span class="absolute bottom-3 right-3 text-[10px] font-mono text-cream-muted bg-pitch/80 px-2 py-0.5 rounded">{v.duration}</span>
+              <span class="absolute bottom-3 right-3 text-xs font-mono text-cream-muted bg-pitch/80 px-2 py-0.5 rounded">{v.duration}</span>
             </div>
             <div class="p-5">
               <div class="flex items-center gap-2 mb-2">
-                <span class={`text-[10px] font-semibold uppercase tracking-wider border px-2 py-0.5 rounded-sm ${typeColors[v.type]}`}>{v.type}</span>
+                <span class={`text-xs font-semibold uppercase tracking-wider border px-2 py-0.5 rounded-sm ${typeColors[v.type]}`}>{v.type}</span>
               </div>
               <h3 class="font-['Oswald'] text-base uppercase tracking-wide text-cream group-hover:text-gold transition-colors mb-1">{v.title}</h3>
               <p class="text-xs text-cream-muted">{v.description}</p>

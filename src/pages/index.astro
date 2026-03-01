@@ -224,7 +224,7 @@ const keyMatches = [
               {s.highlights.length > 0 && (
                 <div class="flex flex-wrap gap-2">
                   {s.highlights.map(h => (
-                    <span class="text-[11px] font-semibold uppercase tracking-wider bg-gold/10 text-gold border border-gold/20 px-2.5 py-0.5 rounded-sm">{h}</span>
+                    <span class="text-xs font-semibold uppercase tracking-wider bg-gold/10 text-gold border border-gold/20 px-2.5 py-0.5 rounded-sm">{h}</span>
                   ))}
                 </div>
               )}
@@ -244,25 +244,25 @@ const keyMatches = [
                     <div class="flex items-center gap-6 sm:gap-8">
                       <div class="text-center">
                         <div class="font-['Oswald'] text-2xl font-bold">{club.apps}</div>
-                        <div class="text-[10px] text-cream-muted uppercase tracking-widest">Apps</div>
+                        <div class="text-xs text-cream-muted uppercase tracking-widest">Apps</div>
                       </div>
                       <div class="text-center">
                         <div class="font-['Oswald'] text-2xl font-bold text-gold">{club.goals}</div>
-                        <div class="text-[10px] text-cream-muted uppercase tracking-widest">Goals</div>
+                        <div class="text-xs text-cream-muted uppercase tracking-widest">Goals</div>
                       </div>
                       <div class="text-center">
                         <div class="font-['Oswald'] text-2xl font-bold">{club.assists}</div>
-                        <div class="text-[10px] text-cream-muted uppercase tracking-widest">Assists</div>
+                        <div class="text-xs text-cream-muted uppercase tracking-widest">Assists</div>
                       </div>
                       {club.mins > 0 && (
                         <div class="text-center hidden sm:block">
                           <div class="font-['Oswald'] text-2xl font-bold text-cream-muted">{club.mins}'</div>
-                          <div class="text-[10px] text-cream-muted uppercase tracking-widest">Mins</div>
+                          <div class="text-xs text-cream-muted uppercase tracking-widest">Mins</div>
                         </div>
                       )}
                       <div class="text-center">
                         <div class="font-['Oswald'] text-2xl font-bold text-fire">{club.gpg.toFixed(2)}</div>
-                        <div class="text-[10px] text-cream-muted uppercase tracking-widest">G/A p90</div>
+                        <div class="text-xs text-cream-muted uppercase tracking-widest">G/A p90</div>
                       </div>
                     </div>
                   </div>
@@ -287,7 +287,7 @@ const keyMatches = [
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {keyMatches.map(m => (
           <div class="bg-surface-elevated border border-pitch-line rounded-sm p-5 hover:border-gold/30 transition-colors">
-            <div class="text-[10px] text-cream-muted mb-2">{m.date}</div>
+            <div class="text-xs text-cream-muted mb-2">{m.date}</div>
             <div class="font-['Oswald'] text-sm uppercase tracking-wide text-cream mb-1">{m.match}</div>
             <div class="text-xs text-gold font-semibold mb-3">{m.result}</div>
             <div class="flex gap-4">
@@ -315,7 +315,7 @@ const keyMatches = [
             <div class="absolute top-4 right-4 text-gold/20 group-hover:text-gold/40 transition-colors">
               <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 1l2.928 6.856L20 8.588l-5 5.304L16.18 20 10 16.428 3.82 20 5 13.892 0 8.588l7.072-.732L10 1z" clip-rule="evenodd"/></svg>
             </div>
-            <span class="text-[10px] text-gold uppercase tracking-widest font-semibold">{h.year}</span>
+            <span class="text-xs text-gold uppercase tracking-widest font-semibold">{h.year}</span>
             <h3 class="font-['Oswald'] text-lg uppercase tracking-wide text-cream mt-2 mb-1">{h.title}</h3>
             <p class="text-xs text-cream-muted">{h.org}</p>
           </div>
