@@ -389,12 +389,12 @@ const keyMatches = [
           { src: 'beach-football.jpg', alt: 'Beach football — Italy', span: '' },
           { src: 'wiltshire-team.jpg', alt: 'Wiltshire Schools FA U16 — 3-2 winners vs Gloucestershire', span: 'md:col-span-2' },
         ].map(photo => (
-          <div class={`relative overflow-hidden rounded-sm group ${photo.span}`}>
+          <button data-gallery-index={String(photo.src)} class={`relative overflow-hidden rounded-sm group cursor-pointer ${photo.span}`}>
             <img src={`${BASE}photos/${photo.src}`} alt={photo.alt} class="w-full h-full object-cover aspect-square group-hover:scale-105 transition-transform duration-500" loading="lazy" />
             <div class="absolute inset-0 bg-gradient-to-t from-pitch/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
               <span class="absolute bottom-3 left-3 text-xs text-cream font-medium">{photo.alt}</span>
             </div>
-          </div>
+          </button>
         ))}
       </div>
     </div>
@@ -420,6 +420,111 @@ const keyMatches = [
 </Layout>
 
 <script>
+  // === LIGHTBOX GALLERY ===
+  const galleryPhotos = [
+    { src: 'bicycle-kick.jpg', alt: 'Bicycle kick — training' },
+    { src: 'bath-action-1.jpg', alt: 'Bath City U18 vs Cirencester' },
+    { src: 'number9-back.jpg', alt: 'Number 9 — Bath City' },
+    { src: 'bath-action-2.jpg', alt: 'Bath City in action' },
+    { src: 'celebration.jpg', alt: 'Goal celebration — Wiltshire FA' },
+    { src: 'nwyfl-trophy.jpg', alt: 'North Wilts Youth League trophy' },
+    { src: 'melksham-duel.jpg', alt: 'Melksham Town — senior reserves' },
+    { src: 'number9-pitch.jpg', alt: 'Number 9 on the pitch' },
+    { src: 'tournament-award.jpg', alt: 'Tournament award' },
+    { src: 'wiltshire-squad.jpg', alt: 'Wiltshire FA U16 squad selection' },
+    { src: 'cup-winner.jpg', alt: 'Cup winner — AFC Corsham' },
+    { src: 'beach-football.jpg', alt: 'Beach football — Italy' },
+    { src: 'wiltshire-team.jpg', alt: 'Wiltshire Schools FA U16 — 3-2 winners vs Gloucestershire' },
+  ];
+
+  const base = document.querySelector('base')?.href || '/olly-football/';
+  const basePath = new URL(base, window.location.origin).pathname;
+
+  // Create modal
+  const modal = document.createElement('div');
+  modal.id = 'lightbox';
+  modal.className = 'fixed inset-0 z-[100] bg-black/95 backdrop-blur-sm hidden items-center justify-center';
+  modal.innerHTML = `
+    <button id="lb-close" class="absolute top-4 right-4 z-10 w-12 h-12 flex items-center justify-center text-white/60 hover:text-white text-3xl cursor-pointer">&times;</button>
+    <button id="lb-prev" class="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-10 w-12 h-12 flex items-center justify-center text-white/60 hover:text-white text-2xl cursor-pointer">‹</button>
+    <button id="lb-next" class="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-10 w-12 h-12 flex items-center justify-center text-white/60 hover:text-white text-2xl cursor-pointer">›</button>
+    <img id="lb-img" class="max-w-[90vw] max-h-[85vh] object-contain select-none" draggable="false" />
+    <div class="absolute bottom-4 left-0 right-0 text-center">
+      <span id="lb-caption" class="text-sm text-white/70"></span>
+      <span id="lb-counter" class="text-xs text-white/40 ml-3"></span>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  let currentIndex = 0;
+
+  function showPhoto(idx: number) {
+    currentIndex = ((idx % galleryPhotos.length) + galleryPhotos.length) % galleryPhotos.length;
+    const photo = galleryPhotos[currentIndex];
+    const img = document.getElementById('lb-img') as HTMLImageElement;
+    img.src = `${basePath}photos/${photo.src}`;
+    img.alt = photo.alt;
+    (document.getElementById('lb-caption') as HTMLElement).textContent = photo.alt;
+    (document.getElementById('lb-counter') as HTMLElement).textContent = `${currentIndex + 1} / ${galleryPhotos.length}`;
+  }
+
+  function openLightbox(idx: number) {
+    showPhoto(idx);
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+
+  // Click handlers on thumbnails
+  document.querySelectorAll('[data-gallery-index]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const src = btn.getAttribute('data-gallery-index')!;
+      const idx = galleryPhotos.findIndex(p => p.src === src);
+      openLightbox(idx >= 0 ? idx : 0);
+    });
+  });
+
+  document.getElementById('lb-close')?.addEventListener('click', closeLightbox);
+  document.getElementById('lb-prev')?.addEventListener('click', () => showPhoto(currentIndex - 1));
+  document.getElementById('lb-next')?.addEventListener('click', () => showPhoto(currentIndex + 1));
+
+  // Keyboard nav
+  document.addEventListener('keydown', (e) => {
+    if (modal.classList.contains('hidden')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') showPhoto(currentIndex - 1);
+    if (e.key === 'ArrowRight') showPhoto(currentIndex + 1);
+  });
+
+  // Click backdrop to close
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeLightbox();
+  });
+
+  // Touch swipe
+  let touchStartX = 0;
+  let touchEndX = 0;
+  const lbImg = document.getElementById('lb-img')!;
+
+  lbImg.addEventListener('touchstart', (e: TouchEvent) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  lbImg.addEventListener('touchend', (e: TouchEvent) => {
+    touchEndX = e.changedTouches[0].screenX;
+    const diff = touchStartX - touchEndX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) showPhoto(currentIndex + 1);  // swipe left = next
+      else showPhoto(currentIndex - 1);             // swipe right = prev
+    }
+  }, { passive: true });
+
   // Mobile FAB menu toggle
   const fab = document.getElementById('mobile-fab');
   const menu = document.getElementById('mobile-menu');
