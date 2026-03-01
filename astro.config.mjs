@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://aibot-tribelo.github.io',
-  base: '/olly-football',
+  base: '/olly-football/',
   vite: {
     plugins: [tailwindcss()]
   }
