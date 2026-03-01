@@ -81,7 +81,28 @@ const keyMatches = [
 ];
 ---
 
-<Layout title="Olly Robinson — Striker">
+<Layout title="Olly Robinson — Striker" description="Olly Robinson — Attacking Forward / Striker. 164 goals, 92 assists in 114 youth games. Bath City U18, Melksham Town. Age 16, Wiltshire.">
+
+  <!-- JSON-LD Person -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Olly Robinson",
+    "url": "https://or9.uk",
+    "jobTitle": "Footballer — Striker",
+    "birthDate": "2009-07",
+    "nationality": { "@type": "Country", "name": "United Kingdom" },
+    "address": { "@type": "PostalAddress", "addressLocality": "Corsham", "addressRegion": "Wiltshire", "addressCountry": "GB" },
+    "sameAs": [
+      "https://www.instagram.com/ollyrobinsonn21",
+      "https://x.com/ollyrobinson21"
+    ],
+    "memberOf": [
+      { "@type": "SportsTeam", "name": "Bath City U18" },
+      { "@type": "SportsTeam", "name": "Melksham Town U18" },
+      { "@type": "SportsTeam", "name": "Melksham Town Reserves" }
+    ]
+  })} />
 
   <!-- HERO -->
   <section class="relative min-h-[85vh] sm:min-h-screen flex items-center pitch-pattern overflow-hidden">
@@ -193,6 +214,7 @@ const keyMatches = [
   </section>
 
   <!-- TECHNICAL ATTRIBUTES -->
+  <main id="main">
   <section id="stats" class="relative border-t border-pitch-line">
     <div class="max-w-7xl mx-auto px-6 sm:px-10 py-20">
       <div class="flex items-center gap-4 mb-12">
@@ -410,6 +432,8 @@ const keyMatches = [
       </div>
     </div>
   </section>
+
+  </main>
 
   <!-- FOOTER / CONTACT -->
   <footer class="border-t border-pitch-line">
