@@ -1,0 +1,79 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const BASE = import.meta.env.BASE_URL;
+
+// Placeholder footage entries — replace with real links
+const videos = [
+  { title: '2025/26 Striker Highlights', description: 'Bath City U18 & Melksham Town — Season compilation', type: 'highlight', link: '#', duration: '3:30' },
+  { title: 'Bath City vs Yeovil College', description: 'Hat-trick performance — Won 6-1', type: 'match', link: '#', duration: '5:00' },
+  { title: 'Calne Town vs Wanbourough', description: '4 goals, 2 assists — Won 14-0', type: 'match', link: '#', duration: '4:15' },
+  { title: 'AFC Corsham vs Devizes', description: '4 goals, 4 assists — Won 12-0', type: 'match', link: '#', duration: '6:00' },
+  { title: 'Wiltshire FA U16 — County Matches', description: 'SW Regional Winners campaign highlights', type: 'highlight', link: '#', duration: '4:00' },
+  { title: 'AC Milan Training Camp', description: 'Summer 2023 — Elite training footage', type: 'training', link: '#', duration: '2:00' },
+];
+
+const typeColors: Record<string, string> = {
+  highlight: 'bg-gold/10 text-gold border-gold/20',
+  match: 'bg-fire/10 text-fire border-fire/20',
+  training: 'bg-blue-500/10 text-blue-400 border-blue-400/20',
+};
+---
+
+<Layout title="Footage — Olly Robinson" description="Match footage, highlights and training clips for Olly Robinson.">
+
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-pitch/80 backdrop-blur-md border-b border-pitch-line/50">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 h-14 flex items-center justify-between">
+      <a href={BASE} class="font-['Oswald'] text-sm uppercase tracking-[0.3em] text-gold hover:text-cream transition-colors">← Back to Profile</a>
+      <span class="font-['Oswald'] text-sm uppercase tracking-[0.3em] text-cream-muted">Footage & Clips</span>
+    </div>
+  </nav>
+
+  <main class="min-h-screen pitch-pattern pt-24 pb-20">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10">
+
+      <!-- Header -->
+      <div class="mb-16">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="h-px w-12 bg-gold"></div>
+          <span class="font-['Oswald'] text-xs uppercase tracking-[0.3em] text-gold">Match Footage & Highlights</span>
+        </div>
+        <h1 class="font-['Oswald'] text-5xl sm:text-6xl lg:text-7xl font-bold uppercase leading-[0.85] tracking-tight mb-4">
+          <span class="text-cream">Watch</span> <span class="text-gold">Olly</span>
+        </h1>
+        <p class="text-cream-muted text-sm max-w-lg">
+          Match highlights, full-game footage, and training clips. Links to Veo, YouTube, and Google Drive.
+        </p>
+      </div>
+
+      <!-- Video Grid -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {videos.map(v => (
+          <a href={v.link} class="group bg-surface-elevated/60 border border-pitch-line rounded-sm overflow-hidden hover:border-gold/30 transition-all">
+            <!-- Placeholder thumbnail -->
+            <div class="aspect-video bg-pitch-light flex items-center justify-center relative overflow-hidden">
+              <div class="absolute inset-0 bg-gradient-to-t from-pitch/80 to-transparent"></div>
+              <svg class="w-16 h-16 text-gold/30 group-hover:text-gold/60 transition-colors relative z-10" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              <span class="absolute bottom-3 right-3 text-[10px] font-mono text-cream-muted bg-pitch/80 px-2 py-0.5 rounded">{v.duration}</span>
+            </div>
+            <div class="p-5">
+              <div class="flex items-center gap-2 mb-2">
+                <span class={`text-[10px] font-semibold uppercase tracking-wider border px-2 py-0.5 rounded-sm ${typeColors[v.type]}`}>{v.type}</span>
+              </div>
+              <h3 class="font-['Oswald'] text-base uppercase tracking-wide text-cream group-hover:text-gold transition-colors mb-1">{v.title}</h3>
+              <p class="text-xs text-cream-muted">{v.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <!-- Coming soon note -->
+      <div class="mt-16 text-center border border-dashed border-pitch-line rounded-sm p-10">
+        <div class="font-['Oswald'] text-xl uppercase tracking-wide text-cream-muted mb-2">More footage coming soon</div>
+        <p class="text-xs text-cream-muted">Full match recordings and new highlight reels will be added throughout the season.</p>
+      </div>
+
+    </div>
+  </main>
+
+</Layout>

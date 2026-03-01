@@ -1,0 +1,376 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const BASE = import.meta.env.BASE_URL;
+
+// Career stats
+const careerStats = {
+  apps: 114,
+  goals: 164,
+  assists: 92,
+  gaPerGame: 2.25,
+  clubs: 7,
+};
+
+// Season-by-season data
+const seasons = [
+  {
+    season: '2025–26',
+    clubs: [
+      { name: 'Bath City U18', league: 'SW Counties Youth League U18', apps: 13, goals: 6, assists: 2, mins: 880, gpg: 0.46, color: '#e63946' },
+      { name: 'Melksham Town Reserves', league: 'Wiltshire Senior League Premier (Step 7)', apps: 6, goals: 3, assists: 3, mins: 225, gpg: 1.20, color: '#457b9d' },
+      { name: 'Melksham Town U18', league: 'Wilts Senior U18 Floodlight League', apps: 6, goals: 3, assists: 3, mins: 225, gpg: 1.20, color: '#457b9d' },
+    ],
+    highlights: ['Senior debut at 16', 'Academy step-up to U18'],
+  },
+  {
+    season: '2024–25',
+    clubs: [
+      { name: 'Calne Town Youth U16', league: 'North Wilts League', apps: 21, goals: 18, assists: 17, mins: 1400, gpg: 1.16, color: '#2d6a4f' },
+      { name: 'FC Wilts JPL U16', league: 'Junior Premier League', apps: 10, goals: 10, assists: 7, mins: 630, gpg: 1.43, color: '#264653' },
+      { name: 'Wiltshire FA U16', league: 'County Select', apps: 7, goals: 1, assists: 2, mins: 380, gpg: 0.24, color: '#6c757d' },
+    ],
+    highlights: ['North Wilts League Winners', 'County Cup Runners-Up', 'SW Regional Winners', 'England Schools Semi-Final'],
+  },
+  {
+    season: '2023–24',
+    clubs: [
+      { name: 'AFC Corsham U15', league: 'Mid Wilts League', apps: 23, goals: 47, assists: 26, mins: 1735, gpg: 2.44, color: '#e76f51' },
+      { name: 'FC Wilts JPL U15', league: 'Junior Premier League', apps: 12, goals: 10, assists: 7, mins: 720, gpg: 1.25, color: '#264653' },
+    ],
+    highlights: ['League 1 & Cup Double', 'AC Milan Training Camp (Italy)'],
+  },
+  {
+    season: '2022–23',
+    clubs: [
+      { name: 'AFC Corsham U14', league: 'Mid Wilts League', apps: 19, goals: 44, assists: 0, mins: 0, gpg: 2.32, color: '#e76f51' },
+    ],
+    highlights: ['2.32 goals per game'],
+  },
+];
+
+// Technical attributes
+const attributes = [
+  { name: 'Finishing', rating: 10, note: '164 goals; both feet, long-range' },
+  { name: 'Dribbling / 1v1', rating: 9, note: 'Strong, direct, beats defenders' },
+  { name: 'Chance Creation', rating: 9, note: '92 assists; vision & pass weight' },
+  { name: 'Long-range Shooting', rating: 8, note: 'Regular 20–30 yard goals' },
+  { name: 'Clutch Moments', rating: 9, note: 'Big-game performer' },
+  { name: 'Aerial Ability', rating: 7, note: 'Good jump reach' },
+];
+
+// Honours
+const honours = [
+  { title: 'SW Regional Winners', org: 'Wiltshire FA U16', year: '2024-25' },
+  { title: 'England Schools Semi-Final', org: 'Wiltshire FA U16', year: '2024-25' },
+  { title: 'North Wilts League Winners', org: 'Calne Town U16', year: '2024-25' },
+  { title: 'County Cup Runners-Up', org: 'Calne Town U16', year: '2024-25' },
+  { title: 'League & Cup Double', org: 'AFC Corsham U15', year: '2023-24' },
+  { title: 'AC Milan Training Camp', org: 'Elite European Exposure', year: 'Summer 2023' },
+];
+
+// Key matches (standout performances)
+const keyMatches = [
+  { date: '23/04/23', match: 'AFC Corsham vs Frome', result: 'Won 5-3', goals: 3, assists: 0 },
+  { date: '30/04/2023', match: 'AFC Corsham vs Melksham', result: 'Won 7-3', goals: 4, assists: 0 },
+  { date: '05/03/2023', match: 'AFC Corsham vs Castle Combe', result: 'Won 13-0', goals: 3, assists: 0 },
+  { date: '04/02/2024', match: 'AFC Corsham vs Devizes', result: 'Won 10-2', goals: 4, assists: 3 },
+  { date: '14/04/2024', match: 'AFC Corsham vs Devizes', result: 'Won 12-0', goals: 4, assists: 4 },
+  { date: '12/11/2025', match: 'Bath City vs Yeovil College', result: 'Won 6-1', goals: 3, assists: 0 },
+  { date: '6/10/2023', match: 'Calne vs Wanbourough', result: 'Won 14-0', goals: 4, assists: 2 },
+];
+---
+
+<Layout title="Olly Robinson — Striker">
+
+  <!-- HERO -->
+  <section class="relative min-h-screen flex items-center pitch-pattern overflow-hidden">
+    <!-- Dramatic diagonal accent -->
+    <div class="absolute inset-0 bg-gradient-to-br from-pitch via-pitch-light/50 to-transparent"></div>
+    <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-gold/5 to-transparent"></div>
+    
+    <!-- Giant shirt number -->
+    <div class="absolute -right-20 top-1/2 -translate-y-1/2 font-['Oswald'] text-[40rem] font-bold text-white/[0.02] leading-none select-none hidden lg:block">9</div>
+
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-pitch/80 backdrop-blur-md border-b border-pitch-line/50">
+      <div class="max-w-7xl mx-auto px-6 sm:px-10 h-14 flex items-center justify-between">
+        <span class="font-['Oswald'] text-sm uppercase tracking-[0.3em] text-gold">OR<span class="text-cream/40">9</span></span>
+        <div class="flex items-center gap-6">
+          <a href="#stats" class="text-xs text-cream-muted hover:text-gold transition-colors font-medium uppercase tracking-widest">Stats</a>
+          <a href="#seasons" class="text-xs text-cream-muted hover:text-gold transition-colors font-medium uppercase tracking-widest">Seasons</a>
+          <a href="#honours" class="text-xs text-cream-muted hover:text-gold transition-colors font-medium uppercase tracking-widest">Honours</a>
+          <a href={`${BASE}footage/`} class="text-xs text-pitch bg-gold hover:bg-gold-dim px-4 py-1.5 rounded-sm transition-colors font-semibold uppercase tracking-widest">Footage</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 pt-32 pb-20 w-full">
+      <div class="grid lg:grid-cols-[1fr_auto] gap-12 items-end">
+        <div>
+          <div class="flex items-center gap-3 mb-6">
+            <div class="h-px w-12 bg-gold"></div>
+            <span class="font-['Oswald'] text-xs uppercase tracking-[0.3em] text-gold">Attacking Forward / Striker</span>
+          </div>
+          
+          <h1 class="font-['Oswald'] text-7xl sm:text-8xl lg:text-9xl font-bold uppercase leading-[0.85] tracking-tight mb-6">
+            <span class="text-cream">Olly</span><br>
+            <span class="gold-shimmer">Robinson</span>
+          </h1>
+          
+          <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-cream-muted mb-8">
+            <span>🎂 19/07/2009 (Age 16)</span>
+            <span>📏 178cm / 68kg</span>
+            <span>🦶 Right-footed (Strong Left)</span>
+            <span>📍 Corsham, Wiltshire</span>
+            <span>🇬🇧 British</span>
+          </div>
+
+          <p class="text-lg text-cream/80 font-light max-w-xl leading-relaxed italic border-l-2 border-gold/50 pl-5">
+            "Consistent, powerful finisher — <span class="text-gold font-medium not-italic">164 goals</span> + <span class="text-gold font-medium not-italic">92 assists</span> in 114 youth games. Now in U18 & senior reserve football at 16."
+          </p>
+        </div>
+
+        <!-- Hero stat cards -->
+        <div class="grid grid-cols-2 gap-3 lg:gap-4">
+          <div class="bg-surface-elevated/80 backdrop-blur border border-pitch-line rounded-sm p-5 text-center">
+            <div class="font-['Oswald'] text-4xl lg:text-5xl font-bold text-gold">{careerStats.goals}</div>
+            <div class="text-xs text-cream-muted uppercase tracking-widest mt-1">Goals</div>
+          </div>
+          <div class="bg-surface-elevated/80 backdrop-blur border border-pitch-line rounded-sm p-5 text-center">
+            <div class="font-['Oswald'] text-4xl lg:text-5xl font-bold text-cream">{careerStats.assists}</div>
+            <div class="text-xs text-cream-muted uppercase tracking-widest mt-1">Assists</div>
+          </div>
+          <div class="bg-surface-elevated/80 backdrop-blur border border-pitch-line rounded-sm p-5 text-center">
+            <div class="font-['Oswald'] text-4xl lg:text-5xl font-bold text-cream">{careerStats.apps}</div>
+            <div class="text-xs text-cream-muted uppercase tracking-widest mt-1">Apps</div>
+          </div>
+          <div class="bg-surface-elevated/80 backdrop-blur border border-pitch-line rounded-sm p-5 text-center">
+            <div class="font-['Oswald'] text-4xl lg:text-5xl font-bold text-fire">{careerStats.gaPerGame}</div>
+            <div class="text-xs text-cream-muted uppercase tracking-widest mt-1">G/A per game</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12 flex items-center gap-4 text-cream-muted">
+        <span class="text-xs uppercase tracking-widest">Current clubs</span>
+        <div class="h-px flex-1 bg-pitch-line"></div>
+        <span class="font-['Oswald'] text-sm text-cream">Bath City U18</span>
+        <span class="text-pitch-line">·</span>
+        <span class="font-['Oswald'] text-sm text-cream">Melksham Town</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- TECHNICAL ATTRIBUTES -->
+  <section id="stats" class="relative border-t border-pitch-line">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 py-20">
+      <div class="flex items-center gap-4 mb-12">
+        <span class="font-['Oswald'] text-gold text-xs tracking-[0.3em] uppercase">01</span>
+        <h2 class="font-['Oswald'] text-3xl sm:text-4xl font-bold uppercase tracking-wide">Technical Profile</h2>
+        <div class="flex-1 h-px bg-pitch-line"></div>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {attributes.map(attr => (
+          <div class="bg-surface-elevated/60 border border-pitch-line rounded-sm p-6 hover:border-gold/30 transition-colors group">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-['Oswald'] text-lg uppercase tracking-wide text-cream">{attr.name}</h3>
+              <span class="font-['Oswald'] text-2xl font-bold text-gold">{attr.rating}<span class="text-cream-muted text-sm">/10</span></span>
+            </div>
+            <div class="w-full bg-pitch-line rounded-full h-2 mb-3">
+              <div class="h-2 rounded-full transition-all duration-1000" style={`width: ${attr.rating * 10}%; background: linear-gradient(90deg, var(--color-gold-dim), var(--color-gold));`}></div>
+            </div>
+            <p class="text-xs text-cream-muted">{attr.note}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SEASON BY SEASON -->
+  <section id="seasons" class="relative border-t border-pitch-line">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 py-20">
+      <div class="flex items-center gap-4 mb-12">
+        <span class="font-['Oswald'] text-gold text-xs tracking-[0.3em] uppercase">02</span>
+        <h2 class="font-['Oswald'] text-3xl sm:text-4xl font-bold uppercase tracking-wide">Season by Season</h2>
+        <div class="flex-1 h-px bg-pitch-line"></div>
+      </div>
+
+      <div class="space-y-12">
+        {seasons.map(s => (
+          <div>
+            <div class="flex items-center gap-4 mb-6">
+              <span class="font-['Oswald'] text-2xl font-bold text-gold">{s.season}</span>
+              {s.highlights.length > 0 && (
+                <div class="flex flex-wrap gap-2">
+                  {s.highlights.map(h => (
+                    <span class="text-[11px] font-semibold uppercase tracking-wider bg-gold/10 text-gold border border-gold/20 px-2.5 py-0.5 rounded-sm">{h}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div class="grid gap-4">
+              {s.clubs.map(club => (
+                <div class="bg-surface-elevated/40 border border-pitch-line rounded-sm overflow-hidden hover:border-gold/20 transition-colors">
+                  <div class="flex flex-col sm:flex-row sm:items-center justify-between p-5 gap-4">
+                    <div class="flex items-center gap-4">
+                      <div class="w-1 h-12 rounded-full" style={`background: ${club.color};`}></div>
+                      <div>
+                        <h4 class="font-['Oswald'] text-lg uppercase tracking-wide">{club.name}</h4>
+                        <p class="text-xs text-cream-muted">{club.league}</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-6 sm:gap-8">
+                      <div class="text-center">
+                        <div class="font-['Oswald'] text-2xl font-bold">{club.apps}</div>
+                        <div class="text-[10px] text-cream-muted uppercase tracking-widest">Apps</div>
+                      </div>
+                      <div class="text-center">
+                        <div class="font-['Oswald'] text-2xl font-bold text-gold">{club.goals}</div>
+                        <div class="text-[10px] text-cream-muted uppercase tracking-widest">Goals</div>
+                      </div>
+                      <div class="text-center">
+                        <div class="font-['Oswald'] text-2xl font-bold">{club.assists}</div>
+                        <div class="text-[10px] text-cream-muted uppercase tracking-widest">Assists</div>
+                      </div>
+                      {club.mins > 0 && (
+                        <div class="text-center hidden sm:block">
+                          <div class="font-['Oswald'] text-2xl font-bold text-cream-muted">{club.mins}'</div>
+                          <div class="text-[10px] text-cream-muted uppercase tracking-widest">Mins</div>
+                        </div>
+                      )}
+                      <div class="text-center">
+                        <div class="font-['Oswald'] text-2xl font-bold text-fire">{club.gpg.toFixed(2)}</div>
+                        <div class="text-[10px] text-cream-muted uppercase tracking-widest">G/A p90</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- KEY PERFORMANCES -->
+  <section class="relative border-t border-pitch-line bg-surface/50">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 py-20">
+      <div class="flex items-center gap-4 mb-12">
+        <span class="font-['Oswald'] text-gold text-xs tracking-[0.3em] uppercase">03</span>
+        <h2 class="font-['Oswald'] text-3xl sm:text-4xl font-bold uppercase tracking-wide">Standout Performances</h2>
+        <div class="flex-1 h-px bg-pitch-line"></div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {keyMatches.map(m => (
+          <div class="bg-surface-elevated border border-pitch-line rounded-sm p-5 hover:border-gold/30 transition-colors">
+            <div class="text-[10px] text-cream-muted mb-2">{m.date}</div>
+            <div class="font-['Oswald'] text-sm uppercase tracking-wide text-cream mb-1">{m.match}</div>
+            <div class="text-xs text-gold font-semibold mb-3">{m.result}</div>
+            <div class="flex gap-4">
+              <span class="font-['Oswald'] text-xl font-bold text-gold">{m.goals}G</span>
+              {m.assists > 0 && <span class="font-['Oswald'] text-xl font-bold text-cream">{m.assists}A</span>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- HONOURS -->
+  <section id="honours" class="relative border-t border-pitch-line">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 py-20">
+      <div class="flex items-center gap-4 mb-12">
+        <span class="font-['Oswald'] text-gold text-xs tracking-[0.3em] uppercase">04</span>
+        <h2 class="font-['Oswald'] text-3xl sm:text-4xl font-bold uppercase tracking-wide">Honours & Recognition</h2>
+        <div class="flex-1 h-px bg-pitch-line"></div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {honours.map(h => (
+          <div class="relative bg-gradient-to-br from-gold/5 to-transparent border border-gold/20 rounded-sm p-6 group hover:border-gold/40 transition-colors">
+            <div class="absolute top-4 right-4 text-gold/20 group-hover:text-gold/40 transition-colors">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 1l2.928 6.856L20 8.588l-5 5.304L16.18 20 10 16.428 3.82 20 5 13.892 0 8.588l7.072-.732L10 1z" clip-rule="evenodd"/></svg>
+            </div>
+            <span class="text-[10px] text-gold uppercase tracking-widest font-semibold">{h.year}</span>
+            <h3 class="font-['Oswald'] text-lg uppercase tracking-wide text-cream mt-2 mb-1">{h.title}</h3>
+            <p class="text-xs text-cream-muted">{h.org}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- PLAYER INFO -->
+  <section class="relative border-t border-pitch-line bg-surface/50">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 py-20">
+      <div class="flex items-center gap-4 mb-12">
+        <span class="font-['Oswald'] text-gold text-xs tracking-[0.3em] uppercase">05</span>
+        <h2 class="font-['Oswald'] text-3xl sm:text-4xl font-bold uppercase tracking-wide">Player Info</h2>
+        <div class="flex-1 h-px bg-pitch-line"></div>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div>
+          <h3 class="font-['Oswald'] text-xs text-gold uppercase tracking-widest mb-4">Physical</h3>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-cream-muted">Height</span><span>178 cm</span></div>
+            <div class="flex justify-between"><span class="text-cream-muted">Weight</span><span>68 kg</span></div>
+            <div class="flex justify-between"><span class="text-cream-muted">Preferred Foot</span><span>Right (Strong Left)</span></div>
+            <div class="flex justify-between"><span class="text-cream-muted">Position</span><span>Striker / Forward</span></div>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-['Oswald'] text-xs text-gold uppercase tracking-widest mb-4">Personal</h3>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-cream-muted">Date of Birth</span><span>19 July 2009</span></div>
+            <div class="flex justify-between"><span class="text-cream-muted">Age</span><span>16</span></div>
+            <div class="flex justify-between"><span class="text-cream-muted">Nationality</span><span>British</span></div>
+            <div class="flex justify-between"><span class="text-cream-muted">Location</span><span>Corsham, Wiltshire</span></div>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-['Oswald'] text-xs text-gold uppercase tracking-widest mb-4">Current Clubs</h3>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-cream-muted">Academy</span><span>Bath City U18</span></div>
+            <div class="flex justify-between"><span class="text-cream-muted">Dual Reg</span><span>Melksham Town U18</span></div>
+            <div class="flex justify-between"><span class="text-cream-muted">Senior</span><span>Melksham Town Reserves</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER / CONTACT -->
+  <footer class="border-t border-pitch-line">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 py-12">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div>
+          <span class="font-['Oswald'] text-2xl font-bold uppercase tracking-wide">Olly Robinson</span>
+          <span class="text-cream-muted text-sm ml-3">⚽ Striker · Age 16 · Wiltshire</span>
+        </div>
+        <div class="flex items-center gap-6 text-sm text-cream-muted">
+          <a href={`${BASE}footage/`} class="hover:text-gold transition-colors">📹 Footage</a>
+          <span>📧 Contact via club</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</Layout>
+
+<script>
+  // Scroll reveal for stat cards
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        (e.target as HTMLElement).classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.stat-reveal').forEach(el => observer.observe(el));
+</script>

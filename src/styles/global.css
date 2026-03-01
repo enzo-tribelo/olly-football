@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@theme {
+  --color-pitch: #0a1a0a;
+  --color-pitch-light: #0f2a0f;
+  --color-pitch-line: #1a3a1a;
+  --color-gold: #f5c518;
+  --color-gold-dim: #b8940f;
+  --color-cream: #f0ebe0;
+  --color-cream-muted: #b8b3a6;
+  --color-fire: #ff4136;
+  --color-surface: #111;
+  --color-surface-elevated: #1a1a1a;
+}
+
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/oswald/v53/TK3_WkUHHAIjg75cFRf3bXL8LICs1_FvsUZiYA.woff2) format('woff2');
+}
+
+@font-face {
+  font-family: 'Oswald';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/oswald/v53/TK3_WkUHHAIjg75cFRf3bXL8LICs1xpqsUZiYA.woff2) format('woff2');
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: var(--color-pitch);
+  color: var(--color-cream);
+  overflow-x: hidden;
+}
+
+/* Pitch pattern overlay */
+.pitch-pattern {
+  background-image: 
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(26,58,26,0.3) 39px, rgba(26,58,26,0.3) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(26,58,26,0.15) 39px, rgba(26,58,26,0.15) 40px);
+}
+
+/* Stat counter animation */
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stat-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.stat-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Gold shimmer */
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.gold-shimmer {
+  background: linear-gradient(90deg, var(--color-gold) 0%, #ffd700 25%, var(--color-gold) 50%, #ffd700 75%, var(--color-gold) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 3s linear infinite;
+}
