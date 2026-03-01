@@ -89,6 +89,11 @@ const keyMatches = [
     <div class="absolute inset-0 bg-gradient-to-br from-pitch via-pitch-light/50 to-transparent"></div>
     <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-gold/5 to-transparent"></div>
     
+    <!-- Hero background image -->
+    <div class="absolute right-0 top-0 w-1/2 h-full hidden lg:block">
+      <img src={`${BASE}photos/bicycle-kick.jpg`} alt="Olly Robinson bicycle kick" class="w-full h-full object-cover object-center opacity-20 mask-gradient" />
+      <div class="absolute inset-0 bg-gradient-to-r from-pitch via-pitch/80 to-transparent"></div>
+    </div>
     <!-- Giant shirt number -->
     <div class="absolute -right-20 top-1/2 -translate-y-1/2 font-['Oswald'] text-[40rem] font-bold text-white/[0.02] leading-none select-none hidden lg:block">9</div>
 
@@ -340,6 +345,39 @@ const keyMatches = [
             <div class="flex justify-between"><span class="text-cream-muted">Senior</span><span>Melksham Town Reserves</span></div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section class="relative border-t border-pitch-line">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 py-20">
+      <div class="flex items-center gap-4 mb-12">
+        <span class="font-['Oswald'] text-gold text-xs tracking-[0.3em] uppercase">06</span>
+        <h2 class="font-['Oswald'] text-3xl sm:text-4xl font-bold uppercase tracking-wide">Gallery</h2>
+        <div class="flex-1 h-px bg-pitch-line"></div>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        {[
+          { src: 'bicycle-kick.jpg', alt: 'Bicycle kick — training', span: 'md:col-span-2 md:row-span-2' },
+          { src: 'bath-action-1.jpg', alt: 'Bath City U18 vs Cirencester', span: '' },
+          { src: 'number9-back.jpg', alt: 'Number 9 — Bath City', span: '' },
+          { src: 'bath-action-2.jpg', alt: 'Bath City in action', span: '' },
+          { src: 'celebration.jpg', alt: 'Goal celebration — Wiltshire FA', span: 'md:col-span-2' },
+          { src: 'nwyfl-trophy.jpg', alt: 'North Wilts Youth League trophy', span: '' },
+          { src: 'melksham-duel.jpg', alt: 'Melksham Town — senior reserves', span: '' },
+          { src: 'number9-pitch.jpg', alt: 'Number 9 on the pitch', span: '' },
+          { src: 'tournament-award.jpg', alt: 'Tournament award', span: '' },
+          { src: 'wiltshire-squad.jpg', alt: 'Wiltshire FA U16 squad selection', span: 'md:col-span-2' },
+        ].map(photo => (
+          <div class={`relative overflow-hidden rounded-sm group ${photo.span}`}>
+            <img src={`${BASE}photos/${photo.src}`} alt={photo.alt} class="w-full h-full object-cover aspect-square group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-t from-pitch/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+              <span class="absolute bottom-3 left-3 text-xs text-cream font-medium">{photo.alt}</span>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   </section>
