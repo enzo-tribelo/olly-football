@@ -84,14 +84,14 @@ const keyMatches = [
 <Layout title="Olly Robinson — Striker">
 
   <!-- HERO -->
-  <section class="relative min-h-screen flex items-center pitch-pattern overflow-hidden">
+  <section class="relative min-h-[85vh] sm:min-h-screen flex items-center pitch-pattern overflow-hidden">
     <!-- Dramatic diagonal accent -->
     <div class="absolute inset-0 bg-gradient-to-br from-pitch via-pitch-light/50 to-transparent"></div>
     <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-gold/5 to-transparent"></div>
     
     <!-- Hero background image -->
     <div class="absolute right-0 top-0 w-1/2 h-full hidden lg:block">
-      <img src={`${BASE}photos/bicycle-kick.jpg`} alt="Olly Robinson bicycle kick" class="w-full h-full object-cover object-center opacity-20 mask-gradient" />
+      <img src={`${BASE}photos/bicycle-kick.jpg`} alt="Olly Robinson bicycle kick goal in a match" class="w-full h-full object-cover object-center opacity-20 mask-gradient" />
       <div class="absolute inset-0 bg-gradient-to-r from-pitch via-pitch/80 to-transparent"></div>
     </div>
     <!-- Giant shirt number -->
@@ -126,7 +126,7 @@ const keyMatches = [
       <a href={`${BASE}footage/`} class="mobile-nav-link px-5 py-2.5 bg-gold text-pitch rounded-full text-xs font-['Oswald'] uppercase tracking-widest font-semibold hover:bg-gold-dim transition-all">Footage</a>
     </div>
 
-    <div class="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 pt-32 pb-20 w-full">
+    <div class="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 pt-20 sm:pt-32 pb-16 sm:pb-20 w-full">
       <div class="grid lg:grid-cols-[1fr_auto] gap-12 items-end">
         <div>
           <div class="flex items-center gap-3 mb-6">
@@ -386,7 +386,7 @@ const keyMatches = [
 
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
         {[
-          { src: 'bicycle-kick.jpg', alt: 'Bicycle kick — training', span: 'md:col-span-2 md:row-span-2' },
+          { src: 'bicycle-kick.jpg', alt: 'Bicycle kick — match goal', span: 'md:col-span-2 md:row-span-2' },
           { src: 'bath-action-1.jpg', alt: 'Bath City U18 vs Cirencester', span: '' },
           { src: 'number9-back.jpg', alt: 'Number 9 — Bath City', span: '' },
           { src: 'bath-action-2.jpg', alt: 'Bath City in action', span: '' },
@@ -428,12 +428,17 @@ const keyMatches = [
     </div>
   </footer>
 
+  <!-- Back to top -->
+  <button id="back-to-top" aria-label="Back to top" class="fixed bottom-6 left-6 z-40 w-11 h-11 bg-surface-elevated/90 backdrop-blur border border-pitch-line rounded-full flex items-center justify-center text-cream-muted hover:text-gold hover:border-gold/40 transition-all opacity-0 pointer-events-none cursor-pointer focus:outline-2 focus:outline-gold focus:outline-offset-2">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+  </button>
+
 </Layout>
 
 <script>
   // === LIGHTBOX GALLERY ===
   const galleryPhotos = [
-    { src: 'bicycle-kick.jpg', alt: 'Bicycle kick — training' },
+    { src: 'bicycle-kick.jpg', alt: 'Bicycle kick — match goal' },
     { src: 'bath-action-1.jpg', alt: 'Bath City U18 vs Cirencester' },
     { src: 'number9-back.jpg', alt: 'Number 9 — Bath City' },
     { src: 'bath-action-2.jpg', alt: 'Bath City in action' },
@@ -579,4 +584,17 @@ const keyMatches = [
     });
   }, { threshold: 0.1 });
   document.querySelectorAll('.stat-reveal').forEach(el => observer.observe(el));
+
+  // Back to top button
+  const btt = document.getElementById('back-to-top');
+  if (btt) {
+    window.addEventListener('scroll', () => {
+      const show = window.scrollY > 600;
+      btt.classList.toggle('opacity-0', !show);
+      btt.classList.toggle('pointer-events-none', !show);
+    }, { passive: true });
+    btt.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
 </script>
