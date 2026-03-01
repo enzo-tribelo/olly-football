@@ -105,6 +105,7 @@ const keyMatches = [
           <a href="#stats" class="text-xs text-cream-muted hover:text-gold transition-colors font-medium uppercase tracking-widest">Stats</a>
           <a href="#seasons" class="text-xs text-cream-muted hover:text-gold transition-colors font-medium uppercase tracking-widest">Seasons</a>
           <a href="#honours" class="text-xs text-cream-muted hover:text-gold transition-colors font-medium uppercase tracking-widest">Honours</a>
+          <a href="#gallery" class="text-xs text-cream-muted hover:text-gold transition-colors font-medium uppercase tracking-widest">Gallery</a>
           <a href={`${BASE}footage/`} class="text-xs text-pitch bg-gold hover:bg-gold-dim px-4 py-1.5 rounded-sm transition-colors font-semibold uppercase tracking-widest">Footage</a>
         </div>
       </div>
@@ -121,6 +122,7 @@ const keyMatches = [
       <a href="#stats" class="mobile-nav-link px-5 py-2.5 bg-surface-elevated/95 backdrop-blur border border-pitch-line rounded-full text-xs font-['Oswald'] uppercase tracking-widest text-cream hover:text-gold hover:border-gold/30 transition-all">Stats</a>
       <a href="#seasons" class="mobile-nav-link px-5 py-2.5 bg-surface-elevated/95 backdrop-blur border border-pitch-line rounded-full text-xs font-['Oswald'] uppercase tracking-widest text-cream hover:text-gold hover:border-gold/30 transition-all">Seasons</a>
       <a href="#honours" class="mobile-nav-link px-5 py-2.5 bg-surface-elevated/95 backdrop-blur border border-pitch-line rounded-full text-xs font-['Oswald'] uppercase tracking-widest text-cream hover:text-gold hover:border-gold/30 transition-all">Honours</a>
+      <a href="#gallery" class="mobile-nav-link px-5 py-2.5 bg-surface-elevated/95 backdrop-blur border border-pitch-line rounded-full text-xs font-['Oswald'] uppercase tracking-widest text-cream hover:text-gold hover:border-gold/30 transition-all">Gallery</a>
       <a href={`${BASE}footage/`} class="mobile-nav-link px-5 py-2.5 bg-gold text-pitch rounded-full text-xs font-['Oswald'] uppercase tracking-widest font-semibold hover:bg-gold-dim transition-all">Footage</a>
     </div>
 
@@ -270,7 +272,7 @@ const keyMatches = [
                         </div>
                       )}
                       <div class="text-center">
-                        <div class="font-['Oswald'] text-2xl font-bold text-fire">{club.gpg.toFixed(2)}</div>
+                        <div class="font-['Oswald'] text-2xl font-bold text-fire">{club.gp90.toFixed(2)}</div>
                         <div class="text-xs text-cream-muted uppercase tracking-widest">xG p90</div>
                       </div>
                     </div>
@@ -374,7 +376,7 @@ const keyMatches = [
   </section>
 
   <!-- GALLERY -->
-  <section class="relative border-t border-pitch-line">
+  <section id="gallery" class="relative border-t border-pitch-line">
     <div class="max-w-7xl mx-auto px-6 sm:px-10 py-20">
       <div class="flex items-center gap-4 mb-12">
         <span class="font-['Oswald'] text-gold text-xs tracking-[0.3em] uppercase">06</span>
