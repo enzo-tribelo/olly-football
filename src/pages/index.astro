@@ -17,33 +17,33 @@ const seasons = [
   {
     season: '2025–26',
     clubs: [
-      { name: 'Bath City U18', league: 'SW Counties Youth League U18', apps: 13, goals: 6, assists: 2, mins: 880, gpg: 0.46, color: '#e63946' },
-      { name: 'Melksham Town Reserves', league: 'Wiltshire Senior League Premier (Step 7)', apps: 6, goals: 3, assists: 3, mins: 225, gpg: 1.20, color: '#457b9d' },
-      { name: 'Melksham Town U18', league: 'Wilts Senior U18 Floodlight League', apps: 6, goals: 3, assists: 3, mins: 225, gpg: 1.20, color: '#457b9d' },
+      { name: 'Bath City U18', league: 'SW Counties Youth League U18', apps: 13, goals: 6, assists: 2, mins: 880, gp90: 0.61, color: '#e63946' },
+      { name: 'Melksham Town Reserves', league: 'Wiltshire Senior League Premier (Step 7)', apps: 6, goals: 3, assists: 3, mins: 225, gp90: 1.20, color: '#457b9d' },
+      { name: 'Melksham Town U18', league: 'Wilts Senior U18 Floodlight League', apps: 6, goals: 3, assists: 3, mins: 225, gp90: 1.20, color: '#457b9d' },
     ],
     highlights: ['Senior debut at 16', 'Academy step-up to U18'],
   },
   {
     season: '2024–25',
     clubs: [
-      { name: 'Calne Town Youth U16', league: 'North Wilts League', apps: 21, goals: 18, assists: 17, mins: 1400, gpg: 1.16, color: '#2d6a4f' },
-      { name: 'FC Wilts JPL U16', league: 'Junior Premier League', apps: 10, goals: 10, assists: 7, mins: 630, gpg: 1.43, color: '#264653' },
-      { name: 'Wiltshire FA U16', league: 'County Select', apps: 7, goals: 1, assists: 2, mins: 380, gpg: 0.24, color: '#6c757d' },
+      { name: 'Calne Town Youth U16', league: 'North Wilts League', apps: 21, goals: 18, assists: 17, mins: 1400, gp90: 1.16, color: '#2d6a4f' },
+      { name: 'FC Wilts JPL U16', league: 'Junior Premier League', apps: 10, goals: 10, assists: 7, mins: 630, gp90: 1.43, color: '#264653' },
+      { name: 'Wiltshire FA U16', league: 'County Select', apps: 7, goals: 1, assists: 2, mins: 380, gp90: 0.24, color: '#6c757d' },
     ],
     highlights: ['North Wilts League Winners', 'County Cup Runners-Up', 'SW Regional Winners', 'England Schools Semi-Final'],
   },
   {
     season: '2023–24',
     clubs: [
-      { name: 'AFC Corsham U15', league: 'Mid Wilts League', apps: 23, goals: 47, assists: 26, mins: 1735, gpg: 2.44, color: '#e76f51' },
-      { name: 'FC Wilts JPL U15', league: 'Junior Premier League', apps: 12, goals: 10, assists: 7, mins: 720, gpg: 1.25, color: '#264653' },
+      { name: 'AFC Corsham U15', league: 'Mid Wilts League', apps: 23, goals: 47, assists: 26, mins: 1735, gp90: 2.44, color: '#e76f51' },
+      { name: 'FC Wilts JPL U15', league: 'Junior Premier League', apps: 12, goals: 10, assists: 7, mins: 720, gp90: 1.25, color: '#264653' },
     ],
     highlights: ['League 1 & Cup Double', 'AC Milan Training Camp (Italy)'],
   },
   {
     season: '2022–23',
     clubs: [
-      { name: 'AFC Corsham U14', league: 'Mid Wilts League', apps: 19, goals: 44, assists: 0, mins: 0, gpg: 2.32, color: '#e76f51' },
+      { name: 'AFC Corsham U14', league: 'Mid Wilts League', apps: 19, goals: 44, assists: 0, mins: 0, gp90: 2.32, color: '#e76f51' },
     ],
     highlights: ['2.32 goals per game'],
   },
@@ -262,7 +262,7 @@ const keyMatches = [
                       )}
                       <div class="text-center">
                         <div class="font-['Oswald'] text-2xl font-bold text-fire">{club.gpg.toFixed(2)}</div>
-                        <div class="text-xs text-cream-muted uppercase tracking-widest">G/A p90</div>
+                        <div class="text-xs text-cream-muted uppercase tracking-widest">Goals p90</div>
                       </div>
                     </div>
                   </div>
