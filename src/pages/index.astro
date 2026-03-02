@@ -81,7 +81,7 @@ const seasonsWithXG = seasons.map(season => ({
     "url": "https://or9.uk",
     "jobTitle": `Footballer — ${profileData.position}`,
     "birthDate": profileData.dob,
-    "nationality": { "@type": "Country", "name": "United Kingdom" },
+    "nationality": [{ "@type": "Country", "name": "United Kingdom" }, { "@type": "Country", "name": "Italy" }],
     "address": { "@type": "PostalAddress", "addressLocality": profileData.location.split(', ')[0], "addressRegion": profileData.location.split(', ')[1], "addressCountry": "GB" },
     "sameAs": [
       profileData.socials.instagram,
@@ -162,7 +162,7 @@ const seasonsWithXG = seasons.map(season => ({
             <span>📏 {profileData.height} / {profileData.weight}</span>
             <span>🦶 {profileData.foot}</span>
             <span>📍 {profileData.location}</span>
-            <span>🇬🇧 {profileData.nationality}</span>
+            <span>🇬🇧🇮🇹 {profileData.nationality}</span>
           </div>
 
           <p class="text-lg text-cream/80 font-light max-w-xl leading-relaxed italic border-l-2 border-gold/50 pl-5">
