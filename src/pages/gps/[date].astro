@@ -1,5 +1,6 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
 import { getEntry } from 'astro:content';
 import { existsSync } from 'fs';
 
@@ -77,16 +78,13 @@ export async function getStaticPaths() {
     <meta name="twitter:site" content="@ollyrobinson21" />
   </Fragment>
 
-  <nav aria-label="Session navigation" class="fixed top-0 left-0 right-0 z-50 bg-pitch/80 backdrop-blur-md border-b border-pitch-line/50">
-    <div class="max-w-7xl mx-auto px-6 sm:px-10 h-14 flex items-center justify-between">
-      <a href={`${BASE}gps/`} class="font-['Oswald'] text-sm uppercase tracking-[0.3em] text-gold hover:text-cream transition-colors">← GPS Data</a>
-      <div class="flex items-center gap-4">
-        {prevDate && <a href={`${BASE}gps/${prevDate}/`} class="text-xs text-cream-muted hover:text-gold transition-colors" aria-label="Previous match session">← Prev</a>}
-        <span class="font-['Oswald'] text-sm uppercase tracking-[0.3em] text-cream-muted">{s.date}</span>
-        {nextDate && <a href={`${BASE}gps/${nextDate}/`} class="text-xs text-cream-muted hover:text-gold transition-colors" aria-label="Next match session">Next →</a>}
-      </div>
-    </div>
-  </nav>
+  <Nav current="gps">
+    <Fragment slot="center">
+      {prevDate && <a href={`${BASE}gps/${prevDate}/`} class="text-xs text-cream-muted hover:text-gold transition-colors mr-2" aria-label="Previous match session">← Prev</a>}
+      <span class="text-xs text-cream-muted/60 mr-2">{s.date}</span>
+      {nextDate && <a href={`${BASE}gps/${nextDate}/`} class="text-xs text-cream-muted hover:text-gold transition-colors mr-4" aria-label="Next match session">Next →</a>}
+    </Fragment>
+  </Nav>
 
   <main id="main" class="min-h-screen pitch-pattern pt-24 pb-20">
     <div class="max-w-4xl mx-auto px-6 sm:px-10">

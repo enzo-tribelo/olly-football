@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
 import { getEntry, getCollection } from 'astro:content';
 
 const BASE = import.meta.env.BASE_URL;
@@ -104,36 +105,7 @@ const seasonsWithXG = seasons.map(season => ({
     <!-- Giant shirt number -->
     <div class="absolute -right-20 top-1/2 -translate-y-1/2 font-['Oswald'] text-[40rem] font-bold text-white/[0.02] leading-none select-none hidden lg:block">9</div>
 
-    <!-- Desktop nav -->
-    <nav class="fixed top-0 left-0 right-0 z-50 bg-pitch/80 backdrop-blur-md border-b border-pitch-line/50 hidden md:block">
-      <div class="max-w-7xl mx-auto px-6 sm:px-10 h-14 flex items-center justify-between">
-        <span class="font-['Oswald'] text-sm uppercase tracking-[0.3em] text-gold">OR<span class="text-cream/40">9</span></span>
-        <div class="flex items-center gap-6">
-          <a href="#stats" class="text-xs text-cream-muted hover:text-gold transition-colors font-medium uppercase tracking-widest">Stats</a>
-          <a href="#seasons" class="text-xs text-cream-muted hover:text-gold transition-colors font-medium uppercase tracking-widest">Seasons</a>
-          <a href="#honours" class="text-xs text-cream-muted hover:text-gold transition-colors font-medium uppercase tracking-widest">Honours</a>
-          <a href="#gallery" class="text-xs text-cream-muted hover:text-gold transition-colors font-medium uppercase tracking-widest">Gallery</a>
-          <a href={`${BASE}gps/`} class="text-xs text-cream-muted hover:text-gold transition-colors font-medium uppercase tracking-widest">GPS</a>
-          <a href={`${BASE}footage/`} class="text-xs text-pitch bg-gold hover:bg-gold-dim px-4 py-1.5 rounded-sm transition-colors font-semibold uppercase tracking-widest">Footage</a>
-        </div>
-      </div>
-    </nav>
-
-    <!-- Mobile FAB hamburger -->
-    <button id="mobile-fab" class="md:hidden fixed bottom-6 right-6 z-50 w-14 h-14 bg-gold rounded-full flex items-center justify-center shadow-lg shadow-gold/20 active:scale-95 transition-transform" aria-label="Menu">
-      <svg id="fab-open" class="w-6 h-6 text-pitch" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
-      <svg id="fab-close" class="w-6 h-6 text-pitch hidden" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
-    </button>
-
-    <!-- Mobile menu -->
-    <div id="mobile-menu" class="md:hidden fixed bottom-24 right-6 z-50 flex flex-col gap-2 items-end opacity-0 pointer-events-none transition-all duration-200 translate-y-4">
-      <a href="#stats" class="mobile-nav-link px-5 py-2.5 bg-surface-elevated/95 backdrop-blur border border-pitch-line rounded-full text-xs font-['Oswald'] uppercase tracking-widest text-cream hover:text-gold hover:border-gold/30 transition-all">Stats</a>
-      <a href="#seasons" class="mobile-nav-link px-5 py-2.5 bg-surface-elevated/95 backdrop-blur border border-pitch-line rounded-full text-xs font-['Oswald'] uppercase tracking-widest text-cream hover:text-gold hover:border-gold/30 transition-all">Seasons</a>
-      <a href="#honours" class="mobile-nav-link px-5 py-2.5 bg-surface-elevated/95 backdrop-blur border border-pitch-line rounded-full text-xs font-['Oswald'] uppercase tracking-widest text-cream hover:text-gold hover:border-gold/30 transition-all">Honours</a>
-      <a href="#gallery" class="mobile-nav-link px-5 py-2.5 bg-surface-elevated/95 backdrop-blur border border-pitch-line rounded-full text-xs font-['Oswald'] uppercase tracking-widest text-cream hover:text-gold hover:border-gold/30 transition-all">Gallery</a>
-      <a href={`${BASE}gps/`} class="mobile-nav-link px-5 py-2.5 bg-surface-elevated/95 backdrop-blur border border-pitch-line rounded-full text-xs font-['Oswald'] uppercase tracking-widest text-cream hover:text-gold hover:border-gold/30 transition-all">GPS</a>
-      <a href={`${BASE}footage/`} class="mobile-nav-link px-5 py-2.5 bg-gold text-pitch rounded-full text-xs font-['Oswald'] uppercase tracking-widest font-semibold hover:bg-gold-dim transition-all">Footage</a>
-    </div>
+    <Nav current="home" />
 
     <div class="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 pt-20 sm:pt-32 pb-16 sm:pb-20 w-full">
       <div class="grid lg:grid-cols-[1fr_auto] gap-12 items-end">
@@ -648,32 +620,6 @@ const seasonsWithXG = seasons.map(season => ({
       else showPhoto(currentIndex - 1);
     }
   }, { passive: true });
-
-  // Mobile FAB menu toggle
-  const fab = document.getElementById('mobile-fab');
-  const menu = document.getElementById('mobile-menu');
-  const fabOpen = document.getElementById('fab-open');
-  const fabClose = document.getElementById('fab-close');
-  let menuOpen = false;
-
-  fab?.addEventListener('click', () => {
-    menuOpen = !menuOpen;
-    menu?.classList.toggle('opacity-0', !menuOpen);
-    menu?.classList.toggle('pointer-events-none', !menuOpen);
-    menu?.classList.toggle('translate-y-4', !menuOpen);
-    fabOpen?.classList.toggle('hidden', menuOpen);
-    fabClose?.classList.toggle('hidden', !menuOpen);
-  });
-
-  // Close menu on nav click
-  document.querySelectorAll('.mobile-nav-link').forEach(link => {
-    link.addEventListener('click', () => {
-      menuOpen = false;
-      menu?.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
-      fabOpen?.classList.remove('hidden');
-      fabClose?.classList.add('hidden');
-    });
-  });
 
   // Scroll reveal for stat cards
   const observer = new IntersectionObserver((entries) => {
