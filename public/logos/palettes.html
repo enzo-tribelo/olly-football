@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OR9 — Palette Options</title>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: #111; color: #fff; }
+h1 { font-family: 'Oswald', sans-serif; text-align: center; padding: 40px 20px 10px; font-size: 28px; letter-spacing: 4px; text-transform: uppercase; color: #888; }
+.subtitle { text-align: center; color: #555; font-size: 13px; margin-bottom: 40px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px; padding: 0 24px 60px; max-width: 1400px; margin: 0 auto; }
+.card { border-radius: 12px; overflow: hidden; border: 1px solid #333; }
+.card-header { padding: 20px 24px; display: flex; align-items: center; justify-content: between; gap: 16px; }
+.card-header h2 { font-family: 'Oswald', sans-serif; font-size: 18px; text-transform: uppercase; letter-spacing: 2px; flex: 1; }
+.badge { font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 1px; }
+.swatches { display: flex; gap: 6px; padding: 0 24px 16px; }
+.swatch { width: 32px; height: 32px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.1); }
+
+/* Sample section inside each card */
+.sample { padding: 24px; }
+.sample-nav { display: flex; gap: 16px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid; }
+.sample-nav span { font-family: 'Oswald', sans-serif; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; }
+.sample-hero h3 { font-family: 'Oswald', sans-serif; font-size: 48px; font-weight: 700; text-transform: uppercase; line-height: 0.9; margin-bottom: 8px; }
+.sample-hero p { font-size: 12px; opacity: 0.7; margin-bottom: 16px; }
+.stat-row { display: flex; gap: 12px; margin-top: 16px; }
+.stat { text-align: center; padding: 12px 16px; border-radius: 6px; flex: 1; }
+.stat-num { font-family: 'Oswald', sans-serif; font-size: 28px; font-weight: 700; }
+.stat-label { font-size: 9px; text-transform: uppercase; letter-spacing: 2px; opacity: 0.6; margin-top: 2px; }
+.bar { height: 6px; border-radius: 3px; margin-top: 16px; }
+.bar-inner { height: 100%; border-radius: 3px; width: 85%; }
+.sample-logo { font-family: 'Oswald', sans-serif; font-size: 14px; letter-spacing: 3px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.logo-stripe { width: 3px; height: 24px; border-radius: 2px; }
+</style>
+</head><body>
+
+<h1>OR9 Colour Palettes</h1>
+<p class="subtitle">Tap to compare · Current palette is #1</p>
+
+<div class="grid">
+
+<!-- 1. CURRENT — Pitch Green + Gold -->
+<div class="card" style="background: #0a1a0a;">
+  <div class="card-header">
+    <h2 style="color: #f5c518;">1 · Pitch & Gold</h2>
+    <span class="badge" style="background: #f5c518; color: #0a1a0a;">Current</span>
+  </div>
+  <div class="swatches">
+    <div class="swatch" style="background: #0a1a0a;"></div>
+    <div class="swatch" style="background: #12261a;"></div>
+    <div class="swatch" style="background: #f5c518;"></div>
+    <div class="swatch" style="background: #e8e0d0;"></div>
+    <div class="swatch" style="background: #ff4444;"></div>
+  </div>
+  <div class="sample" style="color: #e8e0d0;">
+    <div class="sample-logo"><div class="logo-stripe" style="background: #f5c518;"></div><span>OR<span style="color: #f5c518;">9</span></span></div>
+    <div class="sample-nav" style="border-color: rgba(255,255,255,0.1);"><span style="color: #f5c518;">Stats</span><span style="color: #888;">Seasons</span><span style="color: #888;">Honours</span></div>
+    <div class="sample-hero"><h3><span style="color: #e8e0d0;">Olly</span><br><span style="color: #f5c518;">Robinson</span></h3><p>U15–U18 · 2023–Present</p></div>
+    <div class="stat-row">
+      <div class="stat" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);"><div class="stat-num" style="color: #f5c518;">95</div><div class="stat-label">Goals</div></div>
+      <div class="stat" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);"><div class="stat-num">65</div><div class="stat-label">Assists</div></div>
+      <div class="stat" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);"><div class="stat-num" style="color: #ff4444;">1.67</div><div class="stat-label">G/A</div></div>
+    </div>
+    <div class="bar" style="background: rgba(255,255,255,0.1);"><div class="bar-inner" style="background: linear-gradient(90deg, #b8960f, #f5c518);"></div></div>
+  </div>
+</div>
+
+<!-- 2. Midnight Navy + Electric Blue -->
+<div class="card" style="background: #0a0e1a;">
+  <div class="card-header"><h2 style="color: #3b82f6;">2 · Midnight Electric</h2></div>
+  <div class="swatches">
+    <div class="swatch" style="background: #0a0e1a;"></div>
+    <div class="swatch" style="background: #111827;"></div>
+    <div class="swatch" style="background: #3b82f6;"></div>
+    <div class="swatch" style="background: #e2e8f0;"></div>
+    <div class="swatch" style="background: #22d3ee;"></div>
+  </div>
+  <div class="sample" style="color: #e2e8f0;">
+    <div class="sample-logo"><div class="logo-stripe" style="background: #3b82f6;"></div><span>OR<span style="color: #3b82f6;">9</span></span></div>
+    <div class="sample-nav" style="border-color: rgba(255,255,255,0.1);"><span style="color: #3b82f6;">Stats</span><span style="color: #666;">Seasons</span><span style="color: #666;">Honours</span></div>
+    <div class="sample-hero"><h3><span style="color: #e2e8f0;">Olly</span><br><span style="color: #3b82f6;">Robinson</span></h3><p>U15–U18 · 2023–Present</p></div>
+    <div class="stat-row">
+      <div class="stat" style="background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.15);"><div class="stat-num" style="color: #3b82f6;">95</div><div class="stat-label">Goals</div></div>
+      <div class="stat" style="background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.15);"><div class="stat-num">65</div><div class="stat-label">Assists</div></div>
+      <div class="stat" style="background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.15);"><div class="stat-num" style="color: #22d3ee;">1.67</div><div class="stat-label">G/A</div></div>
+    </div>
+    <div class="bar" style="background: rgba(255,255,255,0.08);"><div class="bar-inner" style="background: linear-gradient(90deg, #2563eb, #3b82f6);"></div></div>
+  </div>
+</div>
+
+<!-- 3. Carbon + Red -->
+<div class="card" style="background: #0c0c0c;">
+  <div class="card-header"><h2 style="color: #ef4444;">3 · Carbon Red</h2></div>
+  <div class="swatches">
+    <div class="swatch" style="background: #0c0c0c;"></div>
+    <div class="swatch" style="background: #171717;"></div>
+    <div class="swatch" style="background: #ef4444;"></div>
+    <div class="swatch" style="background: #e5e5e5;"></div>
+    <div class="swatch" style="background: #fbbf24;"></div>
+  </div>
+  <div class="sample" style="color: #e5e5e5;">
+    <div class="sample-logo"><div class="logo-stripe" style="background: #ef4444;"></div><span>OR<span style="color: #ef4444;">9</span></span></div>
+    <div class="sample-nav" style="border-color: rgba(255,255,255,0.1);"><span style="color: #ef4444;">Stats</span><span style="color: #666;">Seasons</span><span style="color: #666;">Honours</span></div>
+    <div class="sample-hero"><h3><span style="color: #e5e5e5;">Olly</span><br><span style="color: #ef4444;">Robinson</span></h3><p>U15–U18 · 2023–Present</p></div>
+    <div class="stat-row">
+      <div class="stat" style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15);"><div class="stat-num" style="color: #ef4444;">95</div><div class="stat-label">Goals</div></div>
+      <div class="stat" style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15);"><div class="stat-num">65</div><div class="stat-label">Assists</div></div>
+      <div class="stat" style="background: rgba(239,68,68,0.06); border: 1px solid rgba(239,68,68,0.15);"><div class="stat-num" style="color: #fbbf24;">1.67</div><div class="stat-label">G/A</div></div>
+    </div>
+    <div class="bar" style="background: rgba(255,255,255,0.08);"><div class="bar-inner" style="background: linear-gradient(90deg, #b91c1c, #ef4444);"></div></div>
+  </div>
+</div>
+
+<!-- 4. Deep Purple + Cyan -->
+<div class="card" style="background: #0f0a1a;">
+  <div class="card-header"><h2 style="color: #a78bfa;">4 · Ultra Violet</h2></div>
+  <div class="swatches">
+    <div class="swatch" style="background: #0f0a1a;"></div>
+    <div class="swatch" style="background: #1a1333;"></div>
+    <div class="swatch" style="background: #a78bfa;"></div>
+    <div class="swatch" style="background: #e2dff0;"></div>
+    <div class="swatch" style="background: #34d399;"></div>
+  </div>
+  <div class="sample" style="color: #e2dff0;">
+    <div class="sample-logo"><div class="logo-stripe" style="background: #a78bfa;"></div><span>OR<span style="color: #a78bfa;">9</span></span></div>
+    <div class="sample-nav" style="border-color: rgba(255,255,255,0.1);"><span style="color: #a78bfa;">Stats</span><span style="color: #666;">Seasons</span><span style="color: #666;">Honours</span></div>
+    <div class="sample-hero"><h3><span style="color: #e2dff0;">Olly</span><br><span style="color: #a78bfa;">Robinson</span></h3><p>U15–U18 · 2023–Present</p></div>
+    <div class="stat-row">
+      <div class="stat" style="background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.15);"><div class="stat-num" style="color: #a78bfa;">95</div><div class="stat-label">Goals</div></div>
+      <div class="stat" style="background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.15);"><div class="stat-num">65</div><div class="stat-label">Assists</div></div>
+      <div class="stat" style="background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.15);"><div class="stat-num" style="color: #34d399;">1.67</div><div class="stat-label">G/A</div></div>
+    </div>
+    <div class="bar" style="background: rgba(255,255,255,0.08);"><div class="bar-inner" style="background: linear-gradient(90deg, #7c3aed, #a78bfa);"></div></div>
+  </div>
+</div>
+
+<!-- 5. Pure Black + White + Gold accent -->
+<div class="card" style="background: #050505;">
+  <div class="card-header"><h2 style="color: #ffffff;">5 · Monochrome Gold</h2></div>
+  <div class="swatches">
+    <div class="swatch" style="background: #050505;"></div>
+    <div class="swatch" style="background: #141414;"></div>
+    <div class="swatch" style="background: #ffffff;"></div>
+    <div class="swatch" style="background: #d4a843;"></div>
+    <div class="swatch" style="background: #888;"></div>
+  </div>
+  <div class="sample" style="color: #e5e5e5;">
+    <div class="sample-logo"><div class="logo-stripe" style="background: #d4a843;"></div><span>OR<span style="color: #d4a843;">9</span></span></div>
+    <div class="sample-nav" style="border-color: rgba(255,255,255,0.08);"><span style="color: #fff;">Stats</span><span style="color: #555;">Seasons</span><span style="color: #555;">Honours</span></div>
+    <div class="sample-hero"><h3><span style="color: #ffffff;">Olly</span><br><span style="color: #d4a843;">Robinson</span></h3><p>U15–U18 · 2023–Present</p></div>
+    <div class="stat-row">
+      <div class="stat" style="background: #111; border: 1px solid #222;"><div class="stat-num" style="color: #fff;">95</div><div class="stat-label">Goals</div></div>
+      <div class="stat" style="background: #111; border: 1px solid #222;"><div class="stat-num">65</div><div class="stat-label">Assists</div></div>
+      <div class="stat" style="background: #111; border: 1px solid #222;"><div class="stat-num" style="color: #d4a843;">1.67</div><div class="stat-label">G/A</div></div>
+    </div>
+    <div class="bar" style="background: #1a1a1a;"><div class="bar-inner" style="background: linear-gradient(90deg, #a07830, #d4a843);"></div></div>
+  </div>
+</div>
+
+<!-- 6. Forest + Emerald -->
+<div class="card" style="background: #071a0f;">
+  <div class="card-header"><h2 style="color: #34d399;">6 · Emerald Pitch</h2></div>
+  <div class="swatches">
+    <div class="swatch" style="background: #071a0f;"></div>
+    <div class="swatch" style="background: #0f2a1a;"></div>
+    <div class="swatch" style="background: #34d399;"></div>
+    <div class="swatch" style="background: #e8f0e8;"></div>
+    <div class="swatch" style="background: #fbbf24;"></div>
+  </div>
+  <div class="sample" style="color: #e8f0e8;">
+    <div class="sample-logo"><div class="logo-stripe" style="background: #34d399;"></div><span>OR<span style="color: #34d399;">9</span></span></div>
+    <div class="sample-nav" style="border-color: rgba(255,255,255,0.08);"><span style="color: #34d399;">Stats</span><span style="color: #666;">Seasons</span><span style="color: #666;">Honours</span></div>
+    <div class="sample-hero"><h3><span style="color: #e8f0e8;">Olly</span><br><span style="color: #34d399;">Robinson</span></h3><p>U15–U18 · 2023–Present</p></div>
+    <div class="stat-row">
+      <div class="stat" style="background: rgba(52,211,153,0.06); border: 1px solid rgba(52,211,153,0.15);"><div class="stat-num" style="color: #34d399;">95</div><div class="stat-label">Goals</div></div>
+      <div class="stat" style="background: rgba(52,211,153,0.06); border: 1px solid rgba(52,211,153,0.15);"><div class="stat-num">65</div><div class="stat-label">Assists</div></div>
+      <div class="stat" style="background: rgba(52,211,153,0.06); border: 1px solid rgba(52,211,153,0.15);"><div class="stat-num" style="color: #fbbf24;">1.67</div><div class="stat-label">G/A</div></div>
+    </div>
+    <div class="bar" style="background: rgba(255,255,255,0.06);"><div class="bar-inner" style="background: linear-gradient(90deg, #059669, #34d399);"></div></div>
+  </div>
+</div>
+
+</div>
+</body></html>
