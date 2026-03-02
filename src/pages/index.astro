@@ -220,7 +220,10 @@ const seasonsWithXG = seasons.map(season => ({
   </section>
 
   <!-- GPS PERFORMANCE -->
-  <section class="relative border-t border-pitch-line bg-surface/50">
+  <section class="relative border-t border-pitch-line bg-surface/50 overflow-hidden">
+    <div class="absolute inset-0 opacity-[0.07]">
+      <img src={`${BASE}photos/bath-action-2.jpg`} alt="" class="w-full h-full object-cover" loading="lazy" aria-hidden="true" />
+    </div>
     <div class="max-w-7xl mx-auto px-6 sm:px-10 py-20">
       <div class="flex items-center gap-4 mb-4">
         <span class="font-['Oswald'] text-gold text-xs tracking-[0.3em] uppercase">02</span>
@@ -464,7 +467,6 @@ const seasonsWithXG = seasons.map(season => ({
           { src: 'bicycle-kick.jpg', alt: 'Bicycle kick — match', span: 'md:col-span-2 md:row-span-2' },
           { src: 'bath-action-1.jpg', alt: 'Bath City U18 vs Cirencester', span: '' },
           { src: 'number9-back.jpg', alt: 'Number 9 — Bath City', span: '' },
-          { src: 'bath-action-2.jpg', alt: 'Bath City in action', span: '' },
           { src: 'celebration.jpg', alt: 'Goal celebration — Wiltshire FA', span: 'md:col-span-2' },
           { src: 'nwyfl-trophy.jpg', alt: 'North Wilts Youth League trophy', span: '' },
           { src: 'melksham-duel.jpg', alt: 'Melksham Town — senior reserves', span: '' },
@@ -517,7 +519,6 @@ const seasonsWithXG = seasons.map(season => ({
     { src: 'bicycle-kick.jpg', alt: 'Bicycle kick — match' },
     { src: 'bath-action-1.jpg', alt: 'Bath City U18 vs Cirencester' },
     { src: 'number9-back.jpg', alt: 'Number 9 — Bath City' },
-    { src: 'bath-action-2.jpg', alt: 'Bath City in action' },
     { src: 'celebration.jpg', alt: 'Goal celebration — Wiltshire FA' },
     { src: 'nwyfl-trophy.jpg', alt: 'North Wilts Youth League trophy' },
     { src: 'melksham-duel.jpg', alt: 'Melksham Town — senior reserves' },
