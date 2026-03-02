@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 @theme {
-  --color-pitch: #0a1a0a;
-  --color-pitch-light: #0f2a0f;
-  --color-pitch-line: #1a3a1a;
-  --color-gold: #f5c518;
-  --color-gold-dim: #b8940f;
+  --color-pitch: #0c0c0c;
+  --color-pitch-light: #171717;
+  --color-pitch-line: #2a2a2a;
+  --color-gold: #ef4444;
+  --color-gold-dim: #b91c1c;
   --color-cream: #f0ebe0;
   --color-cream-muted: #b8b3a6;
   --color-fire: #ff4136;
@@ -43,8 +43,8 @@ body {
 /* Pitch pattern overlay */
 .pitch-pattern {
   background-image: 
-    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(26,58,26,0.3) 39px, rgba(26,58,26,0.3) 40px),
-    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(26,58,26,0.15) 39px, rgba(26,58,26,0.15) 40px);
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.03) 39px, rgba(255,255,255,0.03) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.015) 39px, rgba(255,255,255,0.015) 40px);
 }
 
 /* Stat counter animation */
@@ -71,7 +71,7 @@ body {
 }
 
 .gold-shimmer {
-  background: linear-gradient(90deg, var(--color-gold) 0%, #ffd700 25%, var(--color-gold) 50%, #ffd700 75%, var(--color-gold) 100%);
+  background: linear-gradient(90deg, var(--color-gold) 0%, #f87171 25%, var(--color-gold) 50%, #f87171 75%, var(--color-gold) 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
