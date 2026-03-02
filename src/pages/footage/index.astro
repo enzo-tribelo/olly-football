@@ -21,7 +21,7 @@ const typeColors: Record<string, string> = {
 
 <Layout title="Footage — Olly Robinson" description="Match footage, highlights and goals for Olly Robinson — Striker.">
 
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-pitch/80 backdrop-blur-md border-b border-pitch-line/50">
+  <nav aria-label="Footage navigation" class="fixed top-0 left-0 right-0 z-50 bg-pitch/80 backdrop-blur-md border-b border-pitch-line/50">
     <div class="max-w-7xl mx-auto px-6 sm:px-10 h-14 flex items-center justify-between">
       <a href={BASE} class="font-['Oswald'] text-sm uppercase tracking-[0.3em] text-gold hover:text-cream transition-colors">← Back to Profile</a>
       <span class="font-['Oswald'] text-sm uppercase tracking-[0.3em] text-cream-muted">Footage & Clips</span>
@@ -50,7 +50,7 @@ const typeColors: Record<string, string> = {
         {videos.map(v => (
           <div class="group">
             <!-- Thumbnail with play button — click to load iframe -->
-            <div class="relative aspect-video rounded-sm overflow-hidden bg-pitch-light cursor-pointer video-container" data-video-id={v.id}>
+            <button type="button" aria-label={`Play video: ${v.title}`} class="relative aspect-video w-full rounded-sm overflow-hidden bg-pitch-light cursor-pointer video-container focus:outline-2 focus:outline-gold focus:outline-offset-2" data-video-id={v.id} data-video-title={v.title}>
               <img
                 src={`https://img.youtube.com/vi/${v.id}/hqdefault.jpg`}
                 alt={v.title}
@@ -62,7 +62,7 @@ const typeColors: Record<string, string> = {
                   <svg class="w-7 h-7 sm:w-8 sm:h-8 text-pitch ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                 </div>
               </div>
-            </div>
+            </button>
             <!-- Info -->
             <div class="flex items-center gap-3 mt-4">
               <span class={`text-xs font-semibold uppercase tracking-wider border px-2 py-0.5 rounded-sm ${typeColors[v.type]}`}>{v.type}</span>
@@ -110,8 +110,10 @@ const typeColors: Record<string, string> = {
       activeOriginalHTML = originalHTML;
 
       // Replace with iframe
+      const title = container.getAttribute('data-video-title') || 'Video player';
       const iframe = document.createElement('iframe');
       iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+      iframe.setAttribute('title', title);
       iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
       iframe.setAttribute('allowfullscreen', '');
       iframe.className = 'w-full h-full absolute inset-0';
