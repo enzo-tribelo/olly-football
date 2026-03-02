@@ -39,8 +39,8 @@ const links = [
 
 <!-- Mobile FAB hamburger -->
 <button id="mobile-fab" class="md:hidden fixed bottom-6 right-6 z-50 w-14 h-14 bg-gold rounded-full flex items-center justify-center shadow-lg shadow-gold/20 active:scale-95 transition-transform" aria-label="Menu">
-  <svg id="fab-open" class="w-6 h-6 text-pitch" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
-  <svg id="fab-close" class="w-6 h-6 text-pitch hidden" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
+  <svg aria-hidden="true" id="fab-open" class="w-6 h-6 text-pitch" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+  <svg aria-hidden="true" id="fab-close" class="w-6 h-6 text-pitch hidden" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/></svg>
 </button>
 
 <!-- Mobile menu -->
@@ -54,14 +54,14 @@ const links = [
 
 <!-- Share button: mobile = above FAB (bottom-right), desktop = below nav (top-right) -->
 <button id="share-btn" aria-label="Share this page" class="fixed z-40 w-11 h-11 bg-surface-elevated/90 backdrop-blur border border-pitch-line rounded-full flex items-center justify-center text-cream-muted hover:text-gold hover:border-gold/40 transition-all cursor-pointer focus:outline-2 focus:outline-gold focus:outline-offset-2 bottom-[5.5rem] right-6 md:bottom-auto md:top-[4.25rem] md:right-6">
-  <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 16 16"><path d="M12,9.7c-0.9,0-1.6,0.4-2.2,1L6.8,8.9C6.9,8.6,6.9,8.3,6.9,8c0-0.3,0-0.6-0.1-0.9l3.1-1.8c0.5,0.6,1.3,1,2.2,1c1.7,0,3-1.4,3-3.1C15,1.4,13.7,0,12,0c-1.7,0-3,1.4-3,3.1c0,0.3,0,0.6,0.1,0.9L6.1,5.9c-0.5-0.6-1.3-1-2.2-1C2.3,4.9,1,6.3,1,8c0,1.7,1.3,3.1,3,3.1c0.9,0,1.6-0.4,2.2-1L9.2,12c-0.1,0.3-0.1,0.6-0.1,0.9c0,1.7,1.3,3.1,3,3.1c1.7,0,3-1.4,3-3.1C15,11.1,13.7,9.7,12,9.7z"/></svg>
+  <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 16 16"><path d="M12,9.7c-0.9,0-1.6,0.4-2.2,1L6.8,8.9C6.9,8.6,6.9,8.3,6.9,8c0-0.3,0-0.6-0.1-0.9l3.1-1.8c0.5,0.6,1.3,1,2.2,1c1.7,0,3-1.4,3-3.1C15,1.4,13.7,0,12,0c-1.7,0-3,1.4-3,3.1c0,0.3,0,0.6,0.1,0.9L6.1,5.9c-0.5-0.6-1.3-1-2.2-1C2.3,4.9,1,6.3,1,8c0,1.7,1.3,3.1,3,3.1c0.9,0,1.6-0.4,2.2-1L9.2,12c-0.1,0.3-0.1,0.6-0.1,0.9c0,1.7,1.3,3.1,3,3.1c1.7,0,3-1.4,3-3.1C15,11.1,13.7,9.7,12,9.7z"/></svg>
 </button>
 <!-- Share toast -->
 <div id="share-toast" class="fixed z-50 bg-gold text-pitch text-xs font-semibold px-4 py-2 rounded-sm opacity-0 pointer-events-none transition-opacity duration-300 bottom-[8rem] right-6 md:bottom-auto md:top-[4.25rem] md:right-[4.5rem]">Link copied!</div>
 
 <!-- Back to top -->
 <button id="back-to-top" aria-label="Back to top" class="fixed bottom-6 left-6 z-40 w-11 h-11 bg-surface-elevated/90 backdrop-blur border border-pitch-line rounded-full flex items-center justify-center text-cream-muted hover:text-gold hover:border-gold/40 transition-all opacity-0 pointer-events-none cursor-pointer focus:outline-2 focus:outline-gold focus:outline-offset-2">
-  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
+  <svg aria-hidden="true" class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>
 </button>
 
 <script>

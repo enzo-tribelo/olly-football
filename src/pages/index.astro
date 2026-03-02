@@ -285,7 +285,7 @@ const seasonsWithXG = seasons.map(season => ({
               <div class="text-center">
                 <div class="font-['Oswald'] text-xl font-bold text-amber">{s.high_intensity}<span class="text-sm text-cream-muted"> HI</span></div>
               </div>
-              <svg class="w-5 h-5 text-cream-muted/40 group-hover:text-gold group-hover:translate-x-1 transition-all shrink-0 hidden sm:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+              <svg aria-hidden="true" class="w-5 h-5 text-cream-muted/40 group-hover:text-gold group-hover:translate-x-1 transition-all shrink-0 hidden sm:block" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
             </div>
           </a>
         ))}
@@ -555,10 +555,10 @@ const seasonsWithXG = seasons.map(season => ({
   modal.innerHTML = `
     <button id="lb-close" aria-label="Close gallery" class="absolute top-4 right-4 z-10 w-14 h-14 flex items-center justify-center text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full text-3xl cursor-pointer transition-colors focus:outline-2 focus:outline-gold focus:outline-offset-2">&times;</button>
     <button id="lb-prev" aria-label="Previous photo" class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-10 w-14 h-14 flex items-center justify-center text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full cursor-pointer transition-colors focus:outline-2 focus:outline-gold focus:outline-offset-2">
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+      <svg aria-hidden="true" class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
     </button>
     <button id="lb-next" aria-label="Next photo" class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-10 w-14 h-14 flex items-center justify-center text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full cursor-pointer transition-colors focus:outline-2 focus:outline-gold focus:outline-offset-2">
-      <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+      <svg aria-hidden="true" class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
     </button>
     <img id="lb-img" alt="" class="max-w-[90vw] max-h-[85vh] object-contain select-none" draggable="false" />
     <div class="absolute bottom-4 left-0 right-0 text-center">
