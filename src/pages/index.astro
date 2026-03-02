@@ -446,8 +446,7 @@ const seasonsWithXG = seasons.map(season => ({
     { src: 'wiltshire-team.jpg', alt: 'Wiltshire Schools FA U16 — 3-2 winners vs Gloucestershire' },
   ];
 
-  const base = document.querySelector('base')?.href || '/olly-football/';
-  const basePath = new URL(base, window.location.origin).pathname;
+  const basePath = '/';
 
   // Create modal
   const modal = document.createElement('div');
