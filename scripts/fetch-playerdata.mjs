@@ -272,7 +272,9 @@ async function fetchHeatmaps(cookies) {
 
       const maxX = ap?.maxX || pathmaps[0]?.pitchLimits?.maxX || 105;
       const maxY = ap?.maxY || pathmaps[0]?.pitchLimits?.maxY || 68;
-      const flipY = (y) => isSecondHalf ? maxY - y : y;
+      // First half: flip Y only (SVG y-down vs pitch y-up)
+      // Second half: flip both X and Y (swap ends + SVG inversion)
+      const flipY = (y) => maxY - y; // Always flip Y for SVG
       const flipX = (x) => isSecondHalf ? maxX - x : x;
 
       let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${maxX} ${maxY}" preserveAspectRatio="none">\n`;
