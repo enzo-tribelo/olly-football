@@ -13,9 +13,8 @@ const s = allSessions.find(s => s.session_id === id);
 if (!s || !s.has_data) return Astro.redirect(`${BASE}gps/`);
 
 const validSessions = allSessions.filter(x => x.has_data);
-const bestDistance = Math.max(...validSessions.map(x => x.distance_m));
-const estMins = Math.min(90, Math.round(90 * s.distance_m / bestDistance));
-const estPct = Math.min(100, Math.round(s.distance_m / bestDistance * 100));
+const avgMPerMin = validSessions.reduce((sum, x) => sum + x.metres_per_min, 0) / validSessions.length;
+const estMins = Math.round(s.distance_m / avgMPerMin);
 
 const dateStr = new Date(s.date).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -60,7 +59,7 @@ export async function getStaticPaths() {
           <span class="text-cream">{s.match}</span>
         </h1>
         <p class="text-cream-muted text-sm">
-          {dateStr} · Est. <span class={`font-medium ${estPct < 80 ? 'text-gold' : 'text-cream'}`}>~{estMins} mins played ({estPct}%)</span>
+          {dateStr} · Est. <span class={`font-medium ${estMins < 75 ? 'text-gold' : 'text-cream'}`}>~{estMins} mins played</span>
         </p>
       </div>
 

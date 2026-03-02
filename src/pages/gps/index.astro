@@ -8,13 +8,12 @@ const gpsEntry = await getEntry('gps', 'gps');
 const allSessions = gpsEntry.data.sessions;
 const validSessions = allSessions.filter(s => s.has_data);
 
-// Estimate playing time: use best distance as "full 90" baseline
-const bestDistance = Math.max(...validSessions.map(s => s.distance_m));
-const sessionsWithEst = allSessions.map(s => ({
-  ...s,
-  est_mins: s.has_data ? Math.min(90, Math.round(90 * s.distance_m / bestDistance)) : 0,
-  est_pct: s.has_data ? Math.min(100, Math.round(s.distance_m / bestDistance * 100)) : 0,
-}));
+// Estimate playing time using avg metres/min across all sessions
+const avgMPerMin = validSessions.reduce((sum, s) => sum + s.metres_per_min, 0) / validSessions.length;
+const sessionsWithEst = allSessions.map(s => {
+  const est = s.has_data ? Math.round(s.distance_m / avgMPerMin) : 0;
+  return { ...s, est_mins: est };
+});
 
 const stats = {
   tracked: allSessions.length,
@@ -98,8 +97,8 @@ const stats = {
                   <span>{new Date(s.date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}</span>
                   <span>·</span>
                   {s.has_data ? (
-                    <span class={s.est_pct < 80 ? 'text-gold font-medium' : ''}>
-                      ~{s.est_mins} mins played ({s.est_pct}%)
+                    <span class={s.est_mins < 75 ? 'text-gold font-medium' : ''}>
+                      ~{s.est_mins} mins played
                     </span>
                   ) : (
                     <span class="text-fire/80 font-medium">No GPS data</span>
