@@ -9,6 +9,7 @@ const videos = [
   { id: 'C_TTKECG0Cc', title: 'Dutch International Tournament — Clips (2)', description: 'Summer 2024', type: 'highlight' },
   { id: 'KkvmGcuv8nE', title: 'AFC Corsham U15 vs Bradford — Cup Final Goals', description: 'Cup Final 2023-24', type: 'match' },
   { id: 'LhVojvKhg2U', title: 'JPL Goal of the Month — FC Wilts U15', description: 'October 2023', type: 'highlight' },
+  { id: 'PTbfplyPf-w', title: 'Melksham Town 3-3 Chippenham Town — Clip', description: 'Melksham Town Reserves', type: 'match', start: 197, end: 220 },
 ];
 
 const typeColors: Record<string, string> = {
@@ -51,7 +52,7 @@ const typeColors: Record<string, string> = {
             <!-- YouTube embed -->
             <div class="aspect-video">
               <iframe
-                src={`https://www.youtube-nocookie.com/embed/${v.id}`}
+                src={`https://www.youtube-nocookie.com/embed/${v.id}${v.start ? `?start=${v.start}&end=${v.end}` : ''}`}
                 title={v.title}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen
