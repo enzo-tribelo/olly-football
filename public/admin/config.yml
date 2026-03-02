@@ -2,8 +2,8 @@ backend:
   name: github
   repo: aibot-tribelo/olly-football
   branch: main
-  auth_type: pkce
-  app_id: Ov23libwbxeS0fTBmDhk
+  base_url: https://decap-oauth-proxy-eosin.vercel.app
+  auth_endpoint: api/auth
 
 media_folder: public/photos
 public_folder: /photos
