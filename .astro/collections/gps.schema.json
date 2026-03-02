@@ -15,6 +15,9 @@
               "match": {
                 "type": "string"
               },
+              "session_id": {
+                "type": "string"
+              },
               "duration_mins": {
                 "type": "number"
               },
@@ -30,27 +33,128 @@
               "avg_speed_kph": {
                 "type": "number"
               },
+              "metres_per_min": {
+                "type": "number"
+              },
               "sprints": {
+                "type": "number"
+              },
+              "sprint_distance_m": {
                 "type": "number"
               },
               "high_intensity": {
                 "type": "number"
               },
+              "high_intensity_distance_m": {
+                "type": "number"
+              },
+              "high_speed_run_events": {
+                "type": "number"
+              },
               "high_speed_distance_m": {
+                "type": "number"
+              },
+              "accelerations": {
+                "type": "number"
+              },
+              "decelerations": {
+                "type": "number"
+              },
+              "max_acceleration": {
+                "type": "number"
+              },
+              "max_deceleration": {
+                "type": "number"
+              },
+              "zone_sprint_distance_m": {
+                "type": "number"
+              },
+              "zone_sprint_duration_s": {
+                "type": "number"
+              },
+              "zone_sprint_events": {
+                "type": "number"
+              },
+              "zone_hs_running_distance_m": {
+                "type": "number"
+              },
+              "zone_hs_running_duration_s": {
+                "type": "number"
+              },
+              "zone_hs_running_events": {
+                "type": "number"
+              },
+              "zone_high_intensity_distance_m": {
+                "type": "number"
+              },
+              "zone_high_intensity_duration_s": {
+                "type": "number"
+              },
+              "zone_high_intensity_events": {
+                "type": "number"
+              },
+              "zone_medium_distance_m": {
+                "type": "number"
+              },
+              "zone_medium_duration_s": {
+                "type": "number"
+              },
+              "zone_low_distance_m": {
+                "type": "number"
+              },
+              "zone_low_duration_s": {
+                "type": "number"
+              },
+              "zone_jogging_distance_m": {
+                "type": "number"
+              },
+              "zone_jogging_duration_s": {
+                "type": "number"
+              },
+              "workload": {
+                "type": "number"
+              },
+              "workload_intensity": {
                 "type": "number"
               }
             },
             "required": [
               "date",
               "match",
+              "session_id",
               "duration_mins",
               "has_data",
               "distance_m",
               "max_speed_kph",
               "avg_speed_kph",
+              "metres_per_min",
               "sprints",
+              "sprint_distance_m",
               "high_intensity",
-              "high_speed_distance_m"
+              "high_intensity_distance_m",
+              "high_speed_run_events",
+              "high_speed_distance_m",
+              "accelerations",
+              "decelerations",
+              "max_acceleration",
+              "max_deceleration",
+              "zone_sprint_distance_m",
+              "zone_sprint_duration_s",
+              "zone_sprint_events",
+              "zone_hs_running_distance_m",
+              "zone_hs_running_duration_s",
+              "zone_hs_running_events",
+              "zone_high_intensity_distance_m",
+              "zone_high_intensity_duration_s",
+              "zone_high_intensity_events",
+              "zone_medium_distance_m",
+              "zone_medium_duration_s",
+              "zone_low_distance_m",
+              "zone_low_duration_s",
+              "zone_jogging_distance_m",
+              "zone_jogging_duration_s",
+              "workload",
+              "workload_intensity"
             ],
             "additionalProperties": false
           }

@@ -13,17 +13,13 @@ if (!PLAYERDATA_EMAIL || !PLAYERDATA_PASSWORD) {
 const BASE = 'https://app.playerdata.co.uk';
 
 async function login() {
-  // 1. Get CSRF token from login page
   const loginPage = await fetch(`${BASE}/api/auth/identities/sign_in`);
   const html = await loginPage.text();
   const csrf = html.match(/csrf-token.*?content="([^"]+)"/)?.[1];
   if (!csrf) throw new Error('Failed to get CSRF token');
 
-  // Carry cookies
-  const cookies = loginPage.headers.getSetCookie?.() || [];
-  const cookieHeader = cookies.map(c => c.split(';')[0]).join('; ');
+  const initCookies = loginPage.headers.getSetCookie().map(c => c.split(';')[0]).join('; ');
 
-  // 2. POST login form
   const body = new URLSearchParams({
     'authenticity_token': csrf,
     'identity[email]': PLAYERDATA_EMAIL,
@@ -32,21 +28,13 @@ async function login() {
 
   const loginRes = await fetch(`${BASE}/api/auth/identities/sign_in`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Cookie': cookieHeader,
-    },
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded', Cookie: initCookies },
     body,
     redirect: 'manual',
   });
 
-  if (loginRes.status !== 302) {
-    throw new Error(`Login failed (HTTP ${loginRes.status})`);
-  }
-
-  // Use the new session cookie from the 302 (authenticated session)
-  const setCookies = loginRes.headers.getSetCookie?.() || [];
-  return setCookies.map(c => c.split(';')[0]).join('; ');
+  if (loginRes.status !== 302) throw new Error(`Login failed (HTTP ${loginRes.status})`);
+  return loginRes.headers.getSetCookie().map(c => c.split(';')[0]).join('; ');
 }
 
 async function fetchGPS(cookies) {
@@ -57,12 +45,18 @@ async function fetchGPS(cookies) {
         id
         matchSession { id startTime endTime }
         metricSet {
-          totalDistanceM
-          maxSpeedKph
-          avgSpeedKph
-          sprintEvents
-          highIntensityEvents
-          highSpeedRunDistanceM
+          totalDistanceM maxSpeedKph avgSpeedKph metresPerMinute
+          sprintEvents totalSprintDistanceM
+          highIntensityEvents totalHighIntensityDistanceM
+          highSpeedRunDistanceM highSpeedRunEvents
+          accelerationEvents decelerationEvents maxAcceleration maxDeceleration
+          clubZoneSprintDistanceM clubZoneSprintDurationS clubZoneSprintEvents
+          clubZoneHighSpeedRunningDistanceM clubZoneHighSpeedRunningDurationS clubZoneHighSpeedRunningEvents
+          clubZoneHighIntensityDistanceM clubZoneHighIntensityDurationS clubZoneHighIntensityEvents
+          clubZoneMediumIntensityDistanceM clubZoneMediumIntensityDurationS
+          clubZoneLowIntensityDistanceM clubZoneLowIntensityDurationS
+          clubZoneJoggingDistanceM clubZoneJoggingDurationS
+          workload workloadIntensity
         }
       }
     }
@@ -70,10 +64,7 @@ async function fetchGPS(cookies) {
 
   const res = await fetch(`${BASE}/api/graphql`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Cookie': cookies,
-    },
+    headers: { 'Content-Type': 'application/json', Cookie: cookies },
     body: JSON.stringify({ query }),
   });
 
@@ -82,34 +73,70 @@ async function fetchGPS(cookies) {
   return data.data.currentPerson.matchSessionParticipations;
 }
 
-function toYAML(sessions) {
-  const all = sessions
-    .map(p => ({
-      date: p.matchSession.startTime.slice(0, 10),
-      duration_mins: Math.round((new Date(p.matchSession.endTime) - new Date(p.matchSession.startTime)) / 60000),
-      has_data: !!(p.metricSet && p.metricSet.totalDistanceM > 0),
-      distance_m: p.metricSet ? Math.round(p.metricSet.totalDistanceM) : 0,
-      max_speed_kph: p.metricSet ? Math.round(p.metricSet.maxSpeedKph * 10) / 10 : 0,
-      avg_speed_kph: p.metricSet ? Math.round(p.metricSet.avgSpeedKph * 10) / 10 : 0,
-      sprints: p.metricSet?.sprintEvents ?? 0,
-      high_intensity: p.metricSet?.highIntensityEvents ?? 0,
-      high_speed_distance_m: p.metricSet ? Math.round(p.metricSet.highSpeedRunDistanceM) : 0,
-    }))
-    .sort((a, b) => b.date.localeCompare(a.date));
+function round1(v) { return Math.round((v || 0) * 10) / 10; }
+function round0(v) { return Math.round(v || 0); }
 
+function toYAML(participations) {
+  const all = participations.map(p => {
+    const ms = p.metricSet;
+    const hasData = !!(ms && ms.totalDistanceM > 0);
+    return {
+      date: p.matchSession.startTime.slice(0, 10),
+      session_id: p.matchSession.id,
+      duration_mins: Math.round((new Date(p.matchSession.endTime) - new Date(p.matchSession.startTime)) / 60000),
+      has_data: hasData,
+      // Core
+      distance_m: round0(ms?.totalDistanceM),
+      max_speed_kph: round1(ms?.maxSpeedKph),
+      avg_speed_kph: round1(ms?.avgSpeedKph),
+      metres_per_min: round1(ms?.metresPerMinute),
+      // Sprints & runs
+      sprints: ms?.sprintEvents ?? 0,
+      sprint_distance_m: round0(ms?.totalSprintDistanceM),
+      high_intensity: ms?.highIntensityEvents ?? 0,
+      high_intensity_distance_m: round0(ms?.totalHighIntensityDistanceM),
+      high_speed_run_events: ms?.highSpeedRunEvents ?? 0,
+      high_speed_distance_m: round0(ms?.highSpeedRunDistanceM),
+      // Acceleration
+      accelerations: ms?.accelerationEvents ?? 0,
+      decelerations: ms?.decelerationEvents ?? 0,
+      max_acceleration: round1(ms?.maxAcceleration),
+      max_deceleration: round1(ms?.maxDeceleration),
+      // Speed zones
+      zone_sprint_distance_m: round0(ms?.clubZoneSprintDistanceM),
+      zone_sprint_duration_s: round0(ms?.clubZoneSprintDurationS),
+      zone_sprint_events: ms?.clubZoneSprintEvents ?? 0,
+      zone_hs_running_distance_m: round0(ms?.clubZoneHighSpeedRunningDistanceM),
+      zone_hs_running_duration_s: round0(ms?.clubZoneHighSpeedRunningDurationS),
+      zone_hs_running_events: ms?.clubZoneHighSpeedRunningEvents ?? 0,
+      zone_high_intensity_distance_m: round0(ms?.clubZoneHighIntensityDistanceM),
+      zone_high_intensity_duration_s: round0(ms?.clubZoneHighIntensityDurationS),
+      zone_high_intensity_events: ms?.clubZoneHighIntensityEvents ?? 0,
+      zone_medium_distance_m: round0(ms?.clubZoneMediumIntensityDistanceM),
+      zone_medium_duration_s: round0(ms?.clubZoneMediumIntensityDurationS),
+      zone_low_distance_m: round0(ms?.clubZoneLowIntensityDistanceM),
+      zone_low_duration_s: round0(ms?.clubZoneLowIntensityDurationS),
+      zone_jogging_distance_m: round0(ms?.clubZoneJoggingDistanceM),
+      zone_jogging_duration_s: round0(ms?.clubZoneJoggingDurationS),
+      // Workload
+      workload: round0(ms?.workload),
+      workload_intensity: round0(ms?.workloadIntensity),
+    };
+  }).sort((a, b) => b.date.localeCompare(a.date));
+
+  // Write as YAML
   let yaml = 'sessions:\n';
   for (const s of all) {
     yaml += `  - date: "${s.date}"\n`;
     yaml += `    match: "Bath City U18"\n`;
-    yaml += `    duration_mins: ${s.duration_mins}\n`;
-    yaml += `    has_data: ${s.has_data}\n`;
-    yaml += `    distance_m: ${s.distance_m}\n`;
-    yaml += `    max_speed_kph: ${s.max_speed_kph}\n`;
-    yaml += `    avg_speed_kph: ${s.avg_speed_kph}\n`;
-    yaml += `    sprints: ${s.sprints}\n`;
-    yaml += `    high_intensity: ${s.high_intensity}\n`;
-    yaml += `    high_speed_distance_m: ${s.high_speed_distance_m}\n`;
+    yaml += `    session_id: "${s.session_id}"\n`;
+    for (const [k, v] of Object.entries(s)) {
+      if (['date', 'session_id'].includes(k)) continue;
+      if (typeof v === 'boolean') yaml += `    ${k}: ${v}\n`;
+      else if (typeof v === 'number') yaml += `    ${k}: ${v}\n`;
+    }
   }
+
   return { yaml, count: all.filter(s => s.has_data).length, total: all.length };
 }
 

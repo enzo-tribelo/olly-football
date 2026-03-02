@@ -1,61 +1,217 @@
 sessions:
   - date: "2026-02-07"
     match: "Bath City U18"
+    session_id: "4db654a0-a370-484f-b2ce-9737be4c72fe"
     duration_mins: 105
     has_data: true
     distance_m: 6334
     max_speed_kph: 27.1
     avg_speed_kph: 4.2
+    metres_per_min: 70.4
     sprints: 8
+    sprint_distance_m: 77
     high_intensity: 31
+    high_intensity_distance_m: 225
+    high_speed_run_events: 39
     high_speed_distance_m: 302
+    accelerations: 34
+    decelerations: 38
+    max_acceleration: 4.9
+    max_deceleration: 6
+    zone_sprint_distance_m: 77
+    zone_sprint_duration_s: 10
+    zone_sprint_events: 8
+    zone_hs_running_distance_m: 302
+    zone_hs_running_duration_s: 45
+    zone_hs_running_events: 39
+    zone_high_intensity_distance_m: 225
+    zone_high_intensity_duration_s: 35
+    zone_high_intensity_events: 31
+    zone_medium_distance_m: 1250
+    zone_medium_duration_s: 258
+    zone_low_distance_m: 788
+    zone_low_duration_s: 200
+    zone_jogging_distance_m: 1082
+    zone_jogging_duration_s: 346
+    workload: 10
+    workload_intensity: 10
   - date: "2026-01-31"
     match: "Bath City U18"
+    session_id: "a0f0f78b-cd39-4610-b400-b0c5bfb3fc1d"
     duration_mins: 105
     has_data: false
     distance_m: 0
     max_speed_kph: 0
     avg_speed_kph: 0
+    metres_per_min: 0
     sprints: 0
+    sprint_distance_m: 0
     high_intensity: 0
+    high_intensity_distance_m: 0
+    high_speed_run_events: 0
     high_speed_distance_m: 0
+    accelerations: 0
+    decelerations: 0
+    max_acceleration: 0
+    max_deceleration: 0
+    zone_sprint_distance_m: 0
+    zone_sprint_duration_s: 0
+    zone_sprint_events: 0
+    zone_hs_running_distance_m: 0
+    zone_hs_running_duration_s: 0
+    zone_hs_running_events: 0
+    zone_high_intensity_distance_m: 0
+    zone_high_intensity_duration_s: 0
+    zone_high_intensity_events: 0
+    zone_medium_distance_m: 0
+    zone_medium_duration_s: 0
+    zone_low_distance_m: 0
+    zone_low_duration_s: 0
+    zone_jogging_distance_m: 0
+    zone_jogging_duration_s: 0
+    workload: 0
+    workload_intensity: 0
   - date: "2026-01-10"
     match: "Bath City U18"
+    session_id: "d41b8a7e-3ad3-4488-bc52-303c7d0bf365"
     duration_mins: 105
     has_data: true
     distance_m: 8379
     max_speed_kph: 26
     avg_speed_kph: 5.6
+    metres_per_min: 93.1
     sprints: 15
+    sprint_distance_m: 117
     high_intensity: 41
+    high_intensity_distance_m: 350
+    high_speed_run_events: 56
     high_speed_distance_m: 467
+    accelerations: 50
+    decelerations: 71
+    max_acceleration: 5.7
+    max_deceleration: 6.4
+    zone_sprint_distance_m: 117
+    zone_sprint_duration_s: 16
+    zone_sprint_events: 15
+    zone_hs_running_distance_m: 467
+    zone_hs_running_duration_s: 70
+    zone_hs_running_events: 56
+    zone_high_intensity_distance_m: 350
+    zone_high_intensity_duration_s: 54
+    zone_high_intensity_events: 41
+    zone_medium_distance_m: 994
+    zone_medium_duration_s: 202
+    zone_low_distance_m: 1058
+    zone_low_duration_s: 271
+    zone_jogging_distance_m: 1405
+    zone_jogging_duration_s: 442
+    workload: 0
+    workload_intensity: 0
   - date: "2025-12-10"
     match: "Bath City U18"
+    session_id: "ca86fd47-d4f0-4d95-adaf-20619e8d013f"
     duration_mins: 105
     has_data: true
     distance_m: 2673
     max_speed_kph: 24.5
     avg_speed_kph: 1.8
+    metres_per_min: 29.7
     sprints: 3
+    sprint_distance_m: 28
     high_intensity: 9
+    high_intensity_distance_m: 86
+    high_speed_run_events: 12
     high_speed_distance_m: 113
+    accelerations: 18
+    decelerations: 17
+    max_acceleration: 5.4
+    max_deceleration: 4.7
+    zone_sprint_distance_m: 28
+    zone_sprint_duration_s: 4
+    zone_sprint_events: 3
+    zone_hs_running_distance_m: 113
+    zone_hs_running_duration_s: 17
+    zone_hs_running_events: 12
+    zone_high_intensity_distance_m: 86
+    zone_high_intensity_duration_s: 13
+    zone_high_intensity_events: 9
+    zone_medium_distance_m: 304
+    zone_medium_duration_s: 63
+    zone_low_distance_m: 341
+    zone_low_duration_s: 88
+    zone_jogging_distance_m: 393
+    zone_jogging_duration_s: 125
+    workload: 2
+    workload_intensity: 2
   - date: "2025-12-06"
     match: "Bath City U18"
+    session_id: "3d2bf066-f2b7-4daf-a946-088d2f6a180d"
     duration_mins: 105
     has_data: true
     distance_m: 8859
     max_speed_kph: 27.8
     avg_speed_kph: 5.9
+    metres_per_min: 98.4
     sprints: 9
+    sprint_distance_m: 106
     high_intensity: 36
+    high_intensity_distance_m: 317
+    high_speed_run_events: 45
     high_speed_distance_m: 423
+    accelerations: 56
+    decelerations: 66
+    max_acceleration: 5.4
+    max_deceleration: 5.4
+    zone_sprint_distance_m: 106
+    zone_sprint_duration_s: 14
+    zone_sprint_events: 9
+    zone_hs_running_distance_m: 423
+    zone_hs_running_duration_s: 63
+    zone_hs_running_events: 45
+    zone_high_intensity_distance_m: 317
+    zone_high_intensity_duration_s: 49
+    zone_high_intensity_events: 36
+    zone_medium_distance_m: 1112
+    zone_medium_duration_s: 227
+    zone_low_distance_m: 822
+    zone_low_duration_s: 205
+    zone_jogging_distance_m: 1804
+    zone_jogging_duration_s: 594
+    workload: 0
+    workload_intensity: 0
   - date: "2025-11-15"
     match: "Bath City U18"
+    session_id: "979447ef-c4ec-4654-9a65-3dcc821d7690"
     duration_mins: 105
     has_data: false
     distance_m: 0
     max_speed_kph: 0
     avg_speed_kph: 0
+    metres_per_min: 0
     sprints: 0
+    sprint_distance_m: 0
     high_intensity: 0
+    high_intensity_distance_m: 0
+    high_speed_run_events: 0
     high_speed_distance_m: 0
+    accelerations: 0
+    decelerations: 0
+    max_acceleration: 0
+    max_deceleration: 0
+    zone_sprint_distance_m: 0
+    zone_sprint_duration_s: 0
+    zone_sprint_events: 0
+    zone_hs_running_distance_m: 0
+    zone_hs_running_duration_s: 0
+    zone_hs_running_events: 0
+    zone_high_intensity_distance_m: 0
+    zone_high_intensity_duration_s: 0
+    zone_high_intensity_events: 0
+    zone_medium_distance_m: 0
+    zone_medium_duration_s: 0
+    zone_low_distance_m: 0
+    zone_low_duration_s: 0
+    zone_jogging_distance_m: 0
+    zone_jogging_duration_s: 0
+    workload: 0
+    workload_intensity: 0
