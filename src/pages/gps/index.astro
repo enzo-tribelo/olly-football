@@ -21,7 +21,9 @@ const avgPlayingMPM = fullMatchSessions.reduce((sum, s) => {
 
 const sessionsWithEst = allSessions.map(s => {
   const est = s.has_data ? Math.min(90, Math.round(s.distance_m / avgPlayingMPM)) : 0;
-  return { ...s, est_mins: est };
+  const mins = s.actual_mins ?? est;
+  const isEstimate = !s.actual_mins;
+  return { ...s, playing_mins: mins, is_estimate: isEstimate };
 });
 
 const stats = {
@@ -106,8 +108,8 @@ const stats = {
                   <span>{new Date(s.date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}</span>
                   <span>·</span>
                   {s.has_data ? (
-                    <span class={s.est_mins < 75 ? 'text-gold font-medium' : ''}>
-                      ~{s.est_mins} mins played
+                    <span class={s.playing_mins < 75 ? 'text-gold font-medium' : ''}>
+                      {s.is_estimate ? '~' : ''}{s.playing_mins} mins played
                     </span>
                   ) : (
                     <span class="text-fire/80 font-medium">No GPS data</span>

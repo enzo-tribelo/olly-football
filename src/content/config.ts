@@ -90,6 +90,7 @@ const gpsCollection = defineCollection({
         session_id: z.string(),
         duration_mins: z.number(),
         has_data: z.boolean(),
+        actual_mins: z.number().optional(),
         // Core
         distance_m: z.number(),
         max_speed_kph: z.number(),

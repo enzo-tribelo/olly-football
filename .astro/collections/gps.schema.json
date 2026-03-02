@@ -24,6 +24,9 @@
               "has_data": {
                 "type": "boolean"
               },
+              "actual_mins": {
+                "type": "number"
+              },
               "distance_m": {
                 "type": "number"
               },

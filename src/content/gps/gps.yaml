@@ -2,6 +2,7 @@ sessions:
   - date: "2026-02-07"
     match: "Bath City U18"
     session_id: "4db654a0-a370-484f-b2ce-9737be4c72fe"
+    actual_mins: 70
     duration_mins: 105
     has_data: true
     distance_m: 6334
@@ -74,6 +75,7 @@ sessions:
   - date: "2026-01-10"
     match: "Bath City U18"
     session_id: "d41b8a7e-3ad3-4488-bc52-303c7d0bf365"
+    actual_mins: 70
     duration_mins: 105
     has_data: true
     distance_m: 8379
@@ -146,6 +148,7 @@ sessions:
   - date: "2025-12-06"
     match: "Bath City U18"
     session_id: "3d2bf066-f2b7-4daf-a946-088d2f6a180d"
+    actual_mins: 90
     duration_mins: 105
     has_data: true
     distance_m: 8859

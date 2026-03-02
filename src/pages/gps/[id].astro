@@ -19,6 +19,8 @@ const avgPlayingMPM = fullMatchSessions.reduce((sum, x) => {
   return sum + x.metres_per_min * (x.duration_mins / (x.duration_mins - 15));
 }, 0) / fullMatchSessions.length;
 const estMins = Math.min(90, Math.round(s.distance_m / avgPlayingMPM));
+const playingMins = s.actual_mins ?? estMins;
+const isEstimate = !s.actual_mins;
 
 const dateStr = new Date(s.date).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
@@ -63,7 +65,7 @@ export async function getStaticPaths() {
           <span class="text-cream">{s.match}</span>
         </h1>
         <p class="text-cream-muted text-sm">
-          {dateStr} · Est. <span class={`font-medium ${estMins < 75 ? 'text-gold' : 'text-cream'}`}>~{estMins} mins played</span>
+          {dateStr} · <span class={`font-medium ${playingMins < 75 ? 'text-gold' : 'text-cream'}`}>{isEstimate ? '~' : ''}{playingMins} mins played</span>
         </p>
       </div>
 

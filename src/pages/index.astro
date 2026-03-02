@@ -29,10 +29,10 @@ const fullMatchSessions = gpsSessions.filter(s => s.distance_m > maxDist * 0.5);
 const avgPlayingMPM = fullMatchSessions.reduce((sum, s) => {
   return sum + s.metres_per_min * (s.duration_mins / (s.duration_mins - 15));
 }, 0) / fullMatchSessions.length;
-const gpsSessionsWithEst = gpsSessions.map(s => ({
-  ...s,
-  est_mins: Math.min(90, Math.round(s.distance_m / avgPlayingMPM)),
-}));
+const gpsSessionsWithEst = gpsSessions.map(s => {
+  const est = Math.min(90, Math.round(s.distance_m / avgPlayingMPM));
+  return { ...s, playing_mins: s.actual_mins ?? est, is_estimate: !s.actual_mins };
+});
 const gpsStats = {
   matches: gpsSessions.length,
   avgDistance: Math.round(gpsSessions.reduce((sum, s) => sum + s.distance_m, 0) / gpsSessions.length),
@@ -272,7 +272,7 @@ const seasonsWithXG = seasons.map(season => ({
               <div class="font-['Oswald'] text-sm uppercase tracking-wide text-cream group-hover:text-gold transition-colors">{s.match}</div>
               <div class="text-xs text-cream-muted">
                 {new Date(s.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
-                <span class={s.est_mins < 75 ? 'text-gold' : ''}>· ~{s.est_mins} mins</span>
+                <span class={s.playing_mins < 75 ? 'text-gold' : ''}>· {s.is_estimate ? '~' : ''}{s.playing_mins} mins</span>
               </div>
             </div>
             <div class="flex items-center gap-6 sm:gap-8">

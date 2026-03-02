@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Fetch GPS data from PlayerData API and write to src/content/gps/gps.yaml
 
-import { writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync } from 'fs';
 
 const { PLAYERDATA_EMAIL, PLAYERDATA_PASSWORD } = process.env;
 
@@ -76,7 +76,23 @@ async function fetchGPS(cookies) {
 function round1(v) { return Math.round((v || 0) * 10) / 10; }
 function round0(v) { return Math.round(v || 0); }
 
-function toYAML(participations) {
+// Read existing actual_mins values to preserve manual overrides
+function getExistingActualMins() {
+  const path = 'src/content/gps/gps.yaml';
+  if (!existsSync(path)) return {};
+  const content = readFileSync(path, 'utf8');
+  const map = {};
+  let currentId = null;
+  for (const line of content.split('\n')) {
+    const idMatch = line.match(/session_id:\s*"([^"]+)"/);
+    if (idMatch) currentId = idMatch[1];
+    const minsMatch = line.match(/actual_mins:\s*(\d+)/);
+    if (minsMatch && currentId) map[currentId] = parseInt(minsMatch[1]);
+  }
+  return map;
+}
+
+function toYAML(participations, existingMins) {
   const all = participations.map(p => {
     const ms = p.metricSet;
     const hasData = !!(ms && ms.totalDistanceM > 0);
@@ -130,6 +146,8 @@ function toYAML(participations) {
     yaml += `  - date: "${s.date}"\n`;
     yaml += `    match: "Bath City U18"\n`;
     yaml += `    session_id: "${s.session_id}"\n`;
+    const actualMins = existingMins[s.session_id];
+    if (actualMins) yaml += `    actual_mins: ${actualMins}\n`;
     for (const [k, v] of Object.entries(s)) {
       if (['date', 'session_id'].includes(k)) continue;
       if (typeof v === 'boolean') yaml += `    ${k}: ${v}\n`;
@@ -145,7 +163,8 @@ try {
   const cookies = await login();
   console.log('✅ Logged in, fetching GPS data...');
   const participations = await fetchGPS(cookies);
-  const { yaml, count, total } = toYAML(participations);
+  const existingMins = getExistingActualMins();
+  const { yaml, count, total } = toYAML(participations, existingMins);
   writeFileSync('src/content/gps/gps.yaml', yaml);
   console.log(`✅ Wrote ${count}/${total} GPS sessions to gps.yaml`);
 } catch (err) {
