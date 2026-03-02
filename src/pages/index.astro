@@ -23,7 +23,7 @@ const attributesEntry = await getEntry('attributes', 'attributes');
 const attributes = attributesEntry.data.attributes;
 
 const gpsEntry = await getEntry('gps', 'gps');
-const gpsSessions = gpsEntry.data.sessions.filter(s => s.distance_m > 0);
+const gpsSessions = gpsEntry.data.sessions.filter(s => s.has_data);
 const gpsStats = {
   matches: gpsSessions.length,
   avgDistance: Math.round(gpsSessions.reduce((sum, s) => sum + s.distance_m, 0) / gpsSessions.length),
@@ -104,6 +104,7 @@ const seasonsWithXG = seasons.map(season => ({
           <a href="#seasons" class="text-xs text-cream-muted hover:text-gold transition-colors font-medium uppercase tracking-widest">Seasons</a>
           <a href="#honours" class="text-xs text-cream-muted hover:text-gold transition-colors font-medium uppercase tracking-widest">Honours</a>
           <a href="#gallery" class="text-xs text-cream-muted hover:text-gold transition-colors font-medium uppercase tracking-widest">Gallery</a>
+          <a href={`${BASE}gps/`} class="text-xs text-cream-muted hover:text-gold transition-colors font-medium uppercase tracking-widest">GPS</a>
           <a href={`${BASE}footage/`} class="text-xs text-pitch bg-gold hover:bg-gold-dim px-4 py-1.5 rounded-sm transition-colors font-semibold uppercase tracking-widest">Footage</a>
         </div>
       </div>
@@ -121,6 +122,7 @@ const seasonsWithXG = seasons.map(season => ({
       <a href="#seasons" class="mobile-nav-link px-5 py-2.5 bg-surface-elevated/95 backdrop-blur border border-pitch-line rounded-full text-xs font-['Oswald'] uppercase tracking-widest text-cream hover:text-gold hover:border-gold/30 transition-all">Seasons</a>
       <a href="#honours" class="mobile-nav-link px-5 py-2.5 bg-surface-elevated/95 backdrop-blur border border-pitch-line rounded-full text-xs font-['Oswald'] uppercase tracking-widest text-cream hover:text-gold hover:border-gold/30 transition-all">Honours</a>
       <a href="#gallery" class="mobile-nav-link px-5 py-2.5 bg-surface-elevated/95 backdrop-blur border border-pitch-line rounded-full text-xs font-['Oswald'] uppercase tracking-widest text-cream hover:text-gold hover:border-gold/30 transition-all">Gallery</a>
+      <a href={`${BASE}gps/`} class="mobile-nav-link px-5 py-2.5 bg-surface-elevated/95 backdrop-blur border border-pitch-line rounded-full text-xs font-['Oswald'] uppercase tracking-widest text-cream hover:text-gold hover:border-gold/30 transition-all">GPS</a>
       <a href={`${BASE}footage/`} class="mobile-nav-link px-5 py-2.5 bg-gold text-pitch rounded-full text-xs font-['Oswald'] uppercase tracking-widest font-semibold hover:bg-gold-dim transition-all">Footage</a>
     </div>
 
@@ -277,6 +279,13 @@ const seasonsWithXG = seasons.map(season => ({
             </div>
           </div>
         ))}
+      </div>
+
+      <!-- Link to full GPS page -->
+      <div class="mt-8 text-center">
+        <a href={`${BASE}gps/`} class="inline-flex items-center gap-2 font-['Oswald'] text-sm uppercase tracking-[0.2em] text-gold hover:text-cream border border-gold/30 hover:border-gold px-6 py-3 rounded-sm transition-colors">
+          View Full GPS Data →
+        </a>
       </div>
     </div>
   </section>

@@ -59,8 +59,10 @@ async function fetchGPS(cookies) {
         metricSet {
           totalDistanceM
           maxSpeedKph
+          avgSpeedKph
           sprintEvents
           highIntensityEvents
+          highSpeedRunDistanceM
         }
       }
     }
@@ -81,27 +83,34 @@ async function fetchGPS(cookies) {
 }
 
 function toYAML(sessions) {
-  const valid = sessions
-    .filter(p => p.metricSet && p.metricSet.totalDistanceM > 0)
+  const all = sessions
     .map(p => ({
       date: p.matchSession.startTime.slice(0, 10),
-      distance_m: Math.round(p.metricSet.totalDistanceM),
-      max_speed_kph: Math.round(p.metricSet.maxSpeedKph * 10) / 10,
-      sprints: p.metricSet.sprintEvents,
-      high_intensity: p.metricSet.highIntensityEvents,
+      duration_mins: Math.round((new Date(p.matchSession.endTime) - new Date(p.matchSession.startTime)) / 60000),
+      has_data: !!(p.metricSet && p.metricSet.totalDistanceM > 0),
+      distance_m: p.metricSet ? Math.round(p.metricSet.totalDistanceM) : 0,
+      max_speed_kph: p.metricSet ? Math.round(p.metricSet.maxSpeedKph * 10) / 10 : 0,
+      avg_speed_kph: p.metricSet ? Math.round(p.metricSet.avgSpeedKph * 10) / 10 : 0,
+      sprints: p.metricSet?.sprintEvents ?? 0,
+      high_intensity: p.metricSet?.highIntensityEvents ?? 0,
+      high_speed_distance_m: p.metricSet ? Math.round(p.metricSet.highSpeedRunDistanceM) : 0,
     }))
     .sort((a, b) => b.date.localeCompare(a.date));
 
   let yaml = 'sessions:\n';
-  for (const s of valid) {
+  for (const s of all) {
     yaml += `  - date: "${s.date}"\n`;
     yaml += `    match: "Bath City U18"\n`;
+    yaml += `    duration_mins: ${s.duration_mins}\n`;
+    yaml += `    has_data: ${s.has_data}\n`;
     yaml += `    distance_m: ${s.distance_m}\n`;
     yaml += `    max_speed_kph: ${s.max_speed_kph}\n`;
+    yaml += `    avg_speed_kph: ${s.avg_speed_kph}\n`;
     yaml += `    sprints: ${s.sprints}\n`;
     yaml += `    high_intensity: ${s.high_intensity}\n`;
+    yaml += `    high_speed_distance_m: ${s.high_speed_distance_m}\n`;
   }
-  return { yaml, count: valid.length };
+  return { yaml, count: all.filter(s => s.has_data).length, total: all.length };
 }
 
 try {
@@ -109,9 +118,9 @@ try {
   const cookies = await login();
   console.log('✅ Logged in, fetching GPS data...');
   const participations = await fetchGPS(cookies);
-  const { yaml, count } = toYAML(participations);
+  const { yaml, count, total } = toYAML(participations);
   writeFileSync('src/content/gps/gps.yaml', yaml);
-  console.log(`✅ Wrote ${count} GPS sessions to gps.yaml`);
+  console.log(`✅ Wrote ${count}/${total} GPS sessions to gps.yaml`);
 } catch (err) {
   console.error(`❌ ${err.message}`);
   console.log('⚠️ Keeping existing gps.yaml');

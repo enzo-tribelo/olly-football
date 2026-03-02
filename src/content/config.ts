@@ -87,10 +87,14 @@ const gpsCollection = defineCollection({
       z.object({
         date: z.string(),
         match: z.string(),
+        duration_mins: z.number(),
+        has_data: z.boolean(),
         distance_m: z.number(),
         max_speed_kph: z.number(),
+        avg_speed_kph: z.number(),
         sprints: z.number(),
         high_intensity: z.number(),
+        high_speed_distance_m: z.number(),
       })
     ),
   }),

@@ -1,25 +1,61 @@
 sessions:
   - date: "2026-02-07"
     match: "Bath City U18"
+    duration_mins: 105
+    has_data: true
     distance_m: 6334
     max_speed_kph: 27.1
+    avg_speed_kph: 4.2
     sprints: 8
     high_intensity: 31
+    high_speed_distance_m: 302
+  - date: "2026-01-31"
+    match: "Bath City U18"
+    duration_mins: 105
+    has_data: false
+    distance_m: 0
+    max_speed_kph: 0
+    avg_speed_kph: 0
+    sprints: 0
+    high_intensity: 0
+    high_speed_distance_m: 0
   - date: "2026-01-10"
     match: "Bath City U18"
+    duration_mins: 105
+    has_data: true
     distance_m: 8379
     max_speed_kph: 26
+    avg_speed_kph: 5.6
     sprints: 15
     high_intensity: 41
+    high_speed_distance_m: 467
   - date: "2025-12-10"
     match: "Bath City U18"
+    duration_mins: 105
+    has_data: true
     distance_m: 2673
     max_speed_kph: 24.5
+    avg_speed_kph: 1.8
     sprints: 3
     high_intensity: 9
+    high_speed_distance_m: 113
   - date: "2025-12-06"
     match: "Bath City U18"
+    duration_mins: 105
+    has_data: true
     distance_m: 8859
     max_speed_kph: 27.8
+    avg_speed_kph: 5.9
     sprints: 9
     high_intensity: 36
+    high_speed_distance_m: 423
+  - date: "2025-11-15"
+    match: "Bath City U18"
+    duration_mins: 105
+    has_data: false
+    distance_m: 0
+    max_speed_kph: 0
+    avg_speed_kph: 0
+    sprints: 0
+    high_intensity: 0
+    high_speed_distance_m: 0

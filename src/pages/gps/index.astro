@@ -1,0 +1,139 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getEntry } from 'astro:content';
+
+const BASE = import.meta.env.BASE_URL;
+
+const gpsEntry = await getEntry('gps', 'gps');
+const allSessions = gpsEntry.data.sessions;
+const validSessions = allSessions.filter(s => s.has_data);
+
+const stats = {
+  tracked: allSessions.length,
+  withData: validSessions.length,
+  topSpeed: Math.max(...validSessions.map(s => s.max_speed_kph)),
+  avgDistance: Math.round(validSessions.reduce((sum, s) => sum + s.distance_m, 0) / validSessions.length),
+  avgSprints: Math.round(validSessions.reduce((sum, s) => sum + s.sprints, 0) / validSessions.length),
+  avgHighIntensity: Math.round(validSessions.reduce((sum, s) => sum + s.high_intensity, 0) / validSessions.length),
+  totalDistance: Math.round(validSessions.reduce((sum, s) => sum + s.distance_m, 0)),
+  avgHighSpeedDist: Math.round(validSessions.reduce((sum, s) => sum + s.high_speed_distance_m, 0) / validSessions.length),
+  avgSpeed: Math.round(validSessions.reduce((sum, s) => sum + s.avg_speed_kph, 0) / validSessions.length * 10) / 10,
+};
+---
+
+<Layout title="GPS Performance — Olly Robinson" description="GPS tracking data for Olly Robinson — distance, speed, sprints and high-intensity performance from PlayerData.">
+
+  <nav aria-label="GPS navigation" class="fixed top-0 left-0 right-0 z-50 bg-pitch/80 backdrop-blur-md border-b border-pitch-line/50">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 h-14 flex items-center justify-between">
+      <a href={BASE} class="font-['Oswald'] text-sm uppercase tracking-[0.3em] text-gold hover:text-cream transition-colors">← Back to Profile</a>
+      <span class="font-['Oswald'] text-sm uppercase tracking-[0.3em] text-cream-muted">GPS Performance</span>
+    </div>
+  </nav>
+
+  <main id="main" class="min-h-screen pitch-pattern pt-24 pb-20">
+    <div class="max-w-5xl mx-auto px-6 sm:px-10">
+
+      <!-- Header -->
+      <div class="mb-12">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="h-px w-12 bg-gold"></div>
+          <span class="font-['Oswald'] text-xs uppercase tracking-[0.3em] text-gold">PlayerData GPS Tracking</span>
+        </div>
+        <h1 class="font-['Oswald'] text-5xl sm:text-6xl lg:text-7xl font-bold uppercase leading-[0.85] tracking-tight mb-4">
+          <span class="text-cream">GPS</span> <span class="text-gold">Data</span>
+        </h1>
+        <p class="text-cream-muted text-sm max-w-lg">
+          Physical performance data tracked via PlayerData GPS vests during Bath City U18 matches · 2025-26 season · {stats.tracked} sessions tracked, {stats.withData} with data.
+        </p>
+      </div>
+
+      <!-- Headline stats grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-14">
+        <div class="bg-surface-elevated/60 border border-gold/20 rounded-sm p-5 text-center">
+          <div class="font-['Oswald'] text-3xl font-bold text-gold">{stats.topSpeed}</div>
+          <div class="text-xs text-cream-muted uppercase tracking-widest mt-1">Top Speed<br/>km/h</div>
+        </div>
+        <div class="bg-surface-elevated/60 border border-pitch-line rounded-sm p-5 text-center">
+          <div class="font-['Oswald'] text-3xl font-bold text-cream">{(stats.avgDistance / 1000).toFixed(1)}</div>
+          <div class="text-xs text-cream-muted uppercase tracking-widest mt-1">Avg Distance<br/>km</div>
+        </div>
+        <div class="bg-surface-elevated/60 border border-pitch-line rounded-sm p-5 text-center">
+          <div class="font-['Oswald'] text-3xl font-bold text-cream">{stats.avgSprints}</div>
+          <div class="text-xs text-cream-muted uppercase tracking-widest mt-1">Avg Sprints<br/>per match</div>
+        </div>
+        <div class="bg-surface-elevated/60 border border-pitch-line rounded-sm p-5 text-center">
+          <div class="font-['Oswald'] text-3xl font-bold text-fire">{stats.avgHighIntensity}</div>
+          <div class="text-xs text-cream-muted uppercase tracking-widest mt-1">Avg High<br/>Intensity</div>
+        </div>
+        <div class="bg-surface-elevated/60 border border-pitch-line rounded-sm p-5 text-center">
+          <div class="font-['Oswald'] text-3xl font-bold text-cream">{stats.avgHighSpeedDist}</div>
+          <div class="text-xs text-cream-muted uppercase tracking-widest mt-1">Avg HS Run<br/>metres</div>
+        </div>
+        <div class="bg-surface-elevated/60 border border-pitch-line rounded-sm p-5 text-center">
+          <div class="font-['Oswald'] text-3xl font-bold text-cream">{(stats.totalDistance / 1000).toFixed(1)}</div>
+          <div class="text-xs text-cream-muted uppercase tracking-widest mt-1">Total Distance<br/>km</div>
+        </div>
+      </div>
+
+      <!-- Session-by-session -->
+      <div class="mb-6">
+        <h2 class="font-['Oswald'] text-2xl font-bold uppercase tracking-wide mb-6">Match Sessions</h2>
+      </div>
+
+      <div class="space-y-4">
+        {allSessions.map(s => (
+          <div class={`border rounded-sm p-5 transition-colors ${s.has_data ? 'bg-surface-elevated/40 border-pitch-line hover:border-gold/20' : 'bg-surface-elevated/20 border-pitch-line/50 opacity-50'}`}>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <div class="font-['Oswald'] text-base uppercase tracking-wide text-cream">{s.match}</div>
+                <div class="text-xs text-cream-muted flex items-center gap-3">
+                  <span>{new Date(s.date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                  <span>·</span>
+                  <span>{s.duration_mins} mins</span>
+                  {!s.has_data && <span class="text-fire/80 font-medium">· No GPS data</span>}
+                </div>
+              </div>
+              {s.has_data && (
+                <div class="grid grid-cols-3 sm:grid-cols-5 gap-4 sm:gap-6 text-center">
+                  <div>
+                    <div class="font-['Oswald'] text-xl font-bold text-cream">{(s.distance_m / 1000).toFixed(1)}<span class="text-sm text-cream-muted">km</span></div>
+                    <div class="text-xs text-cream-muted">Distance</div>
+                  </div>
+                  <div>
+                    <div class="font-['Oswald'] text-xl font-bold text-gold">{s.max_speed_kph}<span class="text-sm text-cream-muted">km/h</span></div>
+                    <div class="text-xs text-cream-muted">Top Speed</div>
+                  </div>
+                  <div>
+                    <div class="font-['Oswald'] text-xl font-bold text-cream">{s.avg_speed_kph}<span class="text-sm text-cream-muted">km/h</span></div>
+                    <div class="text-xs text-cream-muted">Avg Speed</div>
+                  </div>
+                  <div>
+                    <div class="font-['Oswald'] text-xl font-bold text-cream">{s.sprints}</div>
+                    <div class="text-xs text-cream-muted">Sprints</div>
+                  </div>
+                  <div>
+                    <div class="font-['Oswald'] text-xl font-bold text-fire">{s.high_intensity}</div>
+                    <div class="text-xs text-cream-muted">High Intensity</div>
+                  </div>
+                </div>
+              )}
+            </div>
+            {s.has_data && (
+              <div class="mt-4 pt-3 border-t border-pitch-line/50 flex gap-6 text-xs text-cream-muted">
+                <span>High-speed running: <span class="text-cream font-medium">{s.high_speed_distance_m}m</span></span>
+                <span>Avg speed: <span class="text-cream font-medium">{s.avg_speed_kph} km/h</span></span>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <!-- Data source -->
+      <div class="mt-12 text-center text-xs text-cream-muted/60">
+        Data tracked via <a href="https://playerdata.com" target="_blank" rel="noopener" class="text-gold/60 hover:text-gold underline">PlayerData</a> GPS · Updated weekly
+      </div>
+
+    </div>
+  </main>
+
+</Layout>

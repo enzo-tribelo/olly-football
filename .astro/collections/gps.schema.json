@@ -15,10 +15,19 @@
               "match": {
                 "type": "string"
               },
+              "duration_mins": {
+                "type": "number"
+              },
+              "has_data": {
+                "type": "boolean"
+              },
               "distance_m": {
                 "type": "number"
               },
               "max_speed_kph": {
+                "type": "number"
+              },
+              "avg_speed_kph": {
                 "type": "number"
               },
               "sprints": {
@@ -26,15 +35,22 @@
               },
               "high_intensity": {
                 "type": "number"
+              },
+              "high_speed_distance_m": {
+                "type": "number"
               }
             },
             "required": [
               "date",
               "match",
+              "duration_mins",
+              "has_data",
               "distance_m",
               "max_speed_kph",
+              "avg_speed_kph",
               "sprints",
-              "high_intensity"
+              "high_intensity",
+              "high_speed_distance_m"
             ],
             "additionalProperties": false
           }
