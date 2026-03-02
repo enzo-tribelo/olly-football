@@ -15,6 +15,7 @@ const profileCollection = defineCollection({
     socials: z.object({
       instagram: z.string(),
       x: z.string(),
+      youtube: z.string().optional(),
     }),
   }),
 });

@@ -42,6 +42,9 @@
             },
             "x": {
               "type": "string"
+            },
+            "youtube": {
+              "type": "string"
             }
           },
           "required": [
