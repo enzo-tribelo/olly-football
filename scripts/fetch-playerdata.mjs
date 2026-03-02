@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Fetch GPS data from PlayerData API and write to src/content/gps/gps.yaml
 
-import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, statSync } from 'fs';
 
 const { PLAYERDATA_EMAIL, PLAYERDATA_PASSWORD } = process.env;
 
@@ -158,6 +158,64 @@ function toYAML(participations, existingMins) {
   return { yaml, count: all.filter(s => s.has_data).length, total: all.length };
 }
 
+async function fetchHeatmaps(cookies) {
+  const dir = 'public/gps/heatmaps';
+  mkdirSync(dir, { recursive: true });
+
+  // Download pitch background if missing
+  if (!existsSync(`${dir}/pitch.png`)) {
+    const pitchRes = await fetch(`${BASE}/api/assets/pitches/association_football_pitch-09b304bcba2fb55b78d668a325443484769ad9dabda105ff51e5c2169b251955.png`, { headers: { Cookie: cookies } });
+    if (pitchRes.ok) {
+      writeFileSync(`${dir}/pitch.png`, Buffer.from(await pitchRes.arrayBuffer()));
+      console.log('📥 Downloaded pitch background');
+    }
+  }
+
+  // Query period heatmaps
+  const query = `{
+    currentPerson {
+      matchSessionParticipations(limit: 50) {
+        matchSession { startTime }
+        periodMetricSets {
+          heatmap
+          matchSessionPeriod { name }
+        }
+      }
+    }
+  }`;
+
+  const res = await fetch(`${BASE}/api/graphql`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Cookie: cookies },
+    body: JSON.stringify({ query }),
+  });
+  const data = await res.json();
+  if (data.errors) { console.log('⚠️ Heatmap query errors:', JSON.stringify(data.errors)); return; }
+
+  const parts = data.data.currentPerson.matchSessionParticipations;
+  let downloaded = 0;
+
+  for (const p of parts) {
+    const date = p.matchSession.startTime.slice(0, 10);
+    for (const pm of (p.periodMetricSets || [])) {
+      if (!pm.heatmap) continue;
+      const period = pm.matchSessionPeriod.name.toLowerCase().replace(/\s+/g, '-');
+      const filename = `${date}-${period}.png`;
+      const filepath = `${dir}/${filename}`;
+
+      // Skip if already downloaded and > 2KB (valid)
+      if (existsSync(filepath) && statSync(filepath).size > 2000) continue;
+
+      const imgRes = await fetch(pm.heatmap, { headers: { Cookie: cookies }, redirect: 'follow' });
+      if (!imgRes.ok) continue;
+      const buf = Buffer.from(await imgRes.arrayBuffer());
+      writeFileSync(filepath, buf);
+      downloaded++;
+    }
+  }
+  console.log(`📥 Downloaded ${downloaded} new heatmap(s)`);
+}
+
 try {
   console.log('🔑 Logging in to PlayerData...');
   const cookies = await login();
@@ -167,6 +225,9 @@ try {
   const { yaml, count, total } = toYAML(participations, existingMins);
   writeFileSync('src/content/gps/gps.yaml', yaml);
   console.log(`✅ Wrote ${count}/${total} GPS sessions to gps.yaml`);
+
+  console.log('🗺️ Fetching heatmaps...');
+  await fetchHeatmaps(cookies);
 } catch (err) {
   console.error(`❌ ${err.message}`);
   console.log('⚠️ Keeping existing gps.yaml');

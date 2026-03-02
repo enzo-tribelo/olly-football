@@ -1,6 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getEntry } from 'astro:content';
+import { existsSync } from 'fs';
 
 const BASE = import.meta.env.BASE_URL;
 const SITE = 'https://or9.uk';
@@ -45,6 +46,15 @@ const validDates = validSessions.map(x => x.date);
 const currentIdx = validDates.indexOf(s.date);
 const prevDate = currentIdx < validDates.length - 1 ? validDates[currentIdx + 1] : null;
 const nextDate = currentIdx > 0 ? validDates[currentIdx - 1] : null;
+
+// Heatmap images
+const heatmapDir = 'public/gps/heatmaps';
+const hasFirstHalf = existsSync(`${heatmapDir}/${s.date}-first-half.png`);
+const hasSecondHalf = existsSync(`${heatmapDir}/${s.date}-second-half.png`);
+const hasHeatmaps = hasFirstHalf || hasSecondHalf;
+// Skip tiny placeholder files (< 2KB = no data)
+const firstHalfValid = hasFirstHalf && (await import('fs')).statSync(`${heatmapDir}/${s.date}-first-half.png`).size > 2000;
+const secondHalfValid = hasSecondHalf && (await import('fs')).statSync(`${heatmapDir}/${s.date}-second-half.png`).size > 2000;
 
 export async function getStaticPaths() {
   const gpsEntry = await getEntry('gps', 'gps');
@@ -168,6 +178,33 @@ export async function getStaticPaths() {
           </div>
         </div>
       </section>
+
+      <!-- Heatmaps -->
+      {(firstHalfValid || secondHalfValid) && (
+        <section aria-label="Position heat maps">
+          <h2 class="font-['Oswald'] text-2xl font-bold uppercase tracking-wide mb-6">Position Heat Map</h2>
+          <div class={`grid ${firstHalfValid && secondHalfValid ? 'grid-cols-2' : 'grid-cols-1 max-w-xs mx-auto'} gap-4 mb-12`}>
+            {firstHalfValid && (
+              <div class="text-center">
+                <div class="relative rounded-sm overflow-hidden">
+                  <img src="/gps/heatmaps/pitch.png" alt="" class="w-full" />
+                  <img src={`/gps/heatmaps/${s.date}-first-half.png`} alt={`First half heat map for ${s.match}`} class="absolute inset-0 w-full h-full" />
+                </div>
+                <p class="text-xs text-cream-muted uppercase tracking-widest mt-2">1st Half</p>
+              </div>
+            )}
+            {secondHalfValid && (
+              <div class="text-center">
+                <div class="relative rounded-sm overflow-hidden">
+                  <img src="/gps/heatmaps/pitch.png" alt="" class="w-full" />
+                  <img src={`/gps/heatmaps/${s.date}-second-half.png`} alt={`Second half heat map for ${s.match}`} class="absolute inset-0 w-full h-full" />
+                </div>
+                <p class="text-xs text-cream-muted uppercase tracking-widest mt-2">2nd Half</p>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       <!-- Speed Zones -->
       <section aria-label="Speed zones breakdown">
