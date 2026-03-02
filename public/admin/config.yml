@@ -94,6 +94,24 @@ collections:
               - { label: "Title/Award", name: "title", widget: "string" }
               - { label: "Organisation", name: "org", widget: "string" }
 
+  # Footage
+  - name: "footage"
+    label: "Footage & Clips"
+    files:
+      - label: "All Videos"
+        name: "footage"
+        file: "src/content/footage/footage.yaml"
+        fields:
+          - label: "Videos"
+            name: "footage"
+            widget: "list"
+            fields:
+              - { label: "YouTube Video ID", name: "id", widget: "string", hint: "The part after v= in the YouTube URL" }
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Description", name: "description", widget: "string" }
+              - { label: "Type", name: "type", widget: "select", options: ["match", "highlight", "training"] }
+              - { label: "Date", name: "date", widget: "string", hint: "YYYY-MM-DD (for sort order)" }
+
   # Attributes
   - name: "attributes"
     label: "Technical Skills"

@@ -132,6 +132,19 @@ const gpsCollection = defineCollection({
   }),
 });
 
+const footageCollection = defineCollection({
+  type: 'data',
+  schema: z.array(
+    z.object({
+      id: z.string(),
+      title: z.string(),
+      description: z.string(),
+      type: z.enum(['match', 'highlight', 'training']),
+      date: z.string(),
+    })
+  ),
+});
+
 export const collections = {
   profile: profileCollection,
   seasons: seasonsCollection,
@@ -139,4 +152,5 @@ export const collections = {
   honours: honoursCollection,
   attributes: attributesCollection,
   gps: gpsCollection,
+  footage: footageCollection,
 };

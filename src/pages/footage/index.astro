@@ -1,16 +1,11 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { getEntry } from 'astro:content';
 
 const BASE = import.meta.env.BASE_URL;
 
-const videos = [
-  { id: '6YTtkB6Qh_g', title: 'Melksham Town vs Chippenham Town — Clip', description: 'Melksham Town Reserves · 2025-26', type: 'match' },
-  { id: 'TMCEEEKN_fk', title: 'Calne U16 vs Swindon Supermarine — Goal', description: 'September 2024', type: 'match' },
-  { id: '6XvCLzA53YM', title: 'Dutch International Tournament — Clips (1)', description: 'Summer 2024', type: 'highlight' },
-  { id: 'C_TTKECG0Cc', title: 'Dutch International Tournament — Clips (2)', description: 'Summer 2024', type: 'highlight' },
-  { id: 'KkvmGcuv8nE', title: 'AFC Corsham U15 vs Bradford — Cup Final Goals', description: 'Cup Final 2023-24', type: 'match' },
-  { id: 'LhVojvKhg2U', title: 'JPL Goal of the Month — FC Wilts U15', description: 'October 2023', type: 'highlight' },
-];
+const footageEntry = await getEntry('footage', 'footage');
+const videos = footageEntry.data;
 
 const typeColors: Record<string, string> = {
   highlight: 'bg-gold/10 text-gold border-gold/20',
