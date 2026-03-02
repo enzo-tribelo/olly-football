@@ -247,10 +247,10 @@ async function fetchHeatmaps(cookies) {
       const p1 = points[i];
       const p2 = points[i + 1];
       const p3 = points[Math.min(points.length - 1, i + 2)];
-      const cp1x = p1[0] + (p2[0] - p0[0]) / 6;
-      const cp1y = p1[1] + (p2[1] - p0[1]) / 6;
-      const cp2x = p2[0] - (p3[0] - p1[0]) / 6;
-      const cp2y = p2[1] - (p3[1] - p1[1]) / 6;
+      const cp1x = p1[0] + (p2[0] - p0[0]) / 4;
+      const cp1y = p1[1] + (p2[1] - p0[1]) / 4;
+      const cp2x = p2[0] - (p3[0] - p1[0]) / 4;
+      const cp2y = p2[1] - (p3[1] - p1[1]) / 4;
       d += 'C' + cp1x.toFixed(1) + ',' + cp1y.toFixed(1) + ' ' + cp2x.toFixed(1) + ',' + cp2y.toFixed(1) + ' ' + p2[0].toFixed(1) + ',' + p2[1].toFixed(1);
     }
     return d;
@@ -272,10 +272,9 @@ async function fetchHeatmaps(cookies) {
 
       const maxX = ap?.maxX || pathmaps[0]?.pitchLimits?.maxX || 105;
       const maxY = ap?.maxY || pathmaps[0]?.pitchLimits?.maxY || 68;
-      // First half: flip Y only (SVG y-down vs pitch y-up)
-      // Second half: flip both X and Y (swap ends + SVG inversion)
-      const flipY = (y) => maxY - y; // Always flip Y for SVG
-      const flipX = (x) => isSecondHalf ? maxX - x : x;
+      // Only flip Y (SVG y-down vs pitch y-up). No X flip — pitch X stays consistent.
+      const flipY = (y) => maxY - y;
+      const flipX = (x) => x;
 
       let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${maxX} ${maxY}" preserveAspectRatio="none">\n`;
 
@@ -298,8 +297,10 @@ async function fetchHeatmaps(cookies) {
       if (ap) {
         const cx = flipX(ap.xPosition).toFixed(1);
         const cy = flipY(ap.yPosition).toFixed(1);
-        svg += `  <circle cx="${cx}" cy="${cy}" r="3.5" fill="#0c0c0c" stroke="#ef4444" stroke-width="0.4" opacity="0.95"/>\n`;
-        svg += `  <text x="${cx}" y="${(parseFloat(cy) + 1.2).toFixed(1)}" text-anchor="middle" font-family="sans-serif" font-size="3.5" font-weight="700" fill="#ffffff" opacity="0.95">OR</text>\n`;
+        const rx = 3.5;
+        const ry = (3.5 * (maxX / maxY)).toFixed(1);
+        svg += `  <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#0c0c0c" stroke="#ef4444" stroke-width="0.4" opacity="0.95"/>\n`;
+        svg += `  <text x="${cx}" y="${(parseFloat(cy) + parseFloat(ry) * 0.35).toFixed(1)}" text-anchor="middle" font-family="sans-serif" font-size="${(parseFloat(ry) * 0.95).toFixed(1)}" font-weight="700" fill="#ffffff" opacity="0.95">OR</text>\n`;
       }
 
       svg += '</svg>';
