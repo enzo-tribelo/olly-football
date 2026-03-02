@@ -49,12 +49,14 @@ const nextDate = currentIdx > 0 ? validDates[currentIdx - 1] : null;
 
 // Heatmap images
 const heatmapDir = 'public/gps/heatmaps';
-const hasFirstHalf = existsSync(`${heatmapDir}/${s.date}-first-half.png`);
-const hasSecondHalf = existsSync(`${heatmapDir}/${s.date}-second-half.png`);
-const hasHeatmaps = hasFirstHalf || hasSecondHalf;
-// Skip tiny placeholder files (< 2KB = no data)
-const firstHalfValid = hasFirstHalf && (await import('fs')).statSync(`${heatmapDir}/${s.date}-first-half.png`).size > 2000;
-const secondHalfValid = hasSecondHalf && (await import('fs')).statSync(`${heatmapDir}/${s.date}-second-half.png`).size > 2000;
+const { statSync: fstatSync } = await import('fs');
+const fileValid = (path: string, minSize = 2000) => {
+  try { return existsSync(path) && fstatSync(path).size > minSize; } catch { return false; }
+};
+const firstHalfValid = fileValid(`${heatmapDir}/${s.date}-first-half.png`);
+const secondHalfValid = fileValid(`${heatmapDir}/${s.date}-second-half.png`);
+const firstHalfPaths = existsSync(`${heatmapDir}/${s.date}-first-half-paths.svg`);
+const secondHalfPaths = existsSync(`${heatmapDir}/${s.date}-second-half-paths.svg`);
 
 export async function getStaticPaths() {
   const gpsEntry = await getEntry('gps', 'gps');
@@ -198,6 +200,38 @@ export async function getStaticPaths() {
                 <div class="relative rounded-sm overflow-hidden">
                   <img src="/gps/heatmaps/pitch.png" alt="" class="w-full" />
                   <img src={`/gps/heatmaps/${s.date}-second-half.png`} alt={`Second half heat map for ${s.match}`} class="absolute inset-0 w-full h-full" />
+                </div>
+                <p class="text-xs text-cream-muted uppercase tracking-widest mt-2">2nd Half</p>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      <!-- Sprint & Intensity Paths -->
+      {(firstHalfPaths || secondHalfPaths) && (
+        <section aria-label="Sprint and intensity paths">
+          <h2 class="font-['Oswald'] text-2xl font-bold uppercase tracking-wide mb-2">Sprint & Intensity Map</h2>
+          <div class="flex items-center gap-4 mb-6 text-xs text-cream-muted">
+            <span class="flex items-center gap-1.5"><span class="w-4 h-0.5 bg-gold inline-block rounded"></span> Sprints</span>
+            <span class="flex items-center gap-1.5"><span class="w-4 h-0.5 bg-amber inline-block rounded"></span> High Intensity</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 bg-white rounded-full border border-gold inline-block"></span> Avg Position</span>
+          </div>
+          <div class={`grid ${firstHalfPaths && secondHalfPaths ? 'grid-cols-2' : 'grid-cols-1 max-w-xs mx-auto'} gap-4 mb-12`}>
+            {firstHalfPaths && (
+              <div class="text-center">
+                <div class="relative rounded-sm overflow-hidden">
+                  <img src="/gps/heatmaps/pitch.png" alt="" class="w-full" />
+                  <img src={`/gps/heatmaps/${s.date}-first-half-paths.svg`} alt={`First half sprint and intensity paths for ${s.match}`} class="absolute inset-0 w-full h-full" />
+                </div>
+                <p class="text-xs text-cream-muted uppercase tracking-widest mt-2">1st Half</p>
+              </div>
+            )}
+            {secondHalfPaths && (
+              <div class="text-center">
+                <div class="relative rounded-sm overflow-hidden">
+                  <img src="/gps/heatmaps/pitch.png" alt="" class="w-full" />
+                  <img src={`/gps/heatmaps/${s.date}-second-half-paths.svg`} alt={`Second half sprint and intensity paths for ${s.match}`} class="absolute inset-0 w-full h-full" />
                 </div>
                 <p class="text-xs text-cream-muted uppercase tracking-widest mt-2">2nd Half</p>
               </div>

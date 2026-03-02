@@ -214,6 +214,72 @@ async function fetchHeatmaps(cookies) {
     }
   }
   console.log(`📥 Downloaded ${downloaded} new heatmap(s)`);
+
+  // Fetch sprint/intensity paths and average positions
+  const pathQuery = `{
+    currentPerson {
+      matchSessionParticipations(limit: 50) {
+        matchSession { startTime }
+        periodMetricSets {
+          matchSessionPeriod { name }
+          averagePosition { xPosition yPosition maxX maxY }
+          pathmaps { pathType paths pitchLimits { maxX maxY } }
+        }
+      }
+    }
+  }`;
+
+  const pathRes = await fetch(`${BASE}/api/graphql`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Cookie: cookies },
+    body: JSON.stringify({ query: pathQuery }),
+  });
+  const pathData = await pathRes.json();
+  if (pathData.errors) { console.log('⚠️ Path query errors:', JSON.stringify(pathData.errors)); return; }
+
+  let pathCount = 0;
+  for (const p of pathData.data.currentPerson.matchSessionParticipations) {
+    const date = p.matchSession.startTime.slice(0, 10);
+    for (const pm of (p.periodMetricSets || [])) {
+      const period = pm.matchSessionPeriod.name.toLowerCase().replace(/\s+/g, '-');
+      const ap = pm.averagePosition;
+      const pathmaps = pm.pathmaps || [];
+      if (!ap && pathmaps.length === 0) continue;
+
+      const filepath = `${dir}/${date}-${period}-paths.svg`;
+      if (existsSync(filepath)) continue; // Skip existing
+
+      const maxX = ap?.maxX || pathmaps[0]?.pitchLimits?.maxX || 105;
+      const maxY = ap?.maxY || pathmaps[0]?.pitchLimits?.maxY || 68;
+
+      let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${maxX} ${maxY}" preserveAspectRatio="none">\n`;
+
+      for (const sp of pathmaps.filter(p => p.pathType === 'sprint')) {
+        for (const path of (sp.paths || [])) {
+          if (path.length < 2) continue;
+          const d = 'M' + path.map(pt => pt[0].toFixed(1) + ',' + pt[1].toFixed(1)).join('L');
+          svg += `  <path d="${d}" fill="none" stroke="#ef4444" stroke-width="0.8" stroke-linecap="round" opacity="0.9"/>\n`;
+        }
+      }
+
+      for (const hp of pathmaps.filter(p => p.pathType === 'high_intensity')) {
+        for (const path of (hp.paths || [])) {
+          if (path.length < 2) continue;
+          const d = 'M' + path.map(pt => pt[0].toFixed(1) + ',' + pt[1].toFixed(1)).join('L');
+          svg += `  <path d="${d}" fill="none" stroke="#fbbf24" stroke-width="0.6" stroke-linecap="round" opacity="0.7"/>\n`;
+        }
+      }
+
+      if (ap) {
+        svg += `  <circle cx="${ap.xPosition.toFixed(1)}" cy="${ap.yPosition.toFixed(1)}" r="2" fill="#ffffff" stroke="#ef4444" stroke-width="0.5" opacity="0.9"/>\n`;
+      }
+
+      svg += '</svg>';
+      writeFileSync(filepath, svg);
+      pathCount++;
+    }
+  }
+  console.log(`📥 Generated ${pathCount} new path map(s)`);
 }
 
 try {
