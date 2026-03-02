@@ -1,4 +1,4 @@
 User-agent: *
-Disallow: /
+Allow: /
 
 Sitemap: https://or9.uk/sitemap.xml
