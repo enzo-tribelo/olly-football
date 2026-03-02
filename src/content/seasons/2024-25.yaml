@@ -21,6 +21,13 @@ clubs:
     assists: 2
     mins: 380
     color: "#6c757d"
+  - name: "Bath City U18"
+    league: "SW Counties Youth League U18"
+    apps: 2
+    goals: 0
+    assists: 0
+    mins: 105
+    color: "#e63946"
 highlights:
   - "North Wilts League Winners"
   - "County Cup Runners-Up"
