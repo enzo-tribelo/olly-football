@@ -103,6 +103,23 @@ export async function getStaticPaths() {
         </p>
       </div>
 
+      <!-- Session navigation -->
+      <div class="flex items-center justify-between mb-10 py-3 border-y border-pitch-line/50">
+        {prevDate ? (
+          <a href={`${BASE}gps/${prevDate}/`} class="flex items-center gap-2 text-sm text-cream-muted hover:text-gold transition-colors group">
+            <svg class="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            <span>Previous Session</span>
+          </a>
+        ) : <span />}
+        <a href={`${BASE}gps/`} class="text-xs text-cream-muted/60 hover:text-gold transition-colors uppercase tracking-widest">All Sessions</a>
+        {nextDate ? (
+          <a href={`${BASE}gps/${nextDate}/`} class="flex items-center gap-2 text-sm text-cream-muted hover:text-gold transition-colors group">
+            <span>Next Session</span>
+            <svg class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </a>
+        ) : <span />}
+      </div>
+
       <!-- Key metrics — 4 big cards -->
       <section aria-label="Key metrics">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
