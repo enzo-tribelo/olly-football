@@ -310,9 +310,13 @@ try {
   const { mins: existingMins, taglines: existingTaglines, matches: existingMatches } = getExistingOverrides();
   const sessions = provider.normalizeSessions(rawSessions, existingMins);
 
-  // Preserve manually set match names from existing YAML
+  // Preserve manually set match names from existing YAML (skip placeholders)
+  const CACHED_MATCH_PLACEHOLDERS = new Set(['opponent', 'mango', 'match']);
   for (const s of sessions) {
-    if (existingMatches[s.session_id]) s.match = existingMatches[s.session_id];
+    const cached = existingMatches[s.session_id];
+    if (cached && !CACHED_MATCH_PLACEHOLDERS.has(cached.toLowerCase())) {
+      s.match = cached;
+    }
   }
 
   const zoneByDate = buildZoneSummaries(pathParticipations);
