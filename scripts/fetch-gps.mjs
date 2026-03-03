@@ -167,7 +167,7 @@ async function generatePerformanceSummary(sessions, zoneByDate) {
     return `- ${s.date} vs ${s.match}${result}: ${(s.distance_m/1000).toFixed(1)}km, ${s.max_speed_kph}km/h top, ${s.sprints} sprints, ${s.high_intensity} HI runs${zoneLine}`;
   }).join('\n');
 
-  const prompt = `You are writing a performance profile paragraph for a 16-year-old striker's football scouting page. Based on the GPS session data below, write 2-3 sentences identifying patterns in the player's performance — especially how their output correlates with match results or goals scored. Be specific, analytical, and written for a football scout. No generic phrases. No emoji. No bullet points.
+  const prompt = `Write exactly 2 sentences for a football scout's player profile. Identify one clear pattern from the GPS data — ideally linking high output to positive results. Be specific with numbers. No generic phrases. No emoji. Complete sentences only — do not trail off.
 
 GPS Sessions:\n${rows}`;
 
@@ -175,7 +175,7 @@ GPS Sessions:\n${rows}`;
     const res = await fetch('https://api.x.ai/v1/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${XAI_API_KEY}` },
-      body: JSON.stringify({ model: 'grok-3-mini', messages: [{ role: 'user', content: prompt }], max_tokens: 150, temperature: 0.6 }),
+      body: JSON.stringify({ model: 'grok-3-mini', messages: [{ role: 'user', content: prompt }], max_tokens: 250, temperature: 0.6 }),
     });
     if (!res.ok) { console.warn(`⚠️ xAI summary error ${res.status}`); return null; }
     const json = await res.json();
