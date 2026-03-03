@@ -190,13 +190,16 @@ function getExistingOverrides() {
   return { mins, taglines, matches };
 }
 
-const EXPLICIT_FIELDS = new Set(['date', 'session_id', 'match', 'actual_mins', 'ai_tagline']);
+const EXPLICIT_FIELDS = new Set(['date', 'session_id', 'match', 'our_team', 'result', 'score', 'actual_mins', 'ai_tagline']);
 
 function toYAML(sessions, taglines) {
   let yaml = 'sessions:\n';
   for (const s of sessions) {
     yaml += `  - date: "${s.date}"\n`;
     yaml += `    match: "${s.match}"\n`;
+    if (s.our_team) yaml += `    our_team: "${s.our_team}"\n`;
+    if (s.result)   yaml += `    result: "${s.result}"\n`;
+    if (s.score)    yaml += `    score: "${s.score}"\n`;
     const tagline = taglines[s.session_id];
     if (tagline) yaml += `    ai_tagline: "${tagline.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"\n`;
     yaml += `    session_id: "${s.session_id}"\n`;
