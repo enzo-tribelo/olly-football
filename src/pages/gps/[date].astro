@@ -115,6 +115,23 @@ export async function getStaticPaths() {
         )}
       </div>
 
+      <!-- Session navigation -->
+      <div class="flex items-center justify-between mb-10 py-3 border-y border-pitch-line/50">
+        {prevDate ? (
+          <a href={`${BASE}gps/${prevDate}/`} data-nav-link class="flex items-center gap-2 text-sm text-cream-muted hover:text-gold transition-colors group">
+            <svg aria-hidden="true" class="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            <span>Previous Session</span>
+          </a>
+        ) : <span />}
+        <a href={`${BASE}gps/`} class="text-xs text-cream-muted/60 hover:text-gold transition-colors uppercase tracking-widest">All Sessions</a>
+        {nextDate ? (
+          <a href={`${BASE}gps/${nextDate}/`} data-nav-link class="flex items-center gap-2 text-sm text-cream-muted hover:text-gold transition-colors group">
+            <span>Next Session</span>
+            <svg aria-hidden="true" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </a>
+        ) : <span />}
+      </div>
+
       <!-- Swipe hint — mobile only, fades after first view -->
       {(prevDate || nextDate) && (
         <div id="swipe-hint" class="flex items-center justify-center gap-3 mb-8 sm:hidden" aria-hidden="true">
@@ -261,23 +278,6 @@ export async function getStaticPaths() {
           </div>
         </section>
       )}
-
-      <!-- Session navigation -->
-      <div class="flex items-center justify-between mb-10 py-3 border-y border-pitch-line/50">
-        {prevDate ? (
-          <a href={`${BASE}gps/${prevDate}/`} data-nav-link class="flex items-center gap-2 text-sm text-cream-muted hover:text-gold transition-colors group">
-            <svg aria-hidden="true" class="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-            <span>Previous Session</span>
-          </a>
-        ) : <span />}
-        <a href={`${BASE}gps/`} class="text-xs text-cream-muted/60 hover:text-gold transition-colors uppercase tracking-widest">All Sessions</a>
-        {nextDate ? (
-          <a href={`${BASE}gps/${nextDate}/`} data-nav-link class="flex items-center gap-2 text-sm text-cream-muted hover:text-gold transition-colors group">
-            <span>Next Session</span>
-            <svg aria-hidden="true" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-          </a>
-        ) : <span />}
-      </div>
 
       <!-- Speed Zones -->
       <section aria-label="Speed zones breakdown">
