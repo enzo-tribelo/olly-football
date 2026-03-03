@@ -157,7 +157,7 @@ Examples of good taglines:
 async function generatePerformanceSummary(sessions, zoneByDate) {
   if (!XAI_API_KEY) return null;
 
-  const dataSessions = sessions.filter(s => s.has_data);
+  const dataSessions = sessions.filter(s => s.has_data).slice(0, 10);
   if (dataSessions.length < 2) return null;
 
   const rows = dataSessions.map(s => {
