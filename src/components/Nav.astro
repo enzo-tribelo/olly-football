@@ -45,6 +45,9 @@ const links = [
 
 <!-- Mobile menu -->
 <div id="mobile-menu" class="md:hidden fixed bottom-24 right-6 z-50 flex flex-col gap-2 items-end opacity-0 pointer-events-none transition-all duration-200 translate-y-4">
+  {current !== 'home' && (
+    <a href={BASE} class="mobile-nav-link px-5 py-2.5 bg-surface-elevated/95 backdrop-blur border border-pitch-line rounded-full text-xs font-['Oswald'] uppercase tracking-widest transition-all text-cream hover:text-gold hover:border-gold/30">Home</a>
+  )}
   {links.map(link => (
     link.cta
       ? <a href={link.href} class={`mobile-nav-link px-5 py-2.5 rounded-full text-xs font-['Oswald'] uppercase tracking-widest font-semibold transition-all ${current === link.page ? 'bg-gold-dim text-pitch' : 'bg-gold text-pitch hover:bg-gold-dim'}`}>{link.label}</a>
