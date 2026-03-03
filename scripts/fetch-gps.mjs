@@ -12,10 +12,6 @@ const {
   XAI_API_KEY,
 } = process.env;
 
-// Read player config from profile.yaml
-const profileYaml = readFileSync('src/content/profile/profile.yaml', 'utf8');
-const GPS_PLAYER_INITIALS = profileYaml.match(/^initials:\s*["']?(.+?)["']?\s*$/m)?.[1] ?? '??';
-
 if (!GPS_PROVIDER_EMAIL || !GPS_PROVIDER_PASSWORD) {
   console.log('⚠️ GPS provider credentials not set, skipping GPS fetch');
   process.exit(0);
@@ -298,6 +294,10 @@ try {
   const cookies = await provider.login(GPS_PROVIDER_EMAIL, GPS_PROVIDER_PASSWORD);
   console.log('✅ Logged in');
 
+  const playerInfo = provider.fetchPlayerInfo ? await provider.fetchPlayerInfo(cookies) : {};
+  const initials = playerInfo.initials ?? '??';
+  console.log(`👤 Player: ${playerInfo.name ?? 'Unknown'} (${initials})`);
+
   console.log('📡 Fetching GPS metrics and path data...');
   const [rawSessions, pathParticipations] = await Promise.all([
     provider.fetchSessions(cookies),
@@ -323,7 +323,7 @@ try {
   console.log('🗺️ Fetching heatmap images...');
   await provider.fetchHeatmapImages(cookies, 'public/gps/heatmaps');
 
-  generatePathSVGs(pathParticipations, GPS_PLAYER_INITIALS);
+  generatePathSVGs(pathParticipations, initials);
 
 } catch (err) {
   console.error(`❌ ${err.message}`);

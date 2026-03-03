@@ -31,6 +31,19 @@ export async function login(email, password) {
   return loginRes.headers.getSetCookie().map(c => c.split(';')[0]).join('; ');
 }
 
+// ─── Player Info ──────────────────────────────────────────────────────────────
+
+export async function fetchPlayerInfo(cookies) {
+  const res = await fetch(`${BASE}/api/graphql`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Cookie: cookies },
+    body: JSON.stringify({ query: '{ currentPerson { name initials } }' }),
+  });
+  const data = await res.json();
+  if (data.errors) throw new Error(`Player info error: ${JSON.stringify(data.errors)}`);
+  return data.data.currentPerson; // { name, initials }
+}
+
 // ─── GPS Metrics ──────────────────────────────────────────────────────────────
 
 export async function fetchSessions(cookies) {
