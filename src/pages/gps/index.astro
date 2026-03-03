@@ -10,7 +10,14 @@ const clubLogos: Record<string, string> = {
   'Bath City U18': `${BASE}clubs/bath-city.png`,
   'Melksham Town U18': `${BASE}clubs/melksham-town.png`,
   'Melksham Town Reserves': `${BASE}clubs/melksham-town.png`,
+  'Bath City': `${BASE}clubs/bath-city.png`,
 };
+
+const resultBadge = (r?: string | null) => ({
+  win:  { label: 'W', cls: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' },
+  draw: { label: 'D', cls: 'bg-amber-500/20  text-amber-400  border border-amber-500/40'  },
+  loss: { label: 'L', cls: 'bg-red-500/20    text-red-400    border border-red-500/40'    },
+}[r ?? ''] ?? null);
 
 const gpsEntry = await getEntry('gps', 'gps');
 const allSessions = gpsEntry.data.sessions;
@@ -118,9 +125,11 @@ const stats = {
           <a href={s.has_data ? `${BASE}gps/${s.date}/` : undefined} role="listitem" aria-label={s.has_data ? `${s.match} on ${s.date} — view full GPS data` : `${s.match} on ${s.date} — no GPS data`} class={`block border rounded-sm p-5 transition-all ${s.has_data ? 'bg-surface-elevated/40 border-pitch-line hover:border-gold/40 hover:bg-surface-elevated/60 cursor-pointer' : 'bg-surface-elevated/20 border-pitch-line/50 opacity-50 pointer-events-none'}`}>
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div>
-                <div class="font-['Oswald'] text-base uppercase tracking-wide text-cream flex items-center gap-2">
+                <div class="font-['Oswald'] text-base uppercase tracking-wide text-cream flex items-center gap-2 flex-wrap">
                   {clubLogos[s.match] && <img src={clubLogos[s.match]} alt="" class="w-6 h-6 object-contain" width="24" height="24" loading="lazy" />}
                   {s.match}
+                  {(() => { const b = resultBadge(s.result); return b && <span class={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${b.cls}`}>{b.label}</span>; })()}
+                  {s.score && <span class="font-['Oswald'] text-sm text-cream-muted/70">{s.score}</span>}
                 </div>
                 <div class="text-xs text-cream-muted flex items-center gap-3">
                   <span>{new Date(s.date).toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}</span>

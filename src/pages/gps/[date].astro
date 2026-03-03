@@ -12,7 +12,14 @@ const clubLogos: Record<string, string> = {
   'Bath City U18': `${BASE}clubs/bath-city.png`,
   'Melksham Town U18': `${BASE}clubs/melksham-town.png`,
   'Melksham Town Reserves': `${BASE}clubs/melksham-town.png`,
+  'Bath City': `${BASE}clubs/bath-city.png`,
 };
+
+const resultBadge = (r?: string | null) => ({
+  win:  { label: 'W', cls: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' },
+  draw: { label: 'D', cls: 'bg-amber-500/20  text-amber-400  border border-amber-500/40'  },
+  loss: { label: 'L', cls: 'bg-red-500/20    text-red-400    border border-red-500/40'    },
+}[r ?? ''] ?? null);
 
 const gpsEntry = await getEntry('gps', 'gps');
 const allSessions = gpsEntry.data.sessions;
@@ -103,12 +110,16 @@ export async function getStaticPaths() {
           <div class="h-px w-12 bg-gold"></div>
           <span class="font-['Oswald'] text-xs uppercase tracking-[0.3em] text-gold">Match Session</span>
         </div>
-        <h1 class="font-['Oswald'] text-4xl sm:text-5xl font-bold uppercase leading-tight tracking-tight mb-2 flex items-center gap-4">
+        <h1 class="font-['Oswald'] text-4xl sm:text-5xl font-bold uppercase leading-tight tracking-tight mb-2 flex items-center gap-4 flex-wrap">
           {clubLogos[s.match] && <img src={clubLogos[s.match]} alt={`${s.match} badge`} class="w-12 h-12 sm:w-14 sm:h-14 object-contain" width="56" height="56" />}
           <span class="text-cream">{s.match}</span>
+          {(() => { const b = resultBadge(s.result); return b && <span class={`text-sm font-bold px-2 py-1 rounded uppercase tracking-wider ${b.cls}`}>{b.label}</span>; })()}
         </h1>
-        <p class="text-cream-muted text-sm">
-          {dateStr} · <span class={`font-medium ${playingMins < 75 ? 'text-gold' : 'text-cream'}`}>{isEstimate ? '~' : ''}{playingMins} mins played</span>
+        <p class="text-cream-muted text-sm flex items-center gap-2 flex-wrap">
+          <span>{dateStr}</span>
+          {s.score && <><span>·</span><span class="font-['Oswald'] text-cream font-medium">{s.score}</span></>}
+          <span>·</span>
+          <span class={`font-medium ${playingMins < 75 ? 'text-gold' : 'text-cream'}`}>{isEstimate ? '~' : ''}{playingMins} mins played</span>
         </p>
         {s.ai_tagline && (
           <p class="text-cream-muted/70 text-sm italic mt-2">{s.ai_tagline}</p>
