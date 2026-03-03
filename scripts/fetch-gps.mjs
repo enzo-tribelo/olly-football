@@ -164,7 +164,8 @@ async function generatePerformanceSummary(sessions, zoneByDate) {
     const result = s.result ? ` [${s.result.toUpperCase()}${s.score ? ` ${s.score}` : ''}]` : '';
     const zone = zoneByDate?.[s.date];
     const zoneLine = zone ? ` | ${zone.sprintZone ?? ''} ${zone.channel ?? ''}`.trim() : '';
-    return `- ${s.date} vs ${s.match}${result}: ${(s.distance_m/1000).toFixed(1)}km, ${s.max_speed_kph}km/h top, ${s.sprints} sprints, ${s.high_intensity} HI runs${zoneLine}`;
+    const opponent = s.match && s.our_team && s.match.toLowerCase() === s.our_team.toLowerCase() ? 'Unknown opponent' : (s.match || 'Unknown opponent');
+    return `- ${s.date} vs ${opponent}${result}: ${(s.distance_m/1000).toFixed(1)}km, ${s.max_speed_kph}km/h top, ${s.sprints} sprints, ${s.high_intensity} HI runs${zoneLine}`;
   }).join('\n');
 
   const prompt = `You are writing a performance profile paragraph for a 16-year-old striker's football scouting page. Based on the GPS session data below, write exactly 2 complete sentences identifying patterns — especially how physical output correlates with match results. Max 55 words total. Be specific and analytical. No generic phrases. No emoji. No bullet points. End with a full stop.
