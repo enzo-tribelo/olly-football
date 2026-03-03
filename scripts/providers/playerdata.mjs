@@ -163,6 +163,16 @@ export async function fetchHeatmapImages(cookies, dir) {
 
 // ─── Normalize to common GPS session schema ───────────────────────────────────
 
+// Opponent names that are clearly placeholders / test data — treat as unknown
+const OPPONENT_PLACEHOLDERS = new Set(['opponent', 'mango']);
+
+function resolveOpponent(raw) {
+  const trimmed = raw?.trim();
+  if (!trimmed) return null;
+  if (OPPONENT_PLACEHOLDERS.has(trimmed.toLowerCase())) return null;
+  return trimmed;
+}
+
 function round1(v) { return Math.round((v || 0) * 10) / 10; }
 function round0(v) { return Math.round(v || 0); }
 
@@ -174,7 +184,7 @@ export function normalizeSessions(participations, existingMins) {
     return {
       date: sess.startTime.slice(0, 10),
       session_id: sess.id,
-      match: (sess.opponent?.trim() || sess.ourTeam?.trim()) || 'Match',
+      match: (resolveOpponent(sess.opponent) || sess.ourTeam?.trim()) || 'Match',
       our_team: sess.ourTeam || null,
       result: sess.result || null,
       score: (sess.score != null && sess.opponentScore != null) ? `${sess.score}-${sess.opponentScore}` : null,
