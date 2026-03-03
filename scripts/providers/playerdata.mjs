@@ -38,7 +38,7 @@ export async function fetchSessions(cookies) {
     currentPerson {
       matchSessionParticipations(limit: 50) {
         id
-        matchSession { id startTime endTime }
+        matchSession { id startTime endTime ourTeam opponent score opponentScore result }
         metricSet {
           totalDistanceM maxSpeedKph avgSpeedKph metresPerMinute
           sprintEvents totalSprintDistanceM
@@ -157,12 +157,16 @@ export function normalizeSessions(participations, existingMins, defaultMatch = '
   return participations.map(p => {
     const ms = p.metricSet;
     const hasData = !!(ms && ms.totalDistanceM > 0);
+    const sess = p.matchSession;
     return {
-      date: p.matchSession.startTime.slice(0, 10),
-      session_id: p.matchSession.id,
-      match: defaultMatch,
-      duration_mins: Math.round((new Date(p.matchSession.endTime) - new Date(p.matchSession.startTime)) / 60000),
-      actual_mins: existingMins[p.matchSession.id],
+      date: sess.startTime.slice(0, 10),
+      session_id: sess.id,
+      match: sess.opponent || sess.ourTeam || defaultMatch,
+      our_team: sess.ourTeam || null,
+      result: sess.result || null,
+      score: (sess.score != null && sess.opponentScore != null) ? `${sess.score}-${sess.opponentScore}` : null,
+      duration_mins: Math.round((new Date(sess.endTime) - new Date(sess.startTime)) / 60000),
+      actual_mins: existingMins[sess.id],
       has_data: hasData,
       distance_m: round0(ms?.totalDistanceM),
       max_speed_kph: round1(ms?.maxSpeedKph),
