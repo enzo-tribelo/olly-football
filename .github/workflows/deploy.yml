@@ -7,7 +7,7 @@ on:
     - cron: '0 6 * * 1'  # Monday 6am UTC
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -20,18 +20,24 @@ jobs:
         with:
           node-version: 22
       - run: npm ci
+
+      # Restore cached gps.yaml so AI taglines persist between runs
+      # Key is unique per run so we always save fresh; restore-keys prefix
+      # matches the most recent previous run's cache.
+      - name: Restore cached GPS data
+        uses: actions/cache@v4
+        with:
+          path: src/content/gps/gps.yaml
+          key: gps-data-${{ github.run_id }}
+          restore-keys: gps-data-
+
       - name: Fetch PlayerData GPS stats
         env:
           PLAYERDATA_EMAIL: ${{ secrets.PLAYERDATA_EMAIL }}
           PLAYERDATA_PASSWORD: ${{ secrets.PLAYERDATA_PASSWORD }}
           XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
         run: node scripts/fetch-playerdata.mjs
-      - name: Commit updated gps.yaml (caches AI taglines + new session data)
-        run: |
-          git config user.name "enzo-aibot"
-          git config user.email "aibot@tribelo.co.uk"
-          git add src/content/gps/gps.yaml
-          git diff --staged --quiet || git commit -m "data(gps): update GPS data + AI taglines [skip ci]" && git push
+
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
