@@ -87,7 +87,9 @@ export async function getStaticPaths() {
 
   <Nav current="gps" />
 
-  <main id="main" class="min-h-screen pitch-pattern pt-20 pb-20">
+  <main id="main" class="min-h-screen pitch-pattern pt-20 pb-20"
+    data-prev-url={prevDate ? `${BASE}gps/${prevDate}/` : ''}
+    data-next-url={nextDate ? `${BASE}gps/${nextDate}/` : ''}>
     <Breadcrumb crumbs={[
       { label: 'Profile', href: '/' },
       { label: 'GPS Performance', href: '/gps/' },
@@ -126,6 +128,17 @@ export async function getStaticPaths() {
           </a>
         ) : <span />}
       </div>
+
+      <!-- Swipe hint — mobile only, fades after first view -->
+      {(prevDate || nextDate) && (
+        <div id="swipe-hint" class="flex items-center justify-center gap-3 mb-8 sm:hidden" aria-hidden="true">
+          <span class="text-xs text-cream-muted/40 uppercase tracking-widest flex items-center gap-1.5">
+            {prevDate && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>}
+            Swipe to navigate
+            {nextDate && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>}
+          </span>
+        </div>
+      )}
 
       <!-- Key metrics — 4 big cards -->
       <section aria-label="Key metrics">
@@ -294,5 +307,63 @@ export async function getStaticPaths() {
 
     </div>
   </main>
+
+<script>
+  (function () {
+    const main = document.getElementById('main');
+    if (!main) return;
+
+    const prevUrl = main.dataset.prevUrl || '';
+    const nextUrl = main.dataset.nextUrl || '';
+    if (!prevUrl && !nextUrl) return;
+
+    let startX = 0;
+    let startY = 0;
+    let navigating = false;
+
+    main.addEventListener('touchstart', function (e) {
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      navigating = false;
+    }, { passive: true });
+
+    main.addEventListener('touchend', function (e) {
+      if (navigating) return;
+
+      const deltaX = e.changedTouches[0].clientX - startX;
+      const deltaY = e.changedTouches[0].clientY - startY;
+
+      // Require horizontal swipe > 60px and more horizontal than vertical
+      if (Math.abs(deltaX) < 60 || Math.abs(deltaX) < Math.abs(deltaY) * 1.5) return;
+
+      navigating = true;
+
+      if (deltaX < 0 && nextUrl) {
+        // Swipe left → next session (newer)
+        window.location.href = nextUrl;
+      } else if (deltaX > 0 && prevUrl) {
+        // Swipe right → previous session (older)
+        window.location.href = prevUrl;
+      } else {
+        navigating = false;
+      }
+    }, { passive: true });
+
+    // Swipe hint: hide after 4s, and don't show again this session
+    const hint = document.getElementById('swipe-hint');
+    if (hint) {
+      if (sessionStorage.getItem('gps-swipe-seen')) {
+        hint.style.display = 'none';
+      } else {
+        hint.style.transition = 'opacity 0.8s ease';
+        setTimeout(function () {
+          hint.style.opacity = '0';
+          setTimeout(function () { hint.style.display = 'none'; }, 800);
+        }, 3000);
+        sessionStorage.setItem('gps-swipe-seen', '1');
+      }
+    }
+  })();
+</script>
 
 </Layout>
