@@ -24,6 +24,7 @@ jobs:
         env:
           PLAYERDATA_EMAIL: ${{ secrets.PLAYERDATA_EMAIL }}
           PLAYERDATA_PASSWORD: ${{ secrets.PLAYERDATA_PASSWORD }}
+          XAI_API_KEY: ${{ secrets.XAI_API_KEY }}
         run: node scripts/fetch-playerdata.mjs
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3

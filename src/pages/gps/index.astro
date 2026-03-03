@@ -133,6 +133,9 @@ const stats = {
                     <span class="text-fire/80 font-medium">No GPS data</span>
                   )}
                 </div>
+                {s.ai_tagline && (
+                  <p class="text-xs text-cream-muted/70 italic mt-1">{s.ai_tagline}</p>
+                )}
               </div>
               {s.has_data && (
                 <div class="grid grid-cols-3 sm:grid-cols-5 gap-4 sm:gap-6 text-center">

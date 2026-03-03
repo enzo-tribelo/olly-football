@@ -18,6 +18,9 @@
               "session_id": {
                 "type": "string"
               },
+              "ai_tagline": {
+                "type": "string"
+              },
               "duration_mins": {
                 "type": "number"
               },
