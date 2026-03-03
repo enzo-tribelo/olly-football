@@ -347,18 +347,16 @@ try {
     provider.fetchPathData(cookies),
   ]);
 
-  const { mins: existingMins, taglines: existingTaglines, matches: existingMatches } = getExistingOverrides();
+  const { mins: existingMins } = getExistingOverrides();
   const sessions = provider.normalizeSessions(rawSessions, existingMins);
 
-  // Preserve manually set match names from existing YAML
-  for (const s of sessions) {
-    if (existingMatches[s.session_id]) s.match = existingMatches[s.session_id];
-  }
+    // Match names always come from the API — no cache override
 
   const zoneByDate = buildZoneSummaries(pathParticipations);
   console.log(`📊 Zone data for ${sessions.filter(s => s.has_data && zoneByDate[s.date]).length}/${sessions.filter(s => s.has_data).length} sessions`);
 
-  const taglines = await generateAllTaglines(sessions, existingTaglines, zoneByDate);
+  // Taglines always regenerate — keeps them fresh with latest result/score context
+  const taglines = await generateAllTaglines(sessions, {}, zoneByDate);
 
   console.log('✨ Generating cross-session performance summary...');
   const performanceSummary = await generatePerformanceSummary(sessions, zoneByDate);
