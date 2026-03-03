@@ -112,23 +112,6 @@ export async function getStaticPaths() {
         </p>
       </div>
 
-      <!-- Session navigation -->
-      <div class="flex items-center justify-between mb-10 py-3 border-y border-pitch-line/50">
-        {prevDate ? (
-          <a href={`${BASE}gps/${prevDate}/`} class="flex items-center gap-2 text-sm text-cream-muted hover:text-gold transition-colors group">
-            <svg aria-hidden="true" class="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-            <span>Previous Session</span>
-          </a>
-        ) : <span />}
-        <a href={`${BASE}gps/`} class="text-xs text-cream-muted/60 hover:text-gold transition-colors uppercase tracking-widest">All Sessions</a>
-        {nextDate ? (
-          <a href={`${BASE}gps/${nextDate}/`} class="flex items-center gap-2 text-sm text-cream-muted hover:text-gold transition-colors group">
-            <span>Next Session</span>
-            <svg aria-hidden="true" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
-          </a>
-        ) : <span />}
-      </div>
-
       <!-- Swipe hint — mobile only, fades after first view -->
       {(prevDate || nextDate) && (
         <div id="swipe-hint" class="flex items-center justify-center gap-3 mb-8 sm:hidden" aria-hidden="true">
@@ -139,6 +122,7 @@ export async function getStaticPaths() {
           </span>
         </div>
       )}
+
 
       <!-- Key metrics — 4 big cards -->
       <section aria-label="Key metrics">
@@ -275,6 +259,23 @@ export async function getStaticPaths() {
         </section>
       )}
 
+      <!-- Session navigation -->
+      <div class="flex items-center justify-between mb-10 py-3 border-y border-pitch-line/50">
+        {prevDate ? (
+          <a href={`${BASE}gps/${prevDate}/`} data-nav-link class="flex items-center gap-2 text-sm text-cream-muted hover:text-gold transition-colors group">
+            <svg aria-hidden="true" class="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            <span>Previous Session</span>
+          </a>
+        ) : <span />}
+        <a href={`${BASE}gps/`} class="text-xs text-cream-muted/60 hover:text-gold transition-colors uppercase tracking-widest">All Sessions</a>
+        {nextDate ? (
+          <a href={`${BASE}gps/${nextDate}/`} data-nav-link class="flex items-center gap-2 text-sm text-cream-muted hover:text-gold transition-colors group">
+            <span>Next Session</span>
+            <svg aria-hidden="true" class="w-4 h-4 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+          </a>
+        ) : <span />}
+      </div>
+
       <!-- Speed Zones -->
       <section aria-label="Speed zones breakdown">
         <h2 class="font-['Oswald'] text-2xl font-bold uppercase tracking-wide mb-6">Speed Zones</h2>
@@ -310,11 +311,34 @@ export async function getStaticPaths() {
 
 <script>
   (function () {
+    const SCROLL_KEY = 'gps_nav_scroll';
+
+    // Restore scroll position if we navigated here from a sibling page
+    const savedScroll = sessionStorage.getItem(SCROLL_KEY);
+    if (savedScroll !== null) {
+      const target = parseInt(savedScroll, 10);
+      sessionStorage.removeItem(SCROLL_KEY);
+      // Defer until layout is painted
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          window.scrollTo({ top: target, behavior: 'instant' });
+        });
+      });
+    }
+
     const main = document.getElementById('main');
     if (!main) return;
 
     const prevUrl = main.dataset.prevUrl || '';
     const nextUrl = main.dataset.nextUrl || '';
+
+    // Save scroll on nav-link clicks (prev / next buttons)
+    document.querySelectorAll('[data-nav-link]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        sessionStorage.setItem(SCROLL_KEY, String(window.scrollY));
+      });
+    });
+
     if (!prevUrl && !nextUrl) return;
 
     let startX = 0;
@@ -339,10 +363,10 @@ export async function getStaticPaths() {
       navigating = true;
 
       if (deltaX < 0 && nextUrl) {
-        // Swipe left → next session (newer)
+        sessionStorage.setItem(SCROLL_KEY, String(window.scrollY));
         window.location.href = nextUrl;
       } else if (deltaX > 0 && prevUrl) {
-        // Swipe right → previous session (older)
+        sessionStorage.setItem(SCROLL_KEY, String(window.scrollY));
         window.location.href = prevUrl;
       } else {
         navigating = false;
