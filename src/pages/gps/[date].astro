@@ -132,7 +132,7 @@ export async function getStaticPaths() {
       <!-- Swipe hint — mobile only, fades after first view -->
       {(prevDate || nextDate) && (
         <div id="swipe-hint" class="flex items-center justify-center gap-3 mb-8 sm:hidden" aria-hidden="true">
-          <span class="text-xs text-cream-muted/40 uppercase tracking-widest flex items-center gap-1.5">
+          <span class="text-xs text-cream-muted uppercase tracking-widest flex items-center gap-1.5">
             {prevDate && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>}
             Swipe to navigate
             {nextDate && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>}
@@ -349,19 +349,15 @@ export async function getStaticPaths() {
       }
     }, { passive: true });
 
-    // Swipe hint: hide after 4s, and don't show again this session
+    // Swipe hint: always show, fade out after 4s
     const hint = document.getElementById('swipe-hint');
     if (hint) {
-      if (sessionStorage.getItem('gps-swipe-seen')) {
-        hint.style.display = 'none';
-      } else {
-        hint.style.transition = 'opacity 0.8s ease';
-        setTimeout(function () {
-          hint.style.opacity = '0';
-          setTimeout(function () { hint.style.display = 'none'; }, 800);
-        }, 3000);
-        sessionStorage.setItem('gps-swipe-seen', '1');
-      }
+      hint.style.opacity = '1';
+      hint.style.transition = 'opacity 1s ease';
+      setTimeout(function () {
+        hint.style.opacity = '0';
+        setTimeout(function () { hint.style.display = 'none'; }, 1000);
+      }, 4000);
     }
   })();
 </script>
