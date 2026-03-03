@@ -12,6 +12,8 @@ if (!PLAYERDATA_EMAIL || !PLAYERDATA_PASSWORD) {
 
 const BASE = 'https://app.playerdata.co.uk';
 
+// ─── Auth ────────────────────────────────────────────────────────────────────
+
 async function login() {
   const loginPage = await fetch(`${BASE}/api/auth/identities/sign_in`);
   const html = await loginPage.text();
@@ -37,10 +39,11 @@ async function login() {
   return loginRes.headers.getSetCookie().map(c => c.split(';')[0]).join('; ');
 }
 
+// ─── GPS Metrics ─────────────────────────────────────────────────────────────
+
 async function fetchGPS(cookies) {
   const query = `{
     currentPerson {
-      name
       matchSessionParticipations(limit: 50) {
         id
         matchSession { id startTime endTime }
@@ -73,51 +76,158 @@ async function fetchGPS(cookies) {
   return data.data.currentPerson.matchSessionParticipations;
 }
 
-function round1(v) { return Math.round((v || 0) * 10) / 10; }
-function round0(v) { return Math.round(v || 0); }
+// ─── Path Data (fetched once, used for both zone analysis + SVG generation) ──
 
-// Read existing actual_mins and ai_tagline values to preserve manual overrides + cached taglines
-function getExistingOverrides() {
-  const path = 'src/content/gps/gps.yaml';
-  if (!existsSync(path)) return { mins: {}, taglines: {} };
-  const content = readFileSync(path, 'utf8');
-  const mins = {};
-  const taglines = {};
-  let currentId = null;
-  for (const line of content.split('\n')) {
-    const idMatch = line.match(/session_id:\s*"([^"]+)"/);
-    if (idMatch) currentId = idMatch[1];
-    const minsMatch = line.match(/actual_mins:\s*(\d+)/);
-    if (minsMatch && currentId) mins[currentId] = parseInt(minsMatch[1]);
-    const taglineMatch = line.match(/ai_tagline:\s*"((?:[^"\\]|\\.)*)"/);
-    if (taglineMatch && currentId) taglines[currentId] = taglineMatch[1].replace(/\\"/g, '"');
-  }
-  return { mins, taglines };
+async function fetchPathData(cookies) {
+  const query = `{
+    currentPerson {
+      matchSessionParticipations(limit: 50) {
+        matchSession { startTime }
+        periodMetricSets {
+          matchSessionPeriod { name }
+          averagePosition { xPosition yPosition maxX maxY }
+          pathmaps { pathType paths pitchLimits { maxX maxY } }
+        }
+      }
+    }
+  }`;
+
+  const res = await fetch(`${BASE}/api/graphql`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Cookie: cookies },
+    body: JSON.stringify({ query }),
+  });
+  const data = await res.json();
+  if (data.errors) throw new Error(`Path query error: ${JSON.stringify(data.errors)}`);
+  return data.data.currentPerson.matchSessionParticipations;
 }
 
-// Generate AI tagline for a single session via xAI Grok
-async function generateTagline(s) {
+// ─── Zone Analysis ───────────────────────────────────────────────────────────
+//
+// Normalises coordinates so "attacking" = high X regardless of which half,
+// then buckets path points into thirds (defensive / middle / attacking) and
+// channels (left / central / right).
+
+function analyzeZones(periodMetricSets) {
+  const sprintPts = [];
+  const hiPts = [];
+  let avgXNorm = null;
+  let maxX = 105;
+  let maxY = 68;
+
+  for (const pm of (periodMetricSets || [])) {
+    const isSecondHalf = pm.matchSessionPeriod?.name === 'Second Half';
+    const pathmaps = pm.pathmaps || [];
+    const pMaxX = pathmaps[0]?.pitchLimits?.maxX || 105;
+    const pMaxY = pathmaps[0]?.pitchLimits?.maxY || 68;
+    maxX = pMaxX;
+    maxY = pMaxY;
+
+    // Normalise X: second half attacks in low-X direction so flip it
+    const normX = x => isSecondHalf ? pMaxX - x : x;
+
+    for (const sp of pathmaps.filter(p => p.pathType === 'sprint')) {
+      for (const path of (sp.paths || [])) {
+        for (const pt of path) sprintPts.push([normX(pt[0]), pt[1]]);
+      }
+    }
+
+    for (const hp of pathmaps.filter(p => p.pathType === 'high_intensity')) {
+      for (const path of (hp.paths || [])) {
+        for (const pt of path) hiPts.push([normX(pt[0]), pt[1]]);
+      }
+    }
+
+    // Average position from API field
+    if (pm.averagePosition) {
+      const ap = pm.averagePosition;
+      const nx = isSecondHalf ? ap.maxX - ap.xPosition : ap.xPosition;
+      // Running average across both halves
+      avgXNorm = avgXNorm === null ? nx / (ap.maxX || maxX) : (avgXNorm + nx / (ap.maxX || maxX)) / 2;
+    }
+  }
+
+  if (sprintPts.length === 0 && hiPts.length === 0) return null;
+
+  const zoneBreakdown = (pts) => {
+    if (pts.length === 0) return null;
+    const att = pts.filter(p => p[0] > maxX * 2 / 3).length / pts.length;
+    const mid = pts.filter(p => p[0] >= maxX / 3 && p[0] <= maxX * 2 / 3).length / pts.length;
+    const def = pts.filter(p => p[0] < maxX / 3).length / pts.length;
+    const left = pts.filter(p => p[1] < maxY / 3).length / pts.length;
+    const centre = pts.filter(p => p[1] >= maxY / 3 && p[1] <= maxY * 2 / 3).length / pts.length;
+    const right = pts.filter(p => p[1] > maxY * 2 / 3).length / pts.length;
+    const dominantThird = att >= mid && att >= def ? 'attacking' : mid >= def ? 'middle' : 'defensive';
+    const dominantCh = centre >= left && centre >= right ? 'central' : left >= right ? 'left' : 'right';
+    return {
+      attPct: Math.round(att * 100),
+      midPct: Math.round(mid * 100),
+      defPct: Math.round(def * 100),
+      dominantThird,
+      dominantCh,
+    };
+  };
+
+  return {
+    sprint: zoneBreakdown(sprintPts),
+    hi: zoneBreakdown(hiPts),
+    avgPosPct: avgXNorm !== null ? Math.round(avgXNorm * 100) : null,
+  };
+}
+
+// Build a map of session date → zone summary
+function buildZoneSummaries(pathParticipations) {
+  const map = {};
+  for (const p of (pathParticipations || [])) {
+    const date = p.matchSession.startTime.slice(0, 10);
+    map[date] = analyzeZones(p.periodMetricSets);
+  }
+  return map;
+}
+
+// Format zone data into a readable string for the AI prompt
+function formatZoneInfo(zone) {
+  if (!zone) return '';
+  const lines = [];
+  if (zone.sprint) {
+    const z = zone.sprint;
+    lines.push(`Sprint zone breakdown: ${z.attPct}% attacking third / ${z.midPct}% middle / ${z.defPct}% defensive, predominantly ${z.dominantCh} channel`);
+  }
+  if (zone.hi) {
+    const z = zone.hi;
+    lines.push(`High-intensity zone: ${z.attPct}% attacking / ${z.midPct}% middle / ${z.defPct}% defensive, ${z.dominantCh} channel`);
+  }
+  if (zone.avgPosPct !== null) {
+    const desc = zone.avgPosPct > 65 ? 'advanced striker position' : zone.avgPosPct > 50 ? 'forward-leaning' : zone.avgPosPct > 35 ? 'mid-pitch' : 'deep-lying';
+    lines.push(`Average position: ${desc} (${zone.avgPosPct}% up the pitch)`);
+  }
+  return lines.join('\n');
+}
+
+// ─── AI Tagline Generation ───────────────────────────────────────────────────
+
+async function generateTagline(s, zoneInfo) {
   if (!XAI_API_KEY) return null;
 
-  // Estimate playing mins: session duration minus halftime (15 min), capped at 90
   const playingMins = s.actual_mins ?? Math.min(90, Math.max(30, s.duration_mins - 15));
-
   const dateFormatted = new Date(s.date + 'T12:00:00Z').toLocaleDateString('en-GB', {
     day: 'numeric', month: 'long', year: 'numeric',
   });
 
-  const prompt = `Write ONE punchy tagline (max 12 words) for a young striker's GPS match report on a football profile website. Capture the standout quality of the performance — explosive pace, relentless pressing, gritty industry, clinical efficiency, etc. Sound like a match report excerpt, not a data dump. No quotes. No emoji.
+  const zoneContext = zoneInfo ? `\nPitch movement:\n${formatZoneInfo(zoneInfo)}` : '';
+
+  const prompt = `Write ONE punchy tagline (max 12 words) for a young striker's GPS match report on a football profile website. Use the pitch movement data to make it specific — mention zones, channels, or positioning when they're interesting. Sound like a match report excerpt, not a data dump. No quotes. No emoji.
 
 Match: ${s.match}, ${dateFormatted}
 Playing time: ~${playingMins} mins
 Distance: ${(s.distance_m / 1000).toFixed(1)}km | Top speed: ${s.max_speed_kph} km/h | Avg speed: ${s.avg_speed_kph} km/h
 Sprints: ${s.sprints} (${s.sprint_distance_m}m) | High intensity: ${s.high_intensity} events | High speed runs: ${s.high_speed_run_events}
-Metres/min: ${s.metres_per_min} | Workload: ${s.workload}
+Metres/min: ${s.metres_per_min} | Workload: ${s.workload}${zoneContext}
 
 Examples of good taglines:
-- "Relentless from first to last — 12 sprints and 9.4km covered"
-- "Explosive afternoon, peaking at 29.4 km/h with 31 high-intensity actions"
-- "Efficient 80-minute shift, steady pressing across every channel"`;
+- "Explosive in the channels — 74% of sprints in the attacking third"
+- "Relentless pressing, covering 9.4km with 12 sprints from deep"
+- "Drove hard through the centre, peaking at 29.4 km/h"`;
 
   try {
     const res = await fetch('https://api.x.ai/v1/chat/completions', {
@@ -148,8 +258,7 @@ Examples of good taglines:
   }
 }
 
-// Generate taglines for all sessions that don't have one yet
-async function generateAllTaglines(sessions, existingTaglines) {
+async function generateAllTaglines(sessions, existingTaglines, zoneByDate) {
   const taglines = { ...existingTaglines };
   const missing = sessions.filter(s => s.has_data && !taglines[s.session_id]);
 
@@ -163,18 +272,40 @@ async function generateAllTaglines(sessions, existingTaglines) {
     return taglines;
   }
 
-  console.log(`✨ Generating ${missing.length} AI tagline(s) via Grok...`);
-  for (const s of missing) {
-    const tagline = await generateTagline(s);
+  console.log(`✨ Generating ${missing.length} AI tagline(s) via Grok with zone context...`);
+  for (let i = 0; i < missing.length; i++) {
+    const s = missing[i];
+    const zoneInfo = zoneByDate?.[s.date] ?? null;
+    const tagline = await generateTagline(s, zoneInfo);
     if (tagline) taglines[s.session_id] = tagline;
-    // Small delay to be polite to the API
-    if (missing.indexOf(s) < missing.length - 1) {
-      await new Promise(r => setTimeout(r, 500));
-    }
+    if (i < missing.length - 1) await new Promise(r => setTimeout(r, 500));
   }
 
   return taglines;
 }
+
+// ─── YAML ────────────────────────────────────────────────────────────────────
+
+function getExistingOverrides() {
+  const path = 'src/content/gps/gps.yaml';
+  if (!existsSync(path)) return { mins: {}, taglines: {} };
+  const content = readFileSync(path, 'utf8');
+  const mins = {};
+  const taglines = {};
+  let currentId = null;
+  for (const line of content.split('\n')) {
+    const idMatch = line.match(/session_id:\s*"([^"]+)"/);
+    if (idMatch) currentId = idMatch[1];
+    const minsMatch = line.match(/actual_mins:\s*(\d+)/);
+    if (minsMatch && currentId) mins[currentId] = parseInt(minsMatch[1]);
+    const taglineMatch = line.match(/ai_tagline:\s*"((?:[^"\\]|\\.)*)"/);
+    if (taglineMatch && currentId) taglines[currentId] = taglineMatch[1].replace(/\\"/g, '"');
+  }
+  return { mins, taglines };
+}
+
+function round1(v) { return Math.round((v || 0) * 10) / 10; }
+function round0(v) { return Math.round(v || 0); }
 
 function buildSessions(participations, existingMins) {
   return participations.map(p => {
@@ -187,24 +318,20 @@ function buildSessions(participations, existingMins) {
       duration_mins: Math.round((new Date(p.matchSession.endTime) - new Date(p.matchSession.startTime)) / 60000),
       actual_mins: existingMins[p.matchSession.id],
       has_data: hasData,
-      // Core
       distance_m: round0(ms?.totalDistanceM),
       max_speed_kph: round1(ms?.maxSpeedKph),
       avg_speed_kph: round1(ms?.avgSpeedKph),
       metres_per_min: round1(ms?.metresPerMinute),
-      // Sprints & runs
       sprints: ms?.sprintEvents ?? 0,
       sprint_distance_m: round0(ms?.totalSprintDistanceM),
       high_intensity: ms?.highIntensityEvents ?? 0,
       high_intensity_distance_m: round0(ms?.totalHighIntensityDistanceM),
       high_speed_run_events: ms?.highSpeedRunEvents ?? 0,
       high_speed_distance_m: round0(ms?.highSpeedRunDistanceM),
-      // Acceleration
       accelerations: ms?.accelerationEvents ?? 0,
       decelerations: ms?.decelerationEvents ?? 0,
       max_acceleration: round1(ms?.maxAcceleration),
       max_deceleration: round1(ms?.maxDeceleration),
-      // Speed zones
       zone_sprint_distance_m: round0(ms?.clubZoneSprintDistanceM),
       zone_sprint_duration_s: round0(ms?.clubZoneSprintDurationS),
       zone_sprint_events: ms?.clubZoneSprintEvents ?? 0,
@@ -220,14 +347,12 @@ function buildSessions(participations, existingMins) {
       zone_low_duration_s: round0(ms?.clubZoneLowIntensityDurationS),
       zone_jogging_distance_m: round0(ms?.clubZoneJoggingDistanceM),
       zone_jogging_duration_s: round0(ms?.clubZoneJoggingDurationS),
-      // Workload
       workload: round0(ms?.workload),
       workload_intensity: round0(ms?.workloadIntensity),
     };
   }).sort((a, b) => b.date.localeCompare(a.date));
 }
 
-// Fields written explicitly at the top of each session block — skip in generic loop
 const EXPLICIT_FIELDS = new Set(['date', 'session_id', 'match', 'actual_mins', 'ai_tagline']);
 
 function toYAML(sessions, taglines) {
@@ -248,11 +373,12 @@ function toYAML(sessions, taglines) {
   return yaml;
 }
 
-async function fetchHeatmaps(cookies) {
+// ─── Heatmap Images ──────────────────────────────────────────────────────────
+
+async function fetchHeatmapImages(cookies) {
   const dir = 'public/gps/heatmaps';
   mkdirSync(dir, { recursive: true });
 
-  // Download pitch background if missing
   if (!existsSync(`${dir}/pitch.png`)) {
     const pitchRes = await fetch(`${BASE}/api/assets/pitches/association_football_pitch-09b304bcba2fb55b78d668a325443484769ad9dabda105ff51e5c2169b251955.png`, { headers: { Cookie: cookies } });
     if (pitchRes.ok) {
@@ -261,7 +387,6 @@ async function fetchHeatmaps(cookies) {
     }
   }
 
-  // Query period heatmaps
   const query = `{
     currentPerson {
       matchSessionParticipations(limit: 50) {
@@ -282,56 +407,32 @@ async function fetchHeatmaps(cookies) {
   const data = await res.json();
   if (data.errors) { console.log('⚠️ Heatmap query errors:', JSON.stringify(data.errors)); return; }
 
-  const parts = data.data.currentPerson.matchSessionParticipations;
   let downloaded = 0;
-
-  for (const p of parts) {
+  for (const p of data.data.currentPerson.matchSessionParticipations) {
     const date = p.matchSession.startTime.slice(0, 10);
     for (const pm of (p.periodMetricSets || [])) {
       if (!pm.heatmap) continue;
       const period = pm.matchSessionPeriod.name.toLowerCase().replace(/\s+/g, '-');
-      const filename = `${date}-${period}.png`;
-      const filepath = `${dir}/${filename}`;
-
-      // Skip if already downloaded and > 2KB (valid)
+      const filepath = `${dir}/${date}-${period}.png`;
       if (existsSync(filepath) && statSync(filepath).size > 2000) continue;
-
       const imgRes = await fetch(pm.heatmap, { headers: { Cookie: cookies }, redirect: 'follow' });
       if (!imgRes.ok) continue;
-      const buf = Buffer.from(await imgRes.arrayBuffer());
-      writeFileSync(filepath, buf);
+      writeFileSync(filepath, Buffer.from(await imgRes.arrayBuffer()));
       downloaded++;
     }
   }
-  console.log(`📥 Downloaded ${downloaded} new heatmap(s)`);
+  console.log(`📥 Downloaded ${downloaded} new heatmap image(s)`);
+}
 
-  // Fetch sprint/intensity paths and average positions
-  const pathQuery = `{
-    currentPerson {
-      matchSessionParticipations(limit: 50) {
-        matchSession { startTime }
-        periodMetricSets {
-          matchSessionPeriod { name }
-          averagePosition { xPosition yPosition maxX maxY }
-          pathmaps { pathType paths pitchLimits { maxX maxY } }
-        }
-      }
-    }
-  }`;
+// ─── SVG Path Maps (uses pre-fetched path data) ──────────────────────────────
 
-  const pathRes = await fetch(`${BASE}/api/graphql`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', Cookie: cookies },
-    body: JSON.stringify({ query: pathQuery }),
-  });
-  const pathData = await pathRes.json();
-  if (pathData.errors) { console.log('⚠️ Path query errors:', JSON.stringify(pathData.errors)); return; }
+function generatePathSVGs(pathParticipations) {
+  const dir = 'public/gps/heatmaps';
 
-  // Catmull-Rom to cubic bezier smooth paths
   function smoothPath(points) {
     if (points.length < 2) return '';
-    if (points.length === 2) return 'M' + points[0][0].toFixed(1) + ',' + points[0][1].toFixed(1) + 'L' + points[1][0].toFixed(1) + ',' + points[1][1].toFixed(1);
-    let d = 'M' + points[0][0].toFixed(1) + ',' + points[0][1].toFixed(1);
+    if (points.length === 2) return `M${points[0][0].toFixed(1)},${points[0][1].toFixed(1)}L${points[1][0].toFixed(1)},${points[1][1].toFixed(1)}`;
+    let d = `M${points[0][0].toFixed(1)},${points[0][1].toFixed(1)}`;
     for (let i = 0; i < points.length - 1; i++) {
       const p0 = points[Math.max(0, i - 1)];
       const p1 = points[i];
@@ -341,13 +442,13 @@ async function fetchHeatmaps(cookies) {
       const cp1y = p1[1] + (p2[1] - p0[1]) / 2;
       const cp2x = p2[0] - (p3[0] - p1[0]) / 2;
       const cp2y = p2[1] - (p3[1] - p1[1]) / 2;
-      d += 'C' + cp1x.toFixed(1) + ',' + cp1y.toFixed(1) + ' ' + cp2x.toFixed(1) + ',' + cp2y.toFixed(1) + ' ' + p2[0].toFixed(1) + ',' + p2[1].toFixed(1);
+      d += `C${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p2[0].toFixed(1)},${p2[1].toFixed(1)}`;
     }
     return d;
   }
 
   let pathCount = 0;
-  for (const p of pathData.data.currentPerson.matchSessionParticipations) {
+  for (const p of pathParticipations) {
     const date = p.matchSession.startTime.slice(0, 10);
     for (const pm of (p.periodMetricSets || [])) {
       const periodName = pm.matchSessionPeriod.name;
@@ -362,8 +463,9 @@ async function fetchHeatmaps(cookies) {
 
       const maxX = ap?.maxX || pathmaps[0]?.pitchLimits?.maxX || 105;
       const maxY = ap?.maxY || pathmaps[0]?.pitchLimits?.maxY || 68;
-      const flipY = (y) => isSecondHalf ? y : maxY - y;
-      const flipX = (x) => isSecondHalf ? maxX - x : x;
+      // SVG display flip (opposite to zone analysis normalisation)
+      const flipY = y => isSecondHalf ? y : maxY - y;
+      const flipX = x => isSecondHalf ? maxX - x : x;
 
       let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${maxX} ${maxY}" preserveAspectRatio="none">\n`;
 
@@ -401,27 +503,43 @@ async function fetchHeatmaps(cookies) {
   console.log(`📥 Generated ${pathCount} new path map(s)`);
 }
 
+// ─── Main ────────────────────────────────────────────────────────────────────
+
 try {
   console.log('🔑 Logging in to PlayerData...');
   const cookies = await login();
-  console.log('✅ Logged in, fetching GPS data...');
-  const participations = await fetchGPS(cookies);
-  const { mins: existingMins, taglines: existingTaglines } = getExistingOverrides();
+  console.log('✅ Logged in');
 
-  // Build session objects
+  // Fetch metrics and path data in parallel
+  console.log('📡 Fetching GPS metrics and path data...');
+  const [participations, pathParticipations] = await Promise.all([
+    fetchGPS(cookies),
+    fetchPathData(cookies),
+  ]);
+
+  const { mins: existingMins, taglines: existingTaglines } = getExistingOverrides();
   const sessions = buildSessions(participations, existingMins);
 
-  // Generate AI taglines for any sessions missing one
-  const taglines = await generateAllTaglines(sessions, existingTaglines);
+  // Build zone summaries from path coordinates
+  const zoneByDate = buildZoneSummaries(pathParticipations);
+  const sessionsWithZones = sessions.filter(s => s.has_data && zoneByDate[s.date]);
+  console.log(`📊 Zone data available for ${sessionsWithZones.length}/${sessions.filter(s => s.has_data).length} sessions`);
 
-  // Write YAML with taglines
+  // Generate taglines (with zone context for spatial specificity)
+  const taglines = await generateAllTaglines(sessions, existingTaglines, zoneByDate);
+
+  // Write YAML
   const yaml = toYAML(sessions, taglines);
   writeFileSync('src/content/gps/gps.yaml', yaml);
-  const withData = sessions.filter(s => s.has_data).length;
-  console.log(`✅ Wrote ${withData}/${sessions.length} GPS sessions to gps.yaml`);
+  console.log(`✅ Wrote ${sessions.filter(s => s.has_data).length}/${sessions.length} GPS sessions to gps.yaml`);
 
-  console.log('🗺️ Fetching heatmaps...');
-  await fetchHeatmaps(cookies);
+  // Fetch heatmap PNGs
+  console.log('🗺️ Fetching heatmap images...');
+  await fetchHeatmapImages(cookies);
+
+  // Generate SVG path maps from already-fetched path data (no second API call)
+  generatePathSVGs(pathParticipations);
+
 } catch (err) {
   console.error(`❌ ${err.message}`);
   console.log('⚠️ Keeping existing gps.yaml');
