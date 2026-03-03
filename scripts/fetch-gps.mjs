@@ -231,7 +231,11 @@ const EXPLICIT_FIELDS = new Set(['date', 'session_id', 'match', 'our_team', 'res
 function toYAML(sessions, taglines, performanceSummary) {
   let yaml = '';
   if (performanceSummary) {
-    const escaped = performanceSummary.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    const escaped = performanceSummary
+      .replace(/\\/g, '\\\\')
+      .replace(/"/g, '\\"')
+      .replace(/\r?\n/g, ' ')
+      .trim();
     yaml += `ai_performance_summary: "${escaped}"\n`;
   }
   yaml += 'sessions:\n';
