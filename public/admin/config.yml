@@ -1,6 +1,6 @@
 backend:
   name: github
-  repo: aibot-tribelo/olly-football
+  repo: enzo-tribelo/olly-football
   branch: main
   base_url: https://decap-oauth-proxy-eosin.vercel.app
   auth_endpoint: api/auth
