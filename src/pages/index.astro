@@ -25,6 +25,7 @@ const attributes = attributesEntry.data.attributes;
 
 const gpsEntry = await getEntry('gps', 'gps');
 const gpsPerformanceSummary = gpsEntry.data.ai_performance_summary ?? null;
+const gpsSummaryFirstSentence = gpsPerformanceSummary ? (gpsPerformanceSummary.split(/(?<=[.!?])\s/)[0] ?? gpsPerformanceSummary) : null;
 const gpsSessions = gpsEntry.data.sessions.filter(s => s.has_data);
 const maxDist = Math.max(...gpsSessions.map(s => s.distance_m));
 const fullMatchSessions = gpsSessions.filter(s => s.distance_m > maxDist * 0.5);
@@ -85,7 +86,7 @@ const seasonsWithXG = seasons.map(season => ({
 }));
 ---
 
-<Layout title="Olly Robinson — OR9" description={`Olly Robinson — Attacking Forward / Striker. ${careerStats.goals} goals, ${careerStats.assists} assists in ${careerStats.apps} youth games. ${profileData.current_clubs[0]}, ${profileData.current_clubs[1]}. Age ${age}, Wiltshire.`}>
+<Layout title="Olly Robinson — OR9" description={gpsSummaryFirstSentence ?? `Olly Robinson — Attacking Forward / Striker. ${careerStats.goals} goals, ${careerStats.assists} assists in ${careerStats.apps} youth games. ${profileData.current_clubs[0]}, ${profileData.current_clubs[1]}. Age ${age}, Wiltshire.`}>
 
   <!-- JSON-LD Person -->
   <script type="application/ld+json" set:html={JSON.stringify({
