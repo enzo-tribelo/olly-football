@@ -307,17 +307,10 @@ try {
     provider.fetchPathData(cookies),
   ]);
 
-  const { mins: existingMins, taglines: existingTaglines, matches: existingMatches } = getExistingOverrides();
+  const { mins: existingMins, taglines: existingTaglines } = getExistingOverrides();
   const sessions = provider.normalizeSessions(rawSessions, existingMins);
 
-  // Preserve manually set match names from existing YAML (skip placeholders)
-  const CACHED_MATCH_PLACEHOLDERS = new Set(['opponent', 'mango', 'match']);
-  for (const s of sessions) {
-    const cached = existingMatches[s.session_id];
-    if (cached && !CACHED_MATCH_PLACEHOLDERS.has(cached.toLowerCase())) {
-      s.match = cached;
-    }
-  }
+  // Match names always come from the API — no cache override
 
   const zoneByDate = buildZoneSummaries(pathParticipations);
   console.log(`📊 Zone data for ${sessions.filter(s => s.has_data && zoneByDate[s.date]).length}/${sessions.filter(s => s.has_data).length} sessions`);
