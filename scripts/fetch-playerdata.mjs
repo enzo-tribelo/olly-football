@@ -3,7 +3,7 @@
 
 import { readFileSync, writeFileSync, existsSync, mkdirSync, statSync } from 'fs';
 
-const { PLAYERDATA_EMAIL, PLAYERDATA_PASSWORD } = process.env;
+const { PLAYERDATA_EMAIL, PLAYERDATA_PASSWORD, XAI_API_KEY } = process.env;
 
 if (!PLAYERDATA_EMAIL || !PLAYERDATA_PASSWORD) {
   console.log('⚠️ PlayerData credentials not set, skipping GPS fetch');
@@ -76,30 +76,116 @@ async function fetchGPS(cookies) {
 function round1(v) { return Math.round((v || 0) * 10) / 10; }
 function round0(v) { return Math.round(v || 0); }
 
-// Read existing actual_mins values to preserve manual overrides
-function getExistingActualMins() {
+// Read existing actual_mins and ai_tagline values to preserve manual overrides + cached taglines
+function getExistingOverrides() {
   const path = 'src/content/gps/gps.yaml';
-  if (!existsSync(path)) return {};
+  if (!existsSync(path)) return { mins: {}, taglines: {} };
   const content = readFileSync(path, 'utf8');
-  const map = {};
+  const mins = {};
+  const taglines = {};
   let currentId = null;
   for (const line of content.split('\n')) {
     const idMatch = line.match(/session_id:\s*"([^"]+)"/);
     if (idMatch) currentId = idMatch[1];
     const minsMatch = line.match(/actual_mins:\s*(\d+)/);
-    if (minsMatch && currentId) map[currentId] = parseInt(minsMatch[1]);
+    if (minsMatch && currentId) mins[currentId] = parseInt(minsMatch[1]);
+    const taglineMatch = line.match(/ai_tagline:\s*"((?:[^"\\]|\\.)*)"/);
+    if (taglineMatch && currentId) taglines[currentId] = taglineMatch[1].replace(/\\"/g, '"');
   }
-  return map;
+  return { mins, taglines };
 }
 
-function toYAML(participations, existingMins) {
-  const all = participations.map(p => {
+// Generate AI tagline for a single session via xAI Grok
+async function generateTagline(s) {
+  if (!XAI_API_KEY) return null;
+
+  // Estimate playing mins: session duration minus halftime (15 min), capped at 90
+  const playingMins = s.actual_mins ?? Math.min(90, Math.max(30, s.duration_mins - 15));
+
+  const dateFormatted = new Date(s.date + 'T12:00:00Z').toLocaleDateString('en-GB', {
+    day: 'numeric', month: 'long', year: 'numeric',
+  });
+
+  const prompt = `Write ONE punchy tagline (max 12 words) for a young striker's GPS match report on a football profile website. Capture the standout quality of the performance — explosive pace, relentless pressing, gritty industry, clinical efficiency, etc. Sound like a match report excerpt, not a data dump. No quotes. No emoji.
+
+Match: ${s.match}, ${dateFormatted}
+Playing time: ~${playingMins} mins
+Distance: ${(s.distance_m / 1000).toFixed(1)}km | Top speed: ${s.max_speed_kph} km/h | Avg speed: ${s.avg_speed_kph} km/h
+Sprints: ${s.sprints} (${s.sprint_distance_m}m) | High intensity: ${s.high_intensity} events | High speed runs: ${s.high_speed_run_events}
+Metres/min: ${s.metres_per_min} | Workload: ${s.workload}
+
+Examples of good taglines:
+- "Relentless from first to last — 12 sprints and 9.4km covered"
+- "Explosive afternoon, peaking at 29.4 km/h with 31 high-intensity actions"
+- "Efficient 80-minute shift, steady pressing across every channel"`;
+
+  try {
+    const res = await fetch('https://api.x.ai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${XAI_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: 'grok-3-mini',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 60,
+        temperature: 0.7,
+      }),
+    });
+    if (!res.ok) {
+      const errText = await res.text();
+      console.warn(`⚠️ xAI error ${res.status} for ${s.date}: ${errText.slice(0, 100)}`);
+      return null;
+    }
+    const json = await res.json();
+    const tagline = json.choices?.[0]?.message?.content?.trim() ?? null;
+    if (tagline) console.log(`  ✨ ${s.date}: "${tagline}"`);
+    return tagline;
+  } catch (e) {
+    console.warn(`⚠️ xAI failed for ${s.date}: ${e.message}`);
+    return null;
+  }
+}
+
+// Generate taglines for all sessions that don't have one yet
+async function generateAllTaglines(sessions, existingTaglines) {
+  const taglines = { ...existingTaglines };
+  const missing = sessions.filter(s => s.has_data && !taglines[s.session_id]);
+
+  if (missing.length === 0) {
+    console.log('✅ All sessions already have AI taglines');
+    return taglines;
+  }
+
+  if (!XAI_API_KEY) {
+    console.log('⚠️ XAI_API_KEY not set, skipping tagline generation');
+    return taglines;
+  }
+
+  console.log(`✨ Generating ${missing.length} AI tagline(s) via Grok...`);
+  for (const s of missing) {
+    const tagline = await generateTagline(s);
+    if (tagline) taglines[s.session_id] = tagline;
+    // Small delay to be polite to the API
+    if (missing.indexOf(s) < missing.length - 1) {
+      await new Promise(r => setTimeout(r, 500));
+    }
+  }
+
+  return taglines;
+}
+
+function buildSessions(participations, existingMins) {
+  return participations.map(p => {
     const ms = p.metricSet;
     const hasData = !!(ms && ms.totalDistanceM > 0);
     return {
       date: p.matchSession.startTime.slice(0, 10),
       session_id: p.matchSession.id,
+      match: 'Bath City U18',
       duration_mins: Math.round((new Date(p.matchSession.endTime) - new Date(p.matchSession.startTime)) / 60000),
+      actual_mins: existingMins[p.matchSession.id],
       has_data: hasData,
       // Core
       distance_m: round0(ms?.totalDistanceM),
@@ -139,23 +225,27 @@ function toYAML(participations, existingMins) {
       workload_intensity: round0(ms?.workloadIntensity),
     };
   }).sort((a, b) => b.date.localeCompare(a.date));
+}
 
-  // Write as YAML
+// Fields written explicitly at the top of each session block — skip in generic loop
+const EXPLICIT_FIELDS = new Set(['date', 'session_id', 'match', 'actual_mins', 'ai_tagline']);
+
+function toYAML(sessions, taglines) {
   let yaml = 'sessions:\n';
-  for (const s of all) {
+  for (const s of sessions) {
     yaml += `  - date: "${s.date}"\n`;
-    yaml += `    match: "Bath City U18"\n`;
+    yaml += `    match: "${s.match}"\n`;
+    const tagline = taglines[s.session_id];
+    if (tagline) yaml += `    ai_tagline: "${tagline.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"\n`;
     yaml += `    session_id: "${s.session_id}"\n`;
-    const actualMins = existingMins[s.session_id];
-    if (actualMins) yaml += `    actual_mins: ${actualMins}\n`;
+    if (s.actual_mins) yaml += `    actual_mins: ${s.actual_mins}\n`;
     for (const [k, v] of Object.entries(s)) {
-      if (['date', 'session_id'].includes(k)) continue;
+      if (EXPLICIT_FIELDS.has(k)) continue;
       if (typeof v === 'boolean') yaml += `    ${k}: ${v}\n`;
       else if (typeof v === 'number') yaml += `    ${k}: ${v}\n`;
     }
   }
-
-  return { yaml, count: all.filter(s => s.has_data).length, total: all.length };
+  return yaml;
 }
 
 async function fetchHeatmaps(cookies) {
@@ -272,8 +362,6 @@ async function fetchHeatmaps(cookies) {
 
       const maxX = ap?.maxX || pathmaps[0]?.pitchLimits?.maxX || 105;
       const maxY = ap?.maxY || pathmaps[0]?.pitchLimits?.maxY || 68;
-      // First half: flip Y only (SVG y-down vs pitch y-up)
-      // Second half: flip X only (swap sides, raw Y already correct for SVG)
       const flipY = (y) => isSecondHalf ? y : maxY - y;
       const flipX = (x) => isSecondHalf ? maxX - x : x;
 
@@ -299,7 +387,6 @@ async function fetchHeatmaps(cookies) {
         const cx = flipX(ap.xPosition).toFixed(1);
         const cy = flipY(ap.yPosition).toFixed(1);
         const rx = 3.5;
-        // Compensate for pitch image aspect ratio (1056x1600) vs viewBox
         const stretchRatio = (1600 / maxY) / (1056 / maxX);
         const ry = (rx / stretchRatio).toFixed(1);
         svg += `  <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#0c0c0c" stroke="#ef4444" stroke-width="0.4" opacity="0.95"/>\n`;
@@ -319,10 +406,19 @@ try {
   const cookies = await login();
   console.log('✅ Logged in, fetching GPS data...');
   const participations = await fetchGPS(cookies);
-  const existingMins = getExistingActualMins();
-  const { yaml, count, total } = toYAML(participations, existingMins);
+  const { mins: existingMins, taglines: existingTaglines } = getExistingOverrides();
+
+  // Build session objects
+  const sessions = buildSessions(participations, existingMins);
+
+  // Generate AI taglines for any sessions missing one
+  const taglines = await generateAllTaglines(sessions, existingTaglines);
+
+  // Write YAML with taglines
+  const yaml = toYAML(sessions, taglines);
   writeFileSync('src/content/gps/gps.yaml', yaml);
-  console.log(`✅ Wrote ${count}/${total} GPS sessions to gps.yaml`);
+  const withData = sessions.filter(s => s.has_data).length;
+  console.log(`✅ Wrote ${withData}/${sessions.length} GPS sessions to gps.yaml`);
 
   console.log('🗺️ Fetching heatmaps...');
   await fetchHeatmaps(cookies);

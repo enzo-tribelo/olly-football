@@ -110,6 +110,9 @@ export async function getStaticPaths() {
         <p class="text-cream-muted text-sm">
           {dateStr} · <span class={`font-medium ${playingMins < 75 ? 'text-gold' : 'text-cream'}`}>{isEstimate ? '~' : ''}{playingMins} mins played</span>
         </p>
+        {s.ai_tagline && (
+          <p class="text-cream-muted/70 text-sm italic mt-2">{s.ai_tagline}</p>
+        )}
       </div>
 
       <!-- Swipe hint — mobile only, fades after first view -->
