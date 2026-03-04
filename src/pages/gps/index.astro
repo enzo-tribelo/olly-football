@@ -27,12 +27,15 @@ const validSessions = allSessions.filter(s => s.has_data);
 // 1. Correct API m/min by removing 15min halftime dilution
 // 2. Use only "full match" sessions (>50% max distance) for baseline
 // 3. Estimate each session's playing time from avg corrected m/min
-const maxDist = Math.max(...validSessions.map(s => s.distance_m));
+const hasData = validSessions.length > 0;
+const maxDist = hasData ? Math.max(...validSessions.map(s => s.distance_m)) : 0;
 const fullMatchSessions = validSessions.filter(s => s.distance_m > maxDist * 0.5);
-const avgPlayingMPM = fullMatchSessions.reduce((sum, s) => {
-  const corrected = s.metres_per_min * (s.duration_mins / (s.duration_mins - 15));
-  return sum + corrected;
-}, 0) / fullMatchSessions.length;
+const avgPlayingMPM = fullMatchSessions.length > 0
+  ? fullMatchSessions.reduce((sum, s) => {
+      const corrected = s.metres_per_min * (s.duration_mins / (s.duration_mins - 15));
+      return sum + corrected;
+    }, 0) / fullMatchSessions.length
+  : 100;
 
 const sessionsWithEst = allSessions.map(s => {
   const est = s.has_data ? Math.min(90, Math.round(s.distance_m / avgPlayingMPM)) : 0;
@@ -41,16 +44,17 @@ const sessionsWithEst = allSessions.map(s => {
   return { ...s, playing_mins: mins, is_estimate: isEstimate };
 });
 
+const n = validSessions.length || 1; // avoid divide-by-zero
 const stats = {
   tracked: allSessions.length,
   withData: validSessions.length,
-  topSpeed: Math.max(...validSessions.map(s => s.max_speed_kph)),
-  avgDistance: Math.round(validSessions.reduce((sum, s) => sum + s.distance_m, 0) / validSessions.length),
-  avgSprints: Math.round(validSessions.reduce((sum, s) => sum + s.sprints, 0) / validSessions.length),
-  avgHighIntensity: Math.round(validSessions.reduce((sum, s) => sum + s.high_intensity, 0) / validSessions.length),
+  topSpeed: hasData ? Math.max(...validSessions.map(s => s.max_speed_kph)) : 0,
+  avgDistance: Math.round(validSessions.reduce((sum, s) => sum + s.distance_m, 0) / n),
+  avgSprints: Math.round(validSessions.reduce((sum, s) => sum + s.sprints, 0) / n),
+  avgHighIntensity: Math.round(validSessions.reduce((sum, s) => sum + s.high_intensity, 0) / n),
   totalDistance: Math.round(validSessions.reduce((sum, s) => sum + s.distance_m, 0)),
-  avgHighSpeedDist: Math.round(validSessions.reduce((sum, s) => sum + s.high_speed_distance_m, 0) / validSessions.length),
-  avgSpeed: Math.round(validSessions.reduce((sum, s) => sum + s.avg_speed_kph, 0) / validSessions.length * 10) / 10,
+  avgHighSpeedDist: Math.round(validSessions.reduce((sum, s) => sum + s.high_speed_distance_m, 0) / n),
+  avgSpeed: Math.round(validSessions.reduce((sum, s) => sum + s.avg_speed_kph, 0) / n * 10) / 10,
 };
 ---
 
