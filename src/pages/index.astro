@@ -172,15 +172,17 @@ const seasonsWithXG = seasons.map(season => ({
           </div>
 
           <p class="text-lg text-cream/80 font-light max-w-xl leading-relaxed italic border-l-2 border-gold/50 pl-5">
-            "Consistent, powerful finisher — <span class="text-gold font-medium not-italic">{careerStats.goals} goals</span> + <span class="text-gold font-medium not-italic">{careerStats.assists} assists</span> in {careerStats.apps} games. Now in U18 & senior reserve football at {age}."
+            "<span class="text-gold font-medium not-italic">{careerStats.goals} goals</span> + <span class="text-gold font-medium not-italic">{careerStats.assists} assists</span> in {careerStats.apps} games across the last 2 seasons. Now playing U18 & senior reserve football at {age}."
           </p>
           <p class="text-xs text-cream-muted mt-2 pl-5 ml-0.5">
-            U15–U18 · 2023–Present
+            {seasonRangeLabel}
           </p>
         </div>
 
         <!-- Hero stat cards -->
-        <div class="grid grid-cols-2 gap-3 lg:gap-4">
+        <div>
+          <p class="text-xs text-cream-muted/50 uppercase tracking-widest mb-2 text-right">{seasonRangeLabel}</p>
+          <div class="grid grid-cols-2 gap-3 lg:gap-4">
           <div class="bg-surface-elevated/80 backdrop-blur border border-pitch-line rounded-sm p-5 text-center">
             <div class="font-['Oswald'] text-4xl lg:text-5xl font-bold text-gold">{careerStats.goals}</div>
             <div class="text-xs text-cream-muted uppercase tracking-widest mt-1">Goals</div>
@@ -202,6 +204,7 @@ const seasonsWithXG = seasons.map(season => ({
         <p class="text-xs text-cream-muted/60 uppercase tracking-widest mt-3 text-center">
           {seasonCountLabel} &middot; {seasonRangeLabel} &middot; <a href="#seasons" class="underline underline-offset-2 hover:text-cream-muted transition-colors">View full history ↓</a>
         </p>
+        </div>
       </div>
 
       <div class="mt-12 flex items-center gap-4 text-cream-muted">
