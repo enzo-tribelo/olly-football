@@ -52,16 +52,30 @@ if (now.getMonth() + 1 < dobMonth) age--; // Before birth month
 
 // Compute career stats dynamically
 const allClubs = seasons.flatMap(s => s.clubs);
+
+// Headline stats: cap at 2 most recent seasons (scouts care about current form)
+const HEADLINE_SEASONS = 2;
+const headlineSeasons = seasons.slice(0, HEADLINE_SEASONS);
+const headlineClubs = headlineSeasons.flatMap(s => s.clubs);
 const careerStats = {
-  apps: allClubs.reduce((sum, c) => sum + c.apps, 0),
-  goals: allClubs.reduce((sum, c) => sum + c.goals, 0),
-  assists: allClubs.reduce((sum, c) => sum + c.assists, 0),
+  apps: headlineClubs.reduce((sum, c) => sum + c.apps, 0),
+  goals: headlineClubs.reduce((sum, c) => sum + c.goals, 0),
+  assists: headlineClubs.reduce((sum, c) => sum + c.assists, 0),
   gaPerGame: 0, // will compute below
   clubs: new Set(allClubs.map(c => c.name)).size,
 };
 careerStats.gaPerGame = parseFloat(
   ((careerStats.goals + careerStats.assists) / careerStats.apps).toFixed(2)
 );
+
+// Season range label — dynamically derived from headline seasons
+const seasonLabels = headlineSeasons.map(s => s.season); // already sorted newest first
+const oldestSeason = seasonLabels[seasonLabels.length - 1];
+const newestSeason = seasonLabels[0];
+const seasonRangeLabel = seasonLabels.length === 1
+  ? newestSeason
+  : `${oldestSeason} – ${newestSeason}`;
+const seasonCountLabel = `${seasonLabels.length} season${seasonLabels.length !== 1 ? 's' : ''}`;
 
 // Club logo mapping
 const clubLogos: Record<string, string> = {
@@ -184,6 +198,10 @@ const seasonsWithXG = seasons.map(season => ({
             <div class="text-xs text-cream-muted uppercase tracking-widest mt-1 cursor-help" title="Goals and assists combined per game played">G/A per game</div>
           </div>
         </div>
+        <!-- Season range label -->
+        <p class="text-xs text-cream-muted/60 uppercase tracking-widest mt-3 text-center">
+          {seasonCountLabel} &middot; {seasonRangeLabel} &middot; <a href="#seasons" class="underline underline-offset-2 hover:text-cream-muted transition-colors">View full history ↓</a>
+        </p>
       </div>
 
       <div class="mt-12 flex items-center gap-4 text-cream-muted">
