@@ -1,4 +1,12 @@
 matches:
+  - date: "11/03/2026"
+    match: "Bath City U18 vs Richard Huish College"
+    venue: "Away"
+    result: "Lost 6-2"
+    goals: 0
+    assists: 0
+    mins: 70
+    standout: false
   - date: "23/04/23"
     match: "AFC Corsham vs Frome"
     result: "Won 5-3"
