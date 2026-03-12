@@ -1,0 +1,207 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import { getEntry } from 'astro:content';
+
+const BASE = import.meta.env.BASE_URL;
+
+const matchesEntry = await getEntry('matches', 'matches');
+const gpsEntry = await getEntry('gps', 'gps');
+
+// Build a lookup of match name → GPS session_id
+const gpsLookup: Record<string, string> = {};
+for (const s of gpsEntry.data.sessions) {
+  if (s.match) gpsLookup[s.match.toLowerCase()] = s.session_id;
+}
+
+// Parse dd/mm/yyyy or d/m/yy etc → Date
+function parseDate(d: string): Date {
+  const parts = d.split('/');
+  if (parts.length !== 3) return new Date(0);
+  const [day, month, year] = parts.map(Number);
+  const fullYear = year < 100 ? 2000 + year : year;
+  return new Date(fullYear, month - 1, day);
+}
+
+function resultType(result: string): 'win' | 'draw' | 'loss' | 'unknown' {
+  const r = result.toLowerCase();
+  if (r.startsWith('won') || r.startsWith('win') || r.startsWith('w ')) return 'win';
+  if (r.startsWith('drew') || r.startsWith('draw') || r.startsWith('d ')) return 'draw';
+  if (r.startsWith('lost') || r.startsWith('loss') || r.startsWith('l ')) return 'loss';
+  return 'unknown';
+}
+
+const resultStyle = {
+  win:     { pill: 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30', letter: 'W' },
+  draw:    { pill: 'bg-amber-500/20   text-amber-300   border border-amber-500/30',   letter: 'D' },
+  loss:    { pill: 'bg-red-500/20     text-red-400     border border-red-500/30',     letter: 'L' },
+  unknown: { pill: 'bg-white/10       text-cream-muted border border-white/10',       letter: '?' },
+};
+
+// Sort newest first
+const matches = [...matchesEntry.data.matches].sort((a, b) =>
+  parseDate(b.date).getTime() - parseDate(a.date).getTime()
+);
+
+// Season grouping (based on date: Aug–Jul)
+function getSeason(d: Date): string {
+  const y = d.getFullYear();
+  const m = d.getMonth(); // 0-indexed
+  const start = m >= 7 ? y : y - 1;
+  return `${start}–${String(start + 1).slice(-2)}`;
+}
+
+// Group by season
+const grouped: Record<string, typeof matches> = {};
+for (const m of matches) {
+  const d = parseDate(m.date);
+  const season = getSeason(d);
+  if (!grouped[season]) grouped[season] = [];
+  grouped[season].push(m);
+}
+const seasons = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
+
+// Summary stats
+const totalGoals = matches.reduce((s, m) => s + m.goals, 0);
+const totalAssists = matches.reduce((s, m) => s + m.assists, 0);
+const wins = matches.filter(m => resultType(m.result) === 'win').length;
+const draws = matches.filter(m => resultType(m.result) === 'draw').length;
+const losses = matches.filter(m => resultType(m.result) === 'loss').length;
+const total = matches.length;
+
+function formatDate(d: string): string {
+  const parsed = parseDate(d);
+  if (parsed.getTime() === 0) return d;
+  return parsed.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function getOpponent(matchStr: string): string {
+  // "Bath City U18 vs Richard Huish" → "Richard Huish"
+  const parts = matchStr.split(' vs ');
+  if (parts.length === 2) {
+    return parts[1].trim();
+  }
+  return matchStr;
+}
+
+function getTeam(matchStr: string): string {
+  const parts = matchStr.split(' vs ');
+  return parts[0].trim();
+}
+---
+
+<Layout
+  title="Matches — Olly Robinson OR9"
+  description="Full match log for Olly Robinson — results, goals, assists and GPS data."
+>
+  <Nav current="matches" />
+
+  <main class="pt-20 pb-24 max-w-4xl mx-auto px-4 sm:px-6">
+
+    <!-- Header -->
+    <div class="mb-10 mt-4">
+      <h1 class="font-['Oswald'] text-3xl sm:text-4xl uppercase tracking-wider text-cream mb-1">
+        Matches
+      </h1>
+      <p class="text-cream-muted text-sm">Full match log · {total} games</p>
+    </div>
+
+    <!-- Summary bar -->
+    <div class="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-10">
+      {[
+        { label: 'Won', value: wins, cls: 'text-emerald-400' },
+        { label: 'Drawn', value: draws, cls: 'text-amber-400' },
+        { label: 'Lost', value: losses, cls: 'text-red-400' },
+        { label: 'Goals', value: totalGoals, cls: 'text-gold' },
+        { label: 'Assists', value: totalAssists, cls: 'text-gold' },
+      ].map(stat => (
+        <div class="bg-surface-elevated border border-pitch-line rounded-lg px-4 py-3 text-center">
+          <div class={`font-['Oswald'] text-2xl ${stat.cls}`}>{stat.value}</div>
+          <div class="text-cream-muted text-xs uppercase tracking-widest mt-0.5">{stat.label}</div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Matches grouped by season -->
+    {seasons.map(season => (
+      <section class="mb-10">
+        <h2 class="font-['Oswald'] text-sm uppercase tracking-[0.2em] text-gold mb-3 flex items-center gap-3">
+          {season}
+          <span class="text-cream-muted font-normal normal-case tracking-normal text-xs">
+            {grouped[season].length} games
+          </span>
+        </h2>
+
+        <div class="rounded-xl border border-pitch-line overflow-hidden divide-y divide-pitch-line/60">
+          {grouped[season].map(m => {
+            const rType = resultType(m.result);
+            const style = resultStyle[rType];
+            const gpsId = gpsLookup[m.match.toLowerCase()];
+            const opponent = getOpponent(m.match);
+            const team = getTeam(m.match);
+            const isHome = !m.venue || m.venue.toLowerCase() !== 'away';
+
+            return (
+              <div class={`flex items-center gap-3 px-4 py-3 bg-surface hover:bg-surface-elevated transition-colors group ${gpsId ? 'cursor-pointer' : ''}`}
+                   onclick={gpsId ? `window.location='${BASE}gps/${gpsId}/'` : undefined}>
+
+                {/* Result pill */}
+                <span class={`shrink-0 inline-flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold font-['Oswald'] ${style.pill}`}>
+                  {style.letter}
+                </span>
+
+                {/* Match info */}
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-cream text-sm font-medium truncate">{opponent}</span>
+                    {m.standout && <span class="text-gold text-xs">⭐</span>}
+                    {gpsId && <span class="text-xs text-cream-muted/60 group-hover:text-gold transition-colors">GPS →</span>}
+                  </div>
+                  <div class="flex items-center gap-2 mt-0.5 flex-wrap">
+                    <span class="text-cream-muted text-xs">{team}</span>
+                    <span class="text-pitch-line text-xs">·</span>
+                    <span class={`text-xs ${isHome ? 'text-cream-muted' : 'text-amber-400/80'}`}>
+                      {isHome ? 'Home' : 'Away'}
+                    </span>
+                    <span class="text-pitch-line text-xs">·</span>
+                    <span class="text-cream-muted text-xs">{formatDate(m.date)}</span>
+                    {m.mins && (
+                      <>
+                        <span class="text-pitch-line text-xs">·</span>
+                        <span class="text-cream-muted text-xs">{m.mins}&apos;</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {/* Score */}
+                <span class={`shrink-0 text-sm font-['Oswald'] font-semibold tracking-wide ${
+                  rType === 'win' ? 'text-emerald-400' : rType === 'loss' ? 'text-red-400' : 'text-amber-400'
+                }`}>
+                  {m.result.replace(/^(Won|Lost|Drew)\s*/i, '')}
+                </span>
+
+                {/* G / A */}
+                {(m.goals > 0 || m.assists > 0) && (
+                  <div class="shrink-0 flex gap-1.5">
+                    {m.goals > 0 && (
+                      <span class="text-xs bg-gold/15 text-gold border border-gold/20 px-1.5 py-0.5 rounded font-semibold">
+                        G{m.goals}
+                      </span>
+                    )}
+                    {m.assists > 0 && (
+                      <span class="text-xs bg-white/8 text-cream-muted border border-white/10 px-1.5 py-0.5 rounded font-semibold">
+                        A{m.assists}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </section>
+    ))}
+
+  </main>
+</Layout>

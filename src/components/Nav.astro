@@ -1,7 +1,7 @@
 ---
 interface Props {
   /** Current page identifier for active state */
-  current?: 'home' | 'gps' | 'footage';
+  current?: 'home' | 'gps' | 'footage' | 'matches';
   /** Override left side with custom back link */
   backHref?: string;
   backLabel?: string;
@@ -17,6 +17,7 @@ const links = [
   { href: `${BASE}#seasons`, label: 'Seasons', page: 'home' },
   { href: `${BASE}#honours`, label: 'Honours', page: 'home' },
   { href: `${BASE}#gallery`, label: 'Gallery', page: 'home' },
+  { href: `${BASE}matches/`, label: 'Matches', page: 'matches' },
   { href: `${BASE}gps/`, label: 'GPS', page: 'gps' },
   { href: `${BASE}footage/`, label: 'Footage', page: 'footage', cta: true },
 ];
