@@ -45,11 +45,14 @@ const matchesCollection = defineCollection({
     matches: z.array(
       z.object({
         date: z.string(),
-        match: z.string(),
-        result: z.string(),
-        goals: z.number(),
-        assists: z.number(),
-        standout: z.boolean().default(true),
+        team: z.string(),
+        opponent: z.string(),
+        venue: z.string().nullable().optional(),
+        result: z.enum(['W', 'D', 'L']),
+        score: z.string().nullable().optional(),
+        goals: z.number().default(0),
+        assists: z.number().default(0),
+        mins: z.number().nullable().optional(),
       })
     ),
   }),

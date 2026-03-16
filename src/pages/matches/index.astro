@@ -1,0 +1,175 @@
+---
+import { getEntry } from 'astro:content';
+import Nav from '../../components/Nav.astro';
+
+const matchData = await getEntry('matches', 'matches');
+const matches = matchData?.data.matches || [];
+
+// Calculate stats
+const stats = {
+  wins: matches.filter(m => m.result === 'W').length,
+  draws: matches.filter(m => m.result === 'D').length,
+  losses: matches.filter(m => m.result === 'L').length,
+  goals: matches.reduce((sum, m) => sum + m.goals, 0),
+  assists: matches.reduce((sum, m) => sum + m.assists, 0),
+};
+
+// Group by season (Aug-Jul boundary)
+interface SeasonGroup {
+  label: string;
+  team: string;
+  matches: typeof matches;
+}
+
+const seasonGroups: SeasonGroup[] = [];
+const groupMap = new Map<string, typeof matches>();
+
+matches.forEach(match => {
+  const date = new Date(match.date);
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1; // 1-12
+  // Season year: if month >= 8 (Aug), use current year; else use previous year
+  const seasonStartYear = month >= 8 ? year : year - 1;
+  const seasonLabel = `${match.team} · ${seasonStartYear}–${String(seasonStartYear + 1).slice(-2)}`;
+  
+  if (!groupMap.has(seasonLabel)) {
+    groupMap.set(seasonLabel, []);
+  }
+  groupMap.get(seasonLabel)!.push(match);
+});
+
+// Convert to array and sort (newest first)
+groupMap.forEach((matches, label) => {
+  const team = matches[0].team;
+  seasonGroups.push({ label, team, matches });
+});
+
+seasonGroups.sort((a, b) => {
+  const aYear = parseInt(a.label.split('·')[1].trim().split('–')[0]);
+  const bYear = parseInt(b.label.split('·')[1].trim().split('–')[0]);
+  return bYear - aYear;
+});
+
+// Format date helper
+function formatDate(dateStr: string): string {
+  const date = new Date(dateStr);
+  const day = date.getDate();
+  const month = date.toLocaleDateString('en-GB', { month: 'short' });
+  const year = date.getFullYear();
+  return `${day} ${month} ${year}`;
+}
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matches · OR9</title>
+  <meta name="description" content="Complete match history and statistics" />
+</head>
+<body class="bg-pitch text-cream antialiased">
+  <Nav current="matches" />
+
+  <main class="pt-20 md:pt-24 pb-16 px-4 sm:px-6 lg:px-10 max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="font-['Oswald'] text-4xl md:text-5xl uppercase tracking-wide text-gold mb-2">Matches</h1>
+      <p class="text-cream-muted text-sm">Complete match history from youth to present</p>
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="grid grid-cols-5 gap-3 mb-10 p-4 bg-surface-elevated/40 border border-pitch-line rounded-lg">
+      <div class="text-center">
+        <div class="text-2xl md:text-3xl font-bold text-green-400">{stats.wins}</div>
+        <div class="text-xs text-cream-muted uppercase tracking-wider mt-1">Wins</div>
+      </div>
+      <div class="text-center">
+        <div class="text-2xl md:text-3xl font-bold text-gray-400">{stats.draws}</div>
+        <div class="text-xs text-cream-muted uppercase tracking-wider mt-1">Draws</div>
+      </div>
+      <div class="text-center">
+        <div class="text-2xl md:text-3xl font-bold text-red-400">{stats.losses}</div>
+        <div class="text-xs text-cream-muted uppercase tracking-wider mt-1">Losses</div>
+      </div>
+      <div class="text-center">
+        <div class="text-2xl md:text-3xl font-bold text-gold">{stats.goals}</div>
+        <div class="text-xs text-cream-muted uppercase tracking-wider mt-1">Goals</div>
+      </div>
+      <div class="text-center">
+        <div class="text-2xl md:text-3xl font-bold text-gold">{stats.assists}</div>
+        <div class="text-xs text-cream-muted uppercase tracking-wider mt-1">Assists</div>
+      </div>
+    </div>
+
+    <!-- Matches by Season -->
+    {seasonGroups.map((season) => (
+      <div class="mb-10">
+        <h2 class="font-['Oswald'] text-xl md:text-2xl uppercase tracking-wide text-cream mb-4">
+          {season.label}
+        </h2>
+        
+        <div class="space-y-2">
+          {season.matches.map((match) => (
+            <div class="flex items-center gap-3 p-3 bg-surface-elevated/30 border border-pitch-line/50 rounded hover:bg-surface-elevated/50 transition-colors">
+              <!-- Date -->
+              <div class="text-xs text-cream-muted w-24 flex-shrink-0">
+                {formatDate(match.date)}
+              </div>
+
+              <!-- Result Badge -->
+              <div class={`w-8 h-8 flex items-center justify-center rounded-full font-bold text-sm flex-shrink-0 ${
+                match.result === 'W' ? 'bg-green-500/20 text-green-400' :
+                match.result === 'D' ? 'bg-gray-500/20 text-gray-400' :
+                'bg-red-500/20 text-red-400'
+              }`}>
+                {match.result}
+              </div>
+
+              <!-- Score -->
+              <div class="text-sm font-semibold text-cream w-16 flex-shrink-0">
+                {match.score || '–'}
+              </div>
+
+              <!-- Opponent -->
+              <div class="text-sm text-cream flex-1 min-w-0">
+                <span class="truncate block">{match.opponent}</span>
+                {match.venue && (
+                  <span class="text-xs text-cream-muted">{match.venue}</span>
+                )}
+              </div>
+
+              <!-- Stats Badges -->
+              <div class="flex items-center gap-2 flex-shrink-0">
+                {match.goals > 0 && (
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-gold/20 text-gold rounded text-xs font-semibold">
+                    <span>G</span>
+                    <span>{match.goals}</span>
+                  </span>
+                )}
+                {match.assists > 0 && (
+                  <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-gold/20 text-gold rounded text-xs font-semibold">
+                    <span>A</span>
+                    <span>{match.assists}</span>
+                  </span>
+                )}
+                {match.mins !== null && (
+                  <span class="text-xs text-cream-muted w-10 text-right">
+                    {match.mins}'
+                  </span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+
+    {matches.length === 0 && (
+      <div class="text-center py-20 text-cream-muted">
+        <p>No matches found.</p>
+      </div>
+    )}
+  </main>
+</body>
+</html>
