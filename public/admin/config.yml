@@ -63,7 +63,7 @@ collections:
 
   # Matches
   - name: "matches"
-    label: "Standout Matches"
+    label: "Match Results"
     files:
       - label: "All Matches"
         name: "matches"
@@ -73,12 +73,15 @@ collections:
             name: "matches"
             widget: "list"
             fields:
-              - { label: "Date", name: "date", widget: "string", hint: "e.g. 23/04/23" }
-              - { label: "Match", name: "match", widget: "string", hint: "e.g. AFC Corsham vs Frome" }
-              - { label: "Result", name: "result", widget: "string", hint: "e.g. Won 5-3" }
-              - { label: "Goals", name: "goals", widget: "number" }
-              - { label: "Assists", name: "assists", widget: "number" }
-              - { label: "Standout Performance?", name: "standout", widget: "boolean", default: true }
+              - { label: "Date", name: "date", widget: "date", format: "YYYY-MM-DD", hint: "Match date" }
+              - { label: "Team", name: "team", widget: "string", hint: "e.g. Bath City U18" }
+              - { label: "Opponent", name: "opponent", widget: "string", hint: "e.g. Cirencester" }
+              - { label: "Venue", name: "venue", widget: "select", options: ["Home", "Away"], required: false }
+              - { label: "Result", name: "result", widget: "select", options: ["W", "D", "L"] }
+              - { label: "Score", name: "score", widget: "string", required: false, hint: "e.g. 3-1" }
+              - { label: "Goals", name: "goals", widget: "number", default: 0 }
+              - { label: "Assists", name: "assists", widget: "number", default: 0 }
+              - { label: "Minutes Played", name: "mins", widget: "number", required: false }
 
   # Honours
   - name: "honours"
