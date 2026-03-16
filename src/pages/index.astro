@@ -15,7 +15,7 @@ const seasons = seasonsEntries
   .sort((a, b) => b.season.localeCompare(a.season)); // Newest first
 
 const matchesEntry = await getEntry('matches', 'matches');
-const keyMatches = matchesEntry.data.matches;
+const keyMatches = matchesEntry.data.matches.filter(m => m.goals >= 2 || (m.goals >= 1 && m.assists >= 1));
 
 const honoursEntry = await getEntry('honours', 'honours');
 const honours = honoursEntry.data.honours;
@@ -419,9 +419,9 @@ const seasonsWithXG = seasons.map(season => ({
       <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {keyMatches.map(m => (
           <div class="bg-surface-elevated border border-pitch-line rounded-sm p-5 hover:border-gold/30 transition-colors">
-            <div class="text-xs text-cream-muted mb-2">{m.date}</div>
-            <div class="font-['Oswald'] text-sm uppercase tracking-wide text-cream mb-1">{m.match}</div>
-            <div class="text-xs text-gold font-semibold mb-3">{m.result}</div>
+            <div class="text-xs text-cream-muted mb-2">{new Date(m.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+            <div class="font-['Oswald'] text-sm uppercase tracking-wide text-cream mb-1">vs {m.opponent}</div>
+            <div class="text-xs text-gold font-semibold mb-3">{m.team}{m.score ? ` · ${m.score}` : ''}</div>
             <div class="flex gap-4">
               <span class="font-['Oswald'] text-xl font-bold text-gold">{m.goals}G</span>
               {m.assists > 0 && <span class="font-['Oswald'] text-xl font-bold text-cream">{m.assists}A</span>}
