@@ -43,6 +43,11 @@ jobs:
           GPS_FORCE_TAGLINES: ${{ github.event.inputs.force_taglines || 'false' }}
         run: node scripts/fetch-gps.mjs
 
+      - name: Sync footage from YouTube
+        run: |
+          pip install yt-dlp -q
+          node scripts/fetch-footage.mjs
+
       - run: npm run build
       - uses: actions/upload-pages-artifact@v4
         with:
