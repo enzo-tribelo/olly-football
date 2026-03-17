@@ -8,7 +8,7 @@ import { readFileSync, writeFileSync } from 'fs';
 
 const CHANNEL_URL = 'https://www.youtube.com/@or9uk';
 const FOOTAGE_PATH = 'src/content/footage/footage.yaml';
-const MAX_VIDEOS = 15;
+const MAX_VIDEOS = 5;
 
 // Fetch video list via yt-dlp
 console.log('Fetching YouTube channel videos...');
@@ -79,8 +79,10 @@ for (const line of lines) {
 
 console.log(`${newEntries.length} new videos to add`);
 
-// Merge: new first, then existing, cap at MAX_VIDEOS
-const merged = [...newEntries, ...entries].slice(0, MAX_VIDEOS);
+// Merge: new first, then existing, sort by date desc, cap at MAX_VIDEOS
+const merged = [...newEntries, ...entries]
+  .sort((a, b) => new Date(b.date) - new Date(a.date))
+  .slice(0, MAX_VIDEOS);
 
 // Write YAML
 const yaml = merged.map(e => `- id: "${e.id}"
