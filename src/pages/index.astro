@@ -61,12 +61,10 @@ const HEADLINE_SEASONS = 2;
 const headlineSeasons = seasons.slice(0, HEADLINE_SEASONS);
 const headlineClubs = headlineSeasons.flatMap(s => s.clubs);
 
-// Goals & assists: derive from matches.yaml (single source of truth)
-// Apps & mins: still from seasons (matches.yaml doesn't track that)
+// Goals, assists, apps & mins: all derived from matches.yaml (single source of truth)
 const allMatches = matchesEntry.data.matches;
-const recentSeasonLabels = new Set(headlineSeasons.map(s => s.season)); // e.g. "2025–26", "2024–25"
+const recentSeasonLabels = new Set(headlineSeasons.map(s => s.season));
 
-// Map match dates to season labels (Aug-Jul boundary)
 function matchSeason(dateStr: string): string {
   const d = new Date(dateStr);
   const y = d.getFullYear();
@@ -78,7 +76,7 @@ function matchSeason(dateStr: string): string {
 const headlineMatches = allMatches.filter(m => recentSeasonLabels.has(matchSeason(m.date)));
 
 const careerStats = {
-  apps: headlineClubs.reduce((sum, c) => sum + c.apps, 0),
+  apps: headlineMatches.length,
   goals: headlineMatches.reduce((sum, m) => sum + m.goals, 0),
   assists: headlineMatches.reduce((sum, m) => sum + m.assists, 0),
   gaPerGame: 0,
