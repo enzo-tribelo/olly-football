@@ -60,25 +60,40 @@ const allClubs = seasons.flatMap(s => s.clubs);
 const HEADLINE_SEASONS = 2;
 const headlineSeasons = seasons.slice(0, HEADLINE_SEASONS);
 const headlineClubs = headlineSeasons.flatMap(s => s.clubs);
+
+// Goals, assists, apps & mins: all derived from matches.yaml (single source of truth)
+const allMatches = matchesEntry.data.matches;
+
+function matchSeason(dateStr: string): string {
+  const d = new Date(dateStr);
+  const y = d.getFullYear();
+  const m = d.getMonth() + 1;
+  const start = m >= 8 ? y : y - 1;
+  return `${start}–${String(start + 1).slice(-2)}`;
+}
+
+// Derive season range from matches (only the 2 most recent seasons for headline stats)
+const allMatchSeasons = [...new Set(allMatches.map(m => matchSeason(m.date)))].sort();
+const recentMatchSeasons = allMatchSeasons.slice(-HEADLINE_SEASONS);
+const oldestSeason = recentMatchSeasons[0];
+const newestSeason = recentMatchSeasons[recentMatchSeasons.length - 1];
+const seasonRangeLabel = recentMatchSeasons.length === 1
+  ? newestSeason
+  : `${oldestSeason} – ${newestSeason}`;
+const seasonCountLabel = `${recentMatchSeasons.length} season${recentMatchSeasons.length !== 1 ? 's' : ''}`;
+
+const headlineMatches = allMatches.filter(m => recentMatchSeasons.includes(matchSeason(m.date)));
+
 const careerStats = {
-  apps: headlineClubs.reduce((sum, c) => sum + c.apps, 0),
-  goals: headlineClubs.reduce((sum, c) => sum + c.goals, 0),
-  assists: headlineClubs.reduce((sum, c) => sum + c.assists, 0),
-  gaPerGame: 0, // will compute below
+  apps: headlineMatches.length,
+  goals: headlineMatches.reduce((sum, m) => sum + m.goals, 0),
+  assists: headlineMatches.reduce((sum, m) => sum + m.assists, 0),
+  gaPerGame: 0,
   clubs: new Set(allClubs.map(c => c.name)).size,
 };
 careerStats.gaPerGame = parseFloat(
   ((careerStats.goals + careerStats.assists) / careerStats.apps).toFixed(2)
 );
-
-// Season range label — dynamically derived from headline seasons
-const seasonLabels = headlineSeasons.map(s => s.season); // already sorted newest first
-const oldestSeason = seasonLabels[seasonLabels.length - 1];
-const newestSeason = seasonLabels[0];
-const seasonRangeLabel = seasonLabels.length === 1
-  ? newestSeason
-  : `${oldestSeason} – ${newestSeason}`;
-const seasonCountLabel = `${seasonLabels.length} season${seasonLabels.length !== 1 ? 's' : ''}`;
 
 // Club logo mapping
 const clubLogos: Record<string, string> = {
@@ -92,15 +107,64 @@ const clubLogos: Record<string, string> = {
   'Wiltshire FA U16': `${BASE}clubs/wiltshire-fa.png`,
 };
 
-// Add computed G/90 and A/90 to each club
-const seasonsWithXG = seasons.map(season => ({
-  ...season,
-  clubs: season.clubs.map(club => ({
-    ...club,
-    gp90: club.mins > 0 ? parseFloat(((club.goals / club.mins) * 90).toFixed(2)) : 0,
-    ap90: club.mins > 0 ? parseFloat(((club.assists / club.mins) * 90).toFixed(2)) : 0,
-  })),
-}));
+// Add computed G/90 and A/90 to each club — now derived from matches.yaml
+// Group matches by season then by team, compute totals
+interface ClubStats {
+  name: string;
+  league: string;
+  apps: number;
+  goals: number;
+  assists: number;
+  mins: number;
+  color: string;
+  gp90: number;
+  ap90: number;
+}
+interface SeasonStats {
+  season: string;
+  clubs: ClubStats[];
+  highlights: string[];
+}
+
+// Club metadata (league, color, highlights) from seasons.yaml
+const seasonsMeta: Record<string, { clubs: Record<string, { league: string; color: string }>; highlights: string[] }> = {};
+for (const s of seasons) {
+  seasonsMeta[s.season] = {
+    clubs: Object.fromEntries(s.clubs.map((c: any) => [c.name, { league: c.league, color: c.color }])),
+    highlights: s.highlights,
+  };
+}
+
+// Build stats from matches
+const matchesBySeason: Record<string, Record<string, { apps: number; goals: number; assists: number; mins: number }>> = {};
+for (const m of allMatches) {
+  const season = matchSeason(m.date);
+  if (!matchesBySeason[season]) matchesBySeason[season] = {};
+  if (!matchesBySeason[season][m.team]) matchesBySeason[season][m.team] = { apps: 0, goals: 0, assists: 0, mins: 0 };
+  const s = matchesBySeason[season][m.team];
+  s.apps++;
+  s.goals += m.goals;
+  s.assists += m.assists;
+  s.mins += m.mins ?? 0;
+}
+
+const seasonsWithXG: SeasonStats[] = Object.entries(matchesBySeason)
+  .sort(([a], [b]) => b.localeCompare(a))
+  .map(([season, teams]) => ({
+    season,
+    highlights: seasonsMeta[season]?.highlights ?? [],
+    clubs: Object.entries(teams).map(([name, stats]) => {
+      const meta = seasonsMeta[season]?.clubs[name];
+      return {
+        name,
+        league: meta?.league ?? '',
+        color: meta?.color ?? '#888',
+        ...stats,
+        gp90: stats.mins > 0 ? parseFloat(((stats.goals / stats.mins) * 90).toFixed(2)) : 0,
+        ap90: stats.mins > 0 ? parseFloat(((stats.assists / stats.mins) * 90).toFixed(2)) : 0,
+      };
+    }),
+  }));
 ---
 
 <Layout title="Olly Robinson — OR9" description={gpsSummaryFirstSentence ?? `Olly Robinson — Attacking Forward / Striker. ${careerStats.goals} goals, ${careerStats.assists} assists in ${careerStats.apps} youth games. ${profileData.current_clubs[0]}, ${profileData.current_clubs[1]}. Age ${age}, Wiltshire.`}>
@@ -360,7 +424,7 @@ const seasonsWithXG = seasons.map(season => ({
 
             <div class="grid gap-4">
               {s.clubs.map(club => (
-                <div class="bg-surface-elevated/40 border border-pitch-line rounded-sm overflow-hidden hover:border-gold/20 transition-colors">
+                <a href={`${BASE}matches/#${(club.name + '-' + s.season).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '')}`} class="block bg-surface-elevated/40 border border-pitch-line rounded-sm overflow-hidden hover:border-gold/20 transition-colors">
                   <div class="flex flex-col sm:flex-row sm:items-center justify-between p-5 gap-4">
                     <div class="flex items-center gap-4">
                       <div class="w-1 h-12 rounded-full" style={`background: ${club.color};`}></div>
@@ -401,7 +465,7 @@ const seasonsWithXG = seasons.map(season => ({
                       </div>
                     </div>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
           </div>

@@ -83,8 +83,10 @@ function formatDate(dateStr: string): string {
     </div>
 
     <!-- Matches by Season -->
-    {seasonGroups.map((season) => (
-      <div class="mb-10">
+    {seasonGroups.map((season) => {
+      const anchorId = season.label.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '');
+      return (
+      <div class="mb-10" id={anchorId}>
         <h2 class="font-['Oswald'] text-xl md:text-2xl uppercase tracking-wide text-cream mb-4">
           {season.label}
         </h2>
@@ -126,6 +128,6 @@ function formatDate(dateStr: string): string {
           ))}
         </div>
       </div>
-    ))}
+    )})}
   </main>
 </Layout>
