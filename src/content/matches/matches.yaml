@@ -332,6 +332,15 @@ matches:
     goals: 0
     assists: 2
     mins: 80
+  - date: "2025-01-18"
+    team: "Bath City U18"
+    opponent: "Cirencester"
+    venue: null
+    result: "W"
+    score: null
+    goals: 0
+    assists: 0
+    mins: null
   - date: "2025-01-12"
     team: "Calne Town U16"
     opponent: "Pen Hill"
@@ -368,6 +377,15 @@ matches:
     goals: 1
     assists: 0
     mins: 60
+  - date: "2024-12-14"
+    team: "Bath City U18"
+    opponent: "Swindon Supermarine"
+    venue: null
+    result: "W"
+    score: null
+    goals: 0
+    assists: 0
+    mins: null
   - date: "2024-12-01"
     team: "Calne Town U16"
     opponent: "Chippenham"
