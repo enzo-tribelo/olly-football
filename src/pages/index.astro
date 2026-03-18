@@ -100,15 +100,10 @@ const clubLogos: Record<string, string> = {
   'Bath City U18': `${BASE}clubs/bath-city.png`,
   'Melksham Town U18': `${BASE}clubs/melksham-town.png`,
   'Melksham Town Reserves': `${BASE}clubs/melksham-town.png`,
-  'Melksham Town': `${BASE}clubs/melksham-town.png`,
-  'Melksham U18': `${BASE}clubs/melksham-town.png`,
   'Calne Town Youth U16': `${BASE}clubs/calne-town.png`,
-  'Calne Town U16': `${BASE}clubs/calne-town.png`,
   'AFC Corsham U15': `${BASE}clubs/afc-corsham.png`,
   'FC Wilts JPL U15': `${BASE}clubs/fc-wilts.png`,
   'FC Wilts JPL U16': `${BASE}clubs/fc-wilts.png`,
-  'FC Wilts U15': `${BASE}clubs/fc-wilts.png`,
-  'FC Wilts U16': `${BASE}clubs/fc-wilts.png`,
   'Wiltshire FA U16': `${BASE}clubs/wiltshire-fa.png`,
 };
 
@@ -132,15 +127,6 @@ interface SeasonStats {
 }
 
 // Club metadata (league, color, highlights) from seasons.yaml
-// Map matches.yaml team names → seasons.yaml team names for metadata lookup
-const teamNameMap: Record<string, string> = {
-  'Calne Town U16': 'Calne Town Youth U16',
-  'FC Wilts U16': 'FC Wilts JPL U16',
-  'FC Wilts U15': 'FC Wilts JPL U15',
-  'Melksham U18': 'Melksham Town U18',
-  'Melksham Town': 'Melksham Town Reserves',
-};
-
 const seasonsMeta: Record<string, { clubs: Record<string, { league: string; color: string }>; highlights: string[] }> = {};
 for (const s of seasons) {
   seasonsMeta[s.season] = {
@@ -168,8 +154,7 @@ const seasonsWithXG: SeasonStats[] = Object.entries(matchesBySeason)
     season,
     highlights: seasonsMeta[season]?.highlights ?? [],
     clubs: Object.entries(teams).map(([name, stats]) => {
-      const canonicalName = teamNameMap[name] ?? name;
-      const meta = seasonsMeta[season]?.clubs[canonicalName] ?? seasonsMeta[season]?.clubs[name];
+      const meta = seasonsMeta[season]?.clubs[name];
       return {
         name,
         league: meta?.league ?? '',
