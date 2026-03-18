@@ -424,7 +424,7 @@ const seasonsWithXG: SeasonStats[] = Object.entries(matchesBySeason)
 
             <div class="grid gap-4">
               {s.clubs.map(club => (
-                <div class="bg-surface-elevated/40 border border-pitch-line rounded-sm overflow-hidden hover:border-gold/20 transition-colors">
+                <a href={`${BASE}matches/#${(club.name + '-' + s.season).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '')}`} class="block bg-surface-elevated/40 border border-pitch-line rounded-sm overflow-hidden hover:border-gold/20 transition-colors">
                   <div class="flex flex-col sm:flex-row sm:items-center justify-between p-5 gap-4">
                     <div class="flex items-center gap-4">
                       <div class="w-1 h-12 rounded-full" style={`background: ${club.color};`}></div>
@@ -432,9 +432,7 @@ const seasonsWithXG: SeasonStats[] = Object.entries(matchesBySeason)
                         <img src={clubLogos[club.name]} alt={`${club.name} badge`} class="w-10 h-10 object-contain" width="40" height="40" loading="lazy" />
                       )}
                       <div>
-                        <a href={`${BASE}matches/#${(club.name + '-' + s.season).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '')}`} class="hover:text-gold transition-colors">
-                          <h4 class="font-['Oswald'] text-lg uppercase tracking-wide">{club.name}</h4>
-                        </a>
+                        <h4 class="font-['Oswald'] text-lg uppercase tracking-wide">{club.name}</h4>
                         <p class="text-xs text-cream-muted">{club.league}</p>
                       </div>
                     </div>
@@ -467,7 +465,7 @@ const seasonsWithXG: SeasonStats[] = Object.entries(matchesBySeason)
                       </div>
                     </div>
                   </div>
-                </div>
+                </a>
               ))}
             </div>
           </div>
