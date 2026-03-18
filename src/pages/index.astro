@@ -73,7 +73,7 @@ function matchSeason(dateStr: string): string {
   return `${start}–${String(start + 1).slice(-2)}`;
 }
 
-const headlineMatches = allMatches.filter(m => recentSeasonLabels.has(matchSeason(m.date)));
+const headlineMatches = allMatches.filter(m => recentMatchSeasons.includes(matchSeason(m.date)));
 
 const careerStats = {
   apps: headlineMatches.length,
@@ -86,14 +86,15 @@ careerStats.gaPerGame = parseFloat(
   ((careerStats.goals + careerStats.assists) / careerStats.apps).toFixed(2)
 );
 
-// Season range label — dynamically derived from headline seasons
-const seasonLabels = headlineSeasons.map(s => s.season); // already sorted newest first
-const oldestSeason = seasonLabels[seasonLabels.length - 1];
-const newestSeason = seasonLabels[0];
-const seasonRangeLabel = seasonLabels.length === 1
+// Season range label — derived from matches
+const allMatchSeasons = [...new Set(allMatches.map(m => matchSeason(m.date)))].sort();
+const recentMatchSeasons = allMatchSeasons.slice(-HEADLINE_SEASONS);
+const oldestSeason = recentMatchSeasons[0];
+const newestSeason = recentMatchSeasons[recentMatchSeasons.length - 1];
+const seasonRangeLabel = recentMatchSeasons.length === 1
   ? newestSeason
   : `${oldestSeason} – ${newestSeason}`;
-const seasonCountLabel = `${seasonLabels.length} season${seasonLabels.length !== 1 ? 's' : ''}`;
+const seasonCountLabel = `${recentMatchSeasons.length} season${recentMatchSeasons.length !== 1 ? 's' : ''}`;
 
 // Club logo mapping
 const clubLogos: Record<string, string> = {
@@ -107,15 +108,64 @@ const clubLogos: Record<string, string> = {
   'Wiltshire FA U16': `${BASE}clubs/wiltshire-fa.png`,
 };
 
-// Add computed G/90 and A/90 to each club
-const seasonsWithXG = seasons.map(season => ({
-  ...season,
-  clubs: season.clubs.map(club => ({
-    ...club,
-    gp90: club.mins > 0 ? parseFloat(((club.goals / club.mins) * 90).toFixed(2)) : 0,
-    ap90: club.mins > 0 ? parseFloat(((club.assists / club.mins) * 90).toFixed(2)) : 0,
-  })),
-}));
+// Add computed G/90 and A/90 to each club — now derived from matches.yaml
+// Group matches by season then by team, compute totals
+interface ClubStats {
+  name: string;
+  league: string;
+  apps: number;
+  goals: number;
+  assists: number;
+  mins: number;
+  color: string;
+  gp90: number;
+  ap90: number;
+}
+interface SeasonStats {
+  season: string;
+  clubs: ClubStats[];
+  highlights: string[];
+}
+
+// Club metadata (league, color, highlights) still from seasons.yaml — just override stats
+const seasonsMeta: Record<string, { clubs: Record<string, { league: string; color: string }>; highlights: string[] }> = {};
+for (const s of seasons) {
+  seasonsMeta[s.season] = {
+    clubs: Object.fromEntries(s.clubs.map((c: any) => [c.name, { league: c.league, color: c.color }])),
+    highlights: s.highlights,
+  };
+}
+
+// Build stats from matches
+const matchesBySeason: Record<string, Record<string, { apps: number; goals: number; assists: number; mins: number }>> = {};
+for (const m of allMatches) {
+  const season = matchSeason(m.date);
+  if (!matchesBySeason[season]) matchesBySeason[season] = {};
+  if (!matchesBySeason[season][m.team]) matchesBySeason[season][m.team] = { apps: 0, goals: 0, assists: 0, mins: 0 };
+  const s = matchesBySeason[season][m.team];
+  s.apps++;
+  s.goals += m.goals;
+  s.assists += m.assists;
+  s.mins += m.mins ?? 0;
+}
+
+const seasonsWithXG: SeasonStats[] = Object.entries(matchesBySeason)
+  .sort(([a], [b]) => b.localeCompare(a))
+  .map(([season, teams]) => ({
+    season,
+    highlights: seasonsMeta[season]?.highlights ?? [],
+    clubs: Object.entries(teams).map(([name, stats]) => {
+      const meta = seasonsMeta[season]?.clubs[name];
+      return {
+        name,
+        league: meta?.league ?? '',
+        color: meta?.color ?? '#888',
+        ...stats,
+        gp90: stats.mins > 0 ? parseFloat(((stats.goals / stats.mins) * 90).toFixed(2)) : 0,
+        ap90: stats.mins > 0 ? parseFloat(((stats.assists / stats.mins) * 90).toFixed(2)) : 0,
+      };
+    }),
+  }));
 ---
 
 <Layout title="Olly Robinson — OR9" description={gpsSummaryFirstSentence ?? `Olly Robinson — Attacking Forward / Striker. ${careerStats.goals} goals, ${careerStats.assists} assists in ${careerStats.apps} youth games. ${profileData.current_clubs[0]}, ${profileData.current_clubs[1]}. Age ${age}, Wiltshire.`}>
