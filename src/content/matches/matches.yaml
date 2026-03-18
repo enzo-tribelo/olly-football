@@ -1,892 +1,892 @@
 matches:
-  - date: "2026-03-18"
-    team: "Bath City U18"
-    opponent: "Bridgwater College"
-    venue: "Away"
-    result: "W"
-    score: "0-5"
-    goals: 1
-    assists: 0
+  - goals: 1
     mins: 75
-  - date: "2026-03-11"
-    team: "Bath City U18"
-    opponent: "Richard Huish College"
-    venue: "Away"
-    result: "L"
-    score: "2-6"
-    goals: 0
     assists: 0
+    date: 2026-03-18
+    venue: Away
+    score: 0-5
+    result: W
+    opponent: Bridgwater College
+    team: Bath City U18
+  - goals: 0
     mins: 70
-  - date: "2026-02-07"
-    team: "Bath City U18"
-    opponent: "Cirencester"
-    venue: null
-    result: "W"
-    score: "3-1"
-    goals: 0
     assists: 0
+    date: 2026-03-11
+    venue: Away
+    score: 2-6
+    result: L
+    opponent: Richard Huish College
+    team: Bath City U18
+  - goals: 0
     mins: 75
-  - date: "2026-02-04"
-    team: "Bath City U18"
-    opponent: "Swindon Academy"
-    venue: null
-    result: "W"
-    score: "2-0"
-    goals: 0
     assists: 0
+    date: 2026-02-07
+    venue: Away
+    score: 1-3
+    result: W
+    opponent: Cirencester
+    team: Bath City U18
+  - goals: 0
     mins: 90
-  - date: "2026-01-30"
-    team: "Bath City U18"
-    opponent: "Mangotsfield"
-    venue: null
-    result: "W"
-    score: "2-1"
-    goals: 0
+    assists: 0
+    date: 2026-02-04
+    venue: Away
+    score: 0-2
+    result: W
+    opponent: Swindon Academy
+    team: Bath City U18
+  - goals: 0
+    mins: 90
     assists: 1
-    mins: 90
-  - date: "2026-01-10"
-    team: "Bath City U18"
-    opponent: "Wimbourbe"
-    venue: null
-    result: "W"
-    score: "2-3"
-    goals: 0
-    assists: 0
+    date: 2026-01-30
+    venue: Home
+    score: 2-1
+    result: W
+    opponent: Mangotsfield
+    team: Bath City U18
+  - goals: 0
     mins: 70
-  - date: "2025-12-06"
-    team: "Bath City U18"
-    opponent: "Middlezoy"
-    venue: null
-    result: "W"
-    score: "3-1"
-    goals: 1
+    assists: 0
+    date: 2026-01-10
+    venue: Away
+    score: 2-3
+    result: W
+    opponent: Wimbourbe
+    team: Bath City U18
+  - goals: 1
+    mins: 90
     assists: 1
-    mins: 90
-  - date: "2025-11-29"
-    team: "Bath City U18"
-    opponent: "Taunton Town"
-    venue: null
-    result: "L"
-    score: "3-1"
-    goals: 1
-    assists: 0
+    date: 2025-12-06
+    venue: Home
+    score: 3-1
+    result: W
+    opponent: Middlezoy
+    team: Bath City U18
+  - goals: 1
     mins: 30
-  - date: "2025-11-19"
-    team: "Bath City U18"
-    opponent: "Sgs"
-    venue: null
-    result: "W"
-    score: "1-0"
-    goals: 0
     assists: 0
+    date: 2025-11-29
+    venue: Away
+    score: 3-1
+    result: L
+    opponent: Taunton Town
+    team: Bath City U18
+  - goals: 0
     mins: 90
-  - date: "2025-11-15"
-    team: "Bath City U18"
-    opponent: "Mangotsfield"
-    venue: null
-    result: "W"
-    score: "4-1"
-    goals: 0
     assists: 0
+    date: 2025-11-19
+    venue: Away
+    score: 1-0
+    result: W
+    opponent: Sgs
+    team: Bath City U18
+  - goals: 0
     mins: 75
-  - date: "2025-11-12"
-    team: "Bath City U18"
-    opponent: "Yeovil College"
-    venue: null
-    result: "W"
-    score: "6-1"
-    goals: 3
     assists: 0
+    date: 2025-11-15
+    venue: Home
+    score: 4-1
+    result: W
+    opponent: Mangotsfield
+    team: Bath City U18
+  - goals: 3
     mins: 60
-  - date: "2025-11-06"
-    team: "Melksham Town U18"
-    opponent: "Kingsbury"
-    venue: null
-    result: "D"
-    score: "2-2"
-    goals: 0
     assists: 0
+    date: 2025-11-12
+    venue: Home
+    score: 6-1
+    result: W
+    opponent: Yeovil College
+    team: Bath City U18
+  - goals: 0
     mins: 30
-  - date: "2025-10-18"
-    team: "Bath City U18"
-    opponent: "Swindon Supermarine"
-    venue: null
-    result: "L"
-    score: "4-2"
-    goals: 0
     assists: 0
+    date: 2025-11-06
+    venue: null
+    score: 2-2
+    result: D
+    opponent: Kingsbury
+    team: Melksham Town U18
+  - goals: 0
     mins: 60
-  - date: "2025-10-08"
-    team: "Bath City U18"
-    opponent: "Weston Supermare"
-    venue: null
-    result: "W"
-    score: "4-1"
-    goals: 0
     assists: 0
+    date: 2025-10-18
+    venue: Away
+    score: 4-2
+    result: L
+    opponent: Swindon Supermarine
+    team: Bath City U18
+  - goals: 0
     mins: 30
-  - date: "2025-10-04"
-    team: "Bath City U18"
-    opponent: "Cirencester"
-    venue: null
-    result: "L"
-    score: "2-1"
-    goals: 0
     assists: 0
+    date: 2025-10-08
+    venue: null
+    score: 4-1
+    result: W
+    opponent: Weston Supermare
+    team: Bath City U18
+  - goals: 0
     mins: 60
-  - date: "2025-10-02"
-    team: "Melksham Town U18"
-    opponent: "Calne"
-    venue: null
-    result: "L"
-    score: "4-1"
-    goals: 0
     assists: 0
+    date: 2025-10-04
+    venue: null
+    score: 2-1
+    result: L
+    opponent: Cirencester
+    team: Bath City U18
+  - goals: 0
     mins: 45
-  - date: "2025-10-01"
-    team: "Bath City U18"
-    opponent: "Sgs"
-    venue: null
-    result: "W"
-    score: "1-0"
-    goals: 1
     assists: 0
+    date: 2025-10-02
+    venue: null
+    score: 4-1
+    result: L
+    opponent: Calne
+    team: Melksham Town U18
+  - goals: 1
     mins: 90
-  - date: "2025-09-24"
-    team: "Bath City U18"
-    opponent: "Hartpury"
-    venue: null
-    result: "W"
-    score: "3-1"
-    goals: 0
     assists: 0
-    mins: 60
-  - date: "2025-09-22"
-    team: "Melksham Town U18"
-    opponent: "Devizes"
+    date: 2025-10-01
     venue: null
-    result: "W"
-    score: "4-1"
-    goals: 0
-    assists: 1
+    score: 1-0
+    result: W
+    opponent: Sgs
+    team: Bath City U18
+  - goals: 0
+    mins: 60
+    assists: 0
+    date: 2025-09-24
+    venue: null
+    score: 3-1
+    result: W
+    opponent: Hartpury
+    team: Bath City U18
+  - goals: 0
     mins: 50
-  - date: "2025-09-17"
-    team: "Melksham Town U18"
-    opponent: "Chippenham"
-    venue: null
-    result: "D"
-    score: "3-3"
-    goals: 0
     assists: 1
+    date: 2025-09-22
+    venue: null
+    score: 4-1
+    result: W
+    opponent: Devizes
+    team: Melksham Town U18
+  - goals: 0
     mins: 35
-  - date: "2025-09-05"
-    team: "Melksham Town Reserves"
-    opponent: "Trowbridge"
+    assists: 1
+    date: 2025-09-17
     venue: null
-    result: "W"
-    score: "4-1"
-    goals: 0
-    assists: 0
+    score: 3-3
+    result: D
+    opponent: Chippenham
+    team: Melksham Town U18
+  - goals: 0
     mins: 20
-  - date: "2025-09-02"
-    team: "Melksham Town U18"
-    opponent: "Bishops Cleeve"
+    assists: 0
+    date: 2025-09-05
     venue: null
-    result: "W"
-    score: "4-2"
-    goals: 1
-    assists: 1
+    score: 4-1
+    result: W
+    opponent: Trowbridge
+    team: Melksham Town Reserves
+  - goals: 1
     mins: 45
-  - date: "2025-08-30"
-    team: "Melksham Town Reserves"
-    opponent: "Calne"
-    venue: null
-    result: "W"
-    score: "0-2"
-    goals: 0
     assists: 1
+    date: 2025-09-02
+    venue: null
+    score: 4-2
+    result: W
+    opponent: Bishops Cleeve
+    team: Melksham Town U18
+  - goals: 0
     mins: 25
-  - date: "2025-08-28"
-    team: "Melksham Town U18"
-    opponent: "Westbury"
+    assists: 1
+    date: 2025-08-30
     venue: null
-    result: "W"
-    score: "7-0"
-    goals: 2
-    assists: 0
+    score: 0-2
+    result: W
+    opponent: Calne
+    team: Melksham Town Reserves
+  - goals: 2
     mins: 20
-  - date: "2025-05-24"
-    team: "Wiltshire FA U16"
-    opponent: "Hampshire"
-    venue: null
-    result: "L"
-    score: "1-3"
-    goals: 0
-    assists: 1
-    mins: 60
-  - date: "2025-05-03"
-    team: "Wiltshire FA U16"
-    opponent: "Devon"
-    venue: null
-    result: "W"
-    score: "4-2"
-    goals: 0
-    assists: 1
-    mins: 60
-  - date: "2025-04-25"
-    team: "FC Wilts JPL U16"
-    opponent: "South Glouster"
-    venue: null
-    result: "D"
-    score: "4-4"
-    goals: 2
-    assists: 1
-    mins: 60
-  - date: "2025-04-22"
-    team: "Wiltshire FA U16"
-    opponent: "Somerset"
-    venue: null
-    result: "D"
-    score: "2-2"
-    goals: 0
     assists: 0
+    date: 2025-08-28
+    venue: null
+    score: 7-0
+    result: W
+    opponent: Westbury
+    team: Melksham Town U18
+  - goals: 0
+    mins: 60
+    assists: 1
+    date: 2025-05-24
+    venue: null
+    score: 1-3
+    result: L
+    opponent: Hampshire
+    team: Wiltshire FA U16
+  - goals: 0
+    mins: 60
+    assists: 1
+    date: 2025-05-03
+    venue: null
+    score: 4-2
+    result: W
+    opponent: Devon
+    team: Wiltshire FA U16
+  - goals: 2
+    mins: 60
+    assists: 1
+    date: 2025-04-25
+    venue: null
+    score: 4-4
+    result: D
+    opponent: South Glouster
+    team: FC Wilts JPL U16
+  - goals: 0
     mins: 40
-  - date: "2025-03-30"
-    team: "Calne Town Youth U16"
-    opponent: "Salisbury"
-    venue: null
-    result: "L"
-    score: "2-6"
-    goals: 1
-    assists: 1
-    mins: 80
-  - date: "2025-03-16"
-    team: "Calne Town Youth U16"
-    opponent: "Melksham"
-    venue: "Home"
-    result: "L"
-    score: "2-1"
-    goals: 0
     assists: 0
+    date: 2025-04-22
+    venue: null
+    score: 2-2
+    result: D
+    opponent: Somerset
+    team: Wiltshire FA U16
+  - goals: 1
+    mins: 80
+    assists: 1
+    date: 2025-03-30
+    venue: null
+    score: 2-6
+    result: L
+    opponent: Salisbury
+    team: Calne Town Youth U16
+  - goals: 0
     mins: 70
-  - date: "2025-03-09"
-    team: "Calne Town Youth U16"
-    opponent: "Melksham"
-    venue: "Home"
-    result: "W"
-    score: "4-0"
-    goals: 0
     assists: 0
+    date: 2025-03-16
+    venue: Home
+    score: 2-1
+    result: L
+    opponent: Melksham
+    team: Calne Town Youth U16
+  - goals: 0
     mins: 60
-  - date: "2025-02-23"
-    team: "Calne Town Youth U16"
-    opponent: "Newbury"
-    venue: "Away"
-    result: "W"
-    score: "0-3"
-    goals: 0
     assists: 0
+    date: 2025-03-09
+    venue: Home
+    score: 4-0
+    result: W
+    opponent: Melksham
+    team: Calne Town Youth U16
+  - goals: 0
     mins: 20
-  - date: "2025-02-23"
-    team: "Calne Town Youth U16"
-    opponent: "Swindon Supermarine"
-    venue: "Home"
-    result: "D"
-    score: "2-2"
-    goals: 0
     assists: 0
+    date: 2025-02-23
+    venue: Away
+    score: 0-3
+    result: W
+    opponent: Newbury
+    team: Calne Town Youth U16
+  - goals: 0
     mins: 65
-  - date: "2025-02-16"
-    team: "Calne Town Youth U16"
-    opponent: "Chippenham"
-    venue: "Home"
-    result: "W"
-    score: "4-1"
-    goals: 0
-    assists: 1
-    mins: 80
-  - date: "2025-02-05"
-    team: "Wiltshire FA U16"
-    opponent: "Gloucestershire"
-    venue: null
-    result: "W"
-    score: "3-2"
-    goals: 0
     assists: 0
+    date: 2025-02-23
+    venue: Home
+    score: 2-2
+    result: D
+    opponent: Swindon Supermarine
+    team: Calne Town Youth U16
+  - goals: 0
+    mins: 80
+    assists: 1
+    date: 2025-02-16
+    venue: Home
+    score: 4-1
+    result: W
+    opponent: Chippenham
+    team: Calne Town Youth U16
+  - goals: 0
     mins: 20
-  - date: "2025-02-02"
-    team: "Calne Town Youth U16"
-    opponent: "Salisbury Youth"
-    venue: "Away"
-    result: "W"
-    score: "1-2"
-    goals: 0
-    assists: 1
-    mins: 80
-  - date: "2025-02-01"
-    team: "FC Wilts JPL U16"
-    opponent: "Wilts Academy"
-    venue: null
-    result: "W"
-    score: "5-2"
-    goals: 2
-    assists: 1
-    mins: 60
-  - date: "2025-01-26"
-    team: "Wiltshire FA U16"
-    opponent: "Durham Away"
-    venue: null
-    result: "L"
-    score: "2-0"
-    goals: 0
     assists: 0
+    date: 2025-02-05
+    venue: null
+    score: 3-2
+    result: W
+    opponent: Gloucestershire
+    team: Wiltshire FA U16
+  - goals: 0
+    mins: 80
+    assists: 1
+    date: 2025-02-02
+    venue: Away
+    score: 1-2
+    result: W
+    opponent: Salisbury Youth
+    team: Calne Town Youth U16
+  - goals: 2
     mins: 60
-  - date: "2025-01-19"
-    team: "Calne Town Youth U16"
-    opponent: "Chippenham"
-    venue: "Away"
-    result: "W"
-    score: "0-3"
-    goals: 0
+    assists: 1
+    date: 2025-02-01
+    venue: null
+    score: 5-2
+    result: W
+    opponent: Wilts Academy
+    team: FC Wilts JPL U16
+  - goals: 0
+    mins: 60
+    assists: 0
+    date: 2025-01-26
+    venue: null
+    score: 2-0
+    result: L
+    opponent: Durham Away
+    team: Wiltshire FA U16
+  - goals: 0
+    mins: 80
     assists: 2
-    mins: 80
-  - date: "2025-01-18"
-    team: "Bath City U18"
-    opponent: "Cirencester"
-    venue: null
-    result: "W"
-    score: null
-    goals: 0
-    assists: 0
+    date: 2025-01-19
+    venue: Away
+    score: 0-3
+    result: W
+    opponent: Chippenham
+    team: Calne Town Youth U16
+  - goals: 0
     mins: null
-  - date: "2025-01-12"
-    team: "Calne Town Youth U16"
-    opponent: "Pen Hill"
-    venue: "Away"
-    result: "W"
-    score: "2-6"
-    goals: 1
-    assists: 1
-    mins: 80
-  - date: "2025-01-11"
-    team: "FC Wilts JPL U16"
-    opponent: "Exeter City"
-    venue: null
-    result: "W"
-    score: "1-0"
-    goals: 0
-    assists: 1
-    mins: 60
-  - date: "2024-12-22"
-    team: "Calne Town Youth U16"
-    opponent: "Melksham"
-    venue: "Away"
-    result: "W"
-    score: "3-4"
-    goals: 2
     assists: 0
-    mins: 65
-  - date: "2024-12-15"
-    team: "Calne Town Youth U16"
-    opponent: "Purton"
-    venue: "Home"
-    result: "W"
-    score: "5-0"
-    goals: 1
-    assists: 0
-    mins: 60
-  - date: "2024-12-14"
-    team: "Bath City U18"
-    opponent: "Swindon Supermarine"
+    date: 2025-01-18
     venue: null
-    result: "W"
     score: null
-    goals: 0
-    assists: 0
-    mins: null
-  - date: "2024-12-01"
-    team: "Calne Town Youth U16"
-    opponent: "Chippenham"
-    venue: "Home"
-    result: "W"
-    score: "5-2"
-    goals: 2
-    assists: 1
-    mins: 60
-  - date: "2024-11-17"
-    team: "Calne Town Youth U16"
-    opponent: "Newbury"
-    venue: "Home"
-    result: "W"
-    score: "3-0"
-    goals: 1
-    assists: 0
+    result: W
+    opponent: Cirencester
+    team: Bath City U18
+  - goals: 1
     mins: 80
-  - date: "2024-11-16"
-    team: "FC Wilts JPL U16"
-    opponent: "Torquay"
-    venue: null
-    result: "L"
-    score: "3-1"
-    goals: 0
     assists: 1
+    date: 2025-01-12
+    venue: Away
+    score: 2-6
+    result: W
+    opponent: Pen Hill
+    team: Calne Town Youth U16
+  - goals: 0
     mins: 60
-  - date: "2024-11-10"
-    team: "Calne Town Youth U16"
-    opponent: "Cirencester"
-    venue: "Away"
-    result: "W"
-    score: "1-2"
-    goals: 1
     assists: 1
+    date: 2025-01-11
+    venue: null
+    score: 1-0
+    result: W
+    opponent: Exeter City
+    team: FC Wilts JPL U16
+  - goals: 2
     mins: 65
-  - date: "2024-11-09"
-    team: "Wiltshire FA U16"
-    opponent: "Warwickshire"
-    venue: null
-    result: "W"
-    score: "2-2"
-    goals: 1
     assists: 0
-    mins: 80
-  - date: "2024-11-06"
-    team: "Wiltshire FA U16"
-    opponent: "Hampshire"
-    venue: null
-    result: "L"
-    score: "5-0"
-    goals: 0
-    assists: 0
+    date: 2024-12-22
+    venue: Away
+    score: 3-4
+    result: W
+    opponent: Melksham
+    team: Calne Town Youth U16
+  - goals: 1
     mins: 60
-  - date: "2024-11-03"
-    team: "Calne Town Youth U16"
-    opponent: "Calne Panthers"
-    venue: "Home"
-    result: "W"
-    score: "8-1"
-    goals: 1
     assists: 0
+    date: 2024-12-15
+    venue: Home
+    score: 5-0
+    result: W
+    opponent: Purton
+    team: Calne Town Youth U16
+  - goals: 0
+    mins: null
+    assists: 0
+    date: 2024-12-14
+    venue: null
+    score: null
+    result: W
+    opponent: Swindon Supermarine
+    team: Bath City U18
+  - goals: 2
     mins: 60
-  - date: "2024-10-26"
-    team: "FC Wilts JPL U16"
-    opponent: "Fc Wilts U15"
-    venue: null
-    result: "W"
-    score: "7-3"
-    goals: 3
+    assists: 1
+    date: 2024-12-01
+    venue: Home
+    score: 5-2
+    result: W
+    opponent: Chippenham
+    team: Calne Town Youth U16
+  - goals: 1
+    mins: 80
     assists: 0
-    mins: 80
-  - date: "2024-10-13"
-    team: "Calne Town Youth U16"
-    opponent: "Park Youth"
-    venue: "Away"
-    result: "W"
-    score: "1-5"
-    goals: 2
-    assists: 2
-    mins: 80
-  - date: "2024-10-12"
-    team: "FC Wilts JPL U16"
-    opponent: "Cheltenham Reds"
-    venue: null
-    result: "W"
-    score: "10-1"
-    goals: 2
-    assists: 2
+    date: 2024-11-17
+    venue: Home
+    score: 3-0
+    result: W
+    opponent: Newbury
+    team: Calne Town Youth U16
+  - goals: 0
     mins: 60
-  - date: "2024-10-06"
-    team: "Calne Town Youth U16"
-    opponent: "Wanbourough"
-    venue: "Home"
-    result: "W"
-    score: "14-0"
-    goals: 4
-    assists: 2
-    mins: 80
-  - date: "2024-10-05"
-    team: "FC Wilts JPL U16"
-    opponent: "Bristol Inner City"
+    assists: 1
+    date: 2024-11-16
     venue: null
-    result: "W"
-    score: "3-0"
-    goals: 1
+    score: 3-1
+    result: L
+    opponent: Torquay
+    team: FC Wilts JPL U16
+  - goals: 1
+    mins: 65
+    assists: 1
+    date: 2024-11-10
+    venue: Away
+    score: 1-2
+    result: W
+    opponent: Cirencester
+    team: Calne Town Youth U16
+  - goals: 1
+    mins: 80
     assists: 0
+    date: 2024-11-09
+    venue: null
+    score: 2-2
+    result: W
+    opponent: Warwickshire
+    team: Wiltshire FA U16
+  - goals: 0
+    mins: 60
+    assists: 0
+    date: 2024-11-06
+    venue: null
+    score: 5-0
+    result: L
+    opponent: Hampshire
+    team: Wiltshire FA U16
+  - goals: 1
+    mins: 60
+    assists: 0
+    date: 2024-11-03
+    venue: Home
+    score: 8-1
+    result: W
+    opponent: Calne Panthers
+    team: Calne Town Youth U16
+  - goals: 3
+    mins: 80
+    assists: 0
+    date: 2024-10-26
+    venue: null
+    score: 7-3
+    result: W
+    opponent: Fc Wilts U15
+    team: FC Wilts JPL U16
+  - goals: 2
+    mins: 80
+    assists: 2
+    date: 2024-10-13
+    venue: Away
+    score: 1-5
+    result: W
+    opponent: Park Youth
+    team: Calne Town Youth U16
+  - goals: 2
+    mins: 60
+    assists: 2
+    date: 2024-10-12
+    venue: null
+    score: 10-1
+    result: W
+    opponent: Cheltenham Reds
+    team: FC Wilts JPL U16
+  - goals: 4
+    mins: 80
+    assists: 2
+    date: 2024-10-06
+    venue: Home
+    score: 14-0
+    result: W
+    opponent: Wanbourough
+    team: Calne Town Youth U16
+  - goals: 1
     mins: 70
-  - date: "2024-09-29"
-    team: "Calne Town Youth U16"
-    opponent: "Swindon Supermarine"
-    venue: "Away"
-    result: "W"
-    score: "1-6"
-    goals: 1
+    assists: 0
+    date: 2024-10-05
+    venue: null
+    score: 3-0
+    result: W
+    opponent: Bristol Inner City
+    team: FC Wilts JPL U16
+  - goals: 1
+    mins: 60
     assists: 2
+    date: 2024-09-29
+    venue: Away
+    score: 1-6
+    result: W
+    opponent: Swindon Supermarine
+    team: Calne Town Youth U16
+  - goals: 0
     mins: 60
-  - date: "2024-09-28"
-    team: "FC Wilts JPL U16"
-    opponent: "Cirencester"
-    venue: null
-    result: "L"
-    score: "9-2"
-    goals: 0
     assists: 0
-    mins: 60
-  - date: "2024-09-22"
-    team: "Calne Town Youth U16"
-    opponent: "Westbury"
-    venue: "Home"
-    result: "W"
-    score: "5-1"
-    goals: 0
-    assists: 1
+    date: 2024-09-28
+    venue: null
+    score: 9-2
+    result: L
+    opponent: Cirencester
+    team: FC Wilts JPL U16
+  - goals: 0
     mins: 80
-  - date: "2024-09-22"
-    team: "FC Wilts JPL U16"
-    opponent: "Mid Somerset"
-    venue: null
-    result: "L"
-    score: "3-0"
-    goals: 0
-    assists: 0
-    mins: 60
-  - date: "2024-09-15"
-    team: "Calne Town Youth U16"
-    opponent: "Purton"
-    venue: "Away"
-    result: "W"
-    score: "0-5"
-    goals: 1
     assists: 1
+    date: 2024-09-22
+    venue: Home
+    score: 5-1
+    result: W
+    opponent: Westbury
+    team: Calne Town Youth U16
+  - goals: 0
+    mins: 60
+    assists: 0
+    date: 2024-09-22
+    venue: null
+    score: 3-0
+    result: L
+    opponent: Mid Somerset
+    team: FC Wilts JPL U16
+  - goals: 1
     mins: 35
-  - date: "2024-09-14"
-    team: "FC Wilts JPL U16"
-    opponent: "South Glouster"
+    assists: 1
+    date: 2024-09-15
+    venue: Away
+    score: 0-5
+    result: W
+    opponent: Purton
+    team: Calne Town Youth U16
+  - goals: 0
+    mins: 60
+    assists: 1
+    date: 2024-09-14
     venue: null
-    result: "W"
-    score: "2-0"
-    goals: 0
-    assists: 1
+    score: 2-0
+    result: W
+    opponent: South Glouster
+    team: FC Wilts JPL U16
+  - goals: 0
     mins: 60
-  - date: "2024-09-08"
-    team: "Calne Town Youth U16"
-    opponent: "Cirencester"
-    venue: "Home"
-    result: "L"
-    score: "3-1"
-    goals: 0
     assists: 1
-    mins: 60
-  - date: "2024-05-11"
-    team: "AFC Corsham U15"
-    opponent: "Bradford"
-    venue: "Home"
-    result: "W"
-    score: "6-1"
-    goals: 2
+    date: 2024-09-08
+    venue: Home
+    score: 3-1
+    result: L
+    opponent: Cirencester
+    team: Calne Town Youth U16
+  - goals: 2
+    mins: 80
     assists: 2
+    date: 2024-05-11
+    venue: Home
+    score: 6-1
+    result: W
+    opponent: Bradford
+    team: AFC Corsham U15
+  - goals: 2
     mins: 80
-  - date: "2024-04-28"
-    team: "AFC Corsham U15"
-    opponent: "Bath Arsenal"
-    venue: "Home"
-    result: "W"
-    score: "4-3"
-    goals: 2
     assists: 1
+    date: 2024-04-28
+    venue: Home
+    score: 4-3
+    result: W
+    opponent: Bath Arsenal
+    team: AFC Corsham U15
+  - goals: 1
     mins: 80
-  - date: "2024-04-21"
-    team: "AFC Corsham U15"
-    opponent: "Dilton Rovers"
-    venue: "Home"
-    result: "D"
-    score: "2-2"
-    goals: 1
     assists: 1
-    mins: 80
-  - date: "2024-04-20"
-    team: "FC Wilts JPL U15"
-    opponent: "Paulton Rovers"
-    venue: "Home"
-    result: "W"
-    score: "2-1"
-    goals: 0
-    assists: 1
+    date: 2024-04-21
+    venue: Home
+    score: 2-2
+    result: D
+    opponent: Dilton Rovers
+    team: AFC Corsham U15
+  - goals: 0
     mins: 60
-  - date: "2024-04-14"
-    team: "AFC Corsham U15"
-    opponent: "Devizes"
-    venue: "Away"
-    result: "W"
-    score: "0-12"
-    goals: 4
-    assists: 4
+    assists: 1
+    date: 2024-04-20
+    venue: Home
+    score: 2-1
+    result: W
+    opponent: Paulton Rovers
+    team: FC Wilts JPL U15
+  - goals: 4
     mins: 65
-  - date: "2024-03-24"
-    team: "AFC Corsham U15"
-    opponent: "Westfield"
-    venue: "Home"
-    result: "W"
-    score: "6-2"
-    goals: 1
-    assists: 2
-    mins: 80
-  - date: "2024-03-10"
-    team: "AFC Corsham U15"
-    opponent: "Westfield"
-    venue: "Away"
-    result: "W"
-    score: "2-4"
-    goals: 0
-    assists: 1
-    mins: 80
-  - date: "2024-03-09"
-    team: "FC Wilts JPL U15"
-    opponent: "Pjss"
-    venue: "Home"
-    result: "W"
-    score: "1-0"
-    goals: 1
-    assists: 0
-    mins: 60
-  - date: "2024-02-25"
-    team: "AFC Corsham U15"
-    opponent: "Bath Arsenal"
-    venue: "Away"
-    result: "L"
-    score: "3-5"
-    goals: 3
-    assists: 0
-    mins: 80
-  - date: "2024-02-04"
-    team: "AFC Corsham U15"
-    opponent: "Devizes"
-    venue: "Home"
-    result: "W"
-    score: "10-2"
-    goals: 4
-    assists: 3
-    mins: 60
-  - date: "2024-01-28"
-    team: "AFC Corsham U15"
-    opponent: "Trowbridge"
-    venue: "Home"
-    result: "W"
-    score: "2-0"
-    goals: 1
-    assists: 0
-    mins: 80
-  - date: "2024-01-27"
-    team: "FC Wilts JPL U15"
-    opponent: "Cirencester"
-    venue: "Home"
-    result: "L"
-    score: "3-2"
-    goals: 0
-    assists: 0
-    mins: 60
-  - date: "2024-01-21"
-    team: "AFC Corsham U15"
-    opponent: "Frome Falcons"
-    venue: "Away"
-    result: "D"
-    score: "3-3"
-    goals: 2
-    assists: 1
-    mins: 80
-  - date: "2024-01-20"
-    team: "FC Wilts JPL U15"
-    opponent: "Cheltenham Town"
-    venue: "Home"
-    result: "D"
-    score: "1-1"
-    goals: 1
-    assists: 0
-    mins: 60
-  - date: "2024-01-14"
-    team: "AFC Corsham U15"
-    opponent: "Bath Arsenal"
-    venue: "Home"
-    result: "W"
-    score: "5-2"
-    goals: 2
-    assists: 3
-    mins: 80
-  - date: "2024-01-07"
-    team: "AFC Corsham U15"
-    opponent: "Bradford On Avon"
-    venue: "Away"
-    result: "W"
-    score: "3-8"
-    goals: 4
-    assists: 0
-    mins: 70
-  - date: "2023-12-10"
-    team: "AFC Corsham U15"
-    opponent: "Wilts Rtc"
-    venue: "Home"
-    result: "L"
-    score: "5-2"
-    goals: 2
-    assists: 0
-    mins: 60
-  - date: "2023-12-09"
-    team: "FC Wilts JPL U15"
-    opponent: "Cheltenham Town Hereford"
-    venue: "Away"
-    result: "W"
-    score: "1-3"
-    goals: 0
-    assists: 1
-    mins: 60
-  - date: "2023-12-03"
-    team: "AFC Corsham U15"
-    opponent: "Frome Falcons"
-    venue: "Home"
-    result: "W"
-    score: "8-2"
-    goals: 2
-    assists: 0
-    mins: 80
-  - date: "2023-11-19"
-    team: "AFC Corsham U15"
-    opponent: "Salisbury Rovers"
-    venue: "Home"
-    result: "W"
-    score: "8-0"
-    goals: 2
-    assists: 0
-    mins: 60
-  - date: "2023-11-18"
-    team: "FC Wilts JPL U15"
-    opponent: "South Gloustershire"
-    venue: "Away"
-    result: "W"
-    score: "1-6"
-    goals: 1
-    assists: 2
-    mins: 65
-  - date: "2023-11-12"
-    team: "AFC Corsham U15"
-    opponent: "Larkhall"
-    venue: "Away"
-    result: "W"
-    score: "3-9"
-    goals: 2
     assists: 4
+    date: 2024-04-14
+    venue: Away
+    score: 0-12
+    result: W
+    opponent: Devizes
+    team: AFC Corsham U15
+  - goals: 1
     mins: 80
-  - date: "2023-11-11"
-    team: "FC Wilts JPL U15"
-    opponent: "Bristol Inner City"
-    venue: "Away"
-    result: "L"
-    score: "1-2"
-    goals: 0
-    assists: 0
-    mins: 60
-  - date: "2023-11-05"
-    team: "AFC Corsham U15"
-    opponent: "Warminster"
-    venue: "Away"
-    result: "W"
-    score: "0-11"
-    goals: 3
-    assists: 3
-    mins: 60
-  - date: "2023-10-28"
-    team: "FC Wilts JPL U15"
-    opponent: "Cheltenham Town C"
-    venue: "Away"
-    result: "L"
-    score: "3-6"
-    goals: 1
-    assists: 0
-    mins: 70
-  - date: "2023-10-14"
-    team: "FC Wilts JPL U15"
-    opponent: "Paulton Rovers Dc"
-    venue: "Away"
-    result: "W"
-    score: "3-4"
-    goals: 1
-    assists: 0
-    mins: 60
-  - date: "2023-10-08"
-    team: "AFC Corsham U15"
-    opponent: "Larkhall"
-    venue: "Home"
-    result: "W"
-    score: "6-3"
-    goals: 0
-    assists: 0
-    mins: 80
-  - date: "2023-10-07"
-    team: "FC Wilts JPL U15"
-    opponent: "Pjss Bristol"
-    venue: "Away"
-    result: "W"
-    score: "3-4"
-    goals: 2
-    assists: 0
-    mins: 60
-  - date: "2023-10-01"
-    team: "AFC Corsham U15"
-    opponent: "Trowbridge"
-    venue: "Away"
-    result: "W"
-    score: "1-7"
-    goals: 3
-    assists: 1
-    mins: 80
-  - date: "2023-09-30"
-    team: "FC Wilts JPL U15"
-    opponent: "Bristol Inner City"
-    venue: "Home"
-    result: "W"
-    score: "5-3"
-    goals: 1
     assists: 2
+    date: 2024-03-24
+    venue: Home
+    score: 6-2
+    result: W
+    opponent: Westfield
+    team: AFC Corsham U15
+  - goals: 0
+    mins: 80
+    assists: 1
+    date: 2024-03-10
+    venue: Away
+    score: 2-4
+    result: W
+    opponent: Westfield
+    team: AFC Corsham U15
+  - goals: 1
+    mins: 60
+    assists: 0
+    date: 2024-03-09
+    venue: Home
+    score: 1-0
+    result: W
+    opponent: Pjss
+    team: FC Wilts JPL U15
+  - goals: 3
+    mins: 80
+    assists: 0
+    date: 2024-02-25
+    venue: Away
+    score: 3-5
+    result: L
+    opponent: Bath Arsenal
+    team: AFC Corsham U15
+  - goals: 4
+    mins: 60
+    assists: 3
+    date: 2024-02-04
+    venue: Home
+    score: 10-2
+    result: W
+    opponent: Devizes
+    team: AFC Corsham U15
+  - goals: 1
+    mins: 80
+    assists: 0
+    date: 2024-01-28
+    venue: Home
+    score: 2-0
+    result: W
+    opponent: Trowbridge
+    team: AFC Corsham U15
+  - goals: 0
+    mins: 60
+    assists: 0
+    date: 2024-01-27
+    venue: Home
+    score: 3-2
+    result: L
+    opponent: Cirencester
+    team: FC Wilts JPL U15
+  - goals: 2
+    mins: 80
+    assists: 1
+    date: 2024-01-21
+    venue: Away
+    score: 3-3
+    result: D
+    opponent: Frome Falcons
+    team: AFC Corsham U15
+  - goals: 1
+    mins: 60
+    assists: 0
+    date: 2024-01-20
+    venue: Home
+    score: 1-1
+    result: D
+    opponent: Cheltenham Town
+    team: FC Wilts JPL U15
+  - goals: 2
+    mins: 80
+    assists: 3
+    date: 2024-01-14
+    venue: Home
+    score: 5-2
+    result: W
+    opponent: Bath Arsenal
+    team: AFC Corsham U15
+  - goals: 4
+    mins: 70
+    assists: 0
+    date: 2024-01-07
+    venue: Away
+    score: 3-8
+    result: W
+    opponent: Bradford On Avon
+    team: AFC Corsham U15
+  - goals: 2
+    mins: 60
+    assists: 0
+    date: 2023-12-10
+    venue: Home
+    score: 5-2
+    result: L
+    opponent: Wilts Rtc
+    team: AFC Corsham U15
+  - goals: 0
+    mins: 60
+    assists: 1
+    date: 2023-12-09
+    venue: Away
+    score: 1-3
+    result: W
+    opponent: Cheltenham Town Hereford
+    team: FC Wilts JPL U15
+  - goals: 2
+    mins: 80
+    assists: 0
+    date: 2023-12-03
+    venue: Home
+    score: 8-2
+    result: W
+    opponent: Frome Falcons
+    team: AFC Corsham U15
+  - goals: 2
+    mins: 60
+    assists: 0
+    date: 2023-11-19
+    venue: Home
+    score: 8-0
+    result: W
+    opponent: Salisbury Rovers
+    team: AFC Corsham U15
+  - goals: 1
+    mins: 65
+    assists: 2
+    date: 2023-11-18
+    venue: Away
+    score: 1-6
+    result: W
+    opponent: South Gloustershire
+    team: FC Wilts JPL U15
+  - goals: 2
+    mins: 80
+    assists: 4
+    date: 2023-11-12
+    venue: Away
+    score: 3-9
+    result: W
+    opponent: Larkhall
+    team: AFC Corsham U15
+  - goals: 0
+    mins: 60
+    assists: 0
+    date: 2023-11-11
+    venue: Away
+    score: 1-2
+    result: L
+    opponent: Bristol Inner City
+    team: FC Wilts JPL U15
+  - goals: 3
+    mins: 60
+    assists: 3
+    date: 2023-11-05
+    venue: Away
+    score: 0-11
+    result: W
+    opponent: Warminster
+    team: AFC Corsham U15
+  - goals: 1
+    mins: 70
+    assists: 0
+    date: 2023-10-28
+    venue: Away
+    score: 3-6
+    result: L
+    opponent: Cheltenham Town C
+    team: FC Wilts JPL U15
+  - goals: 1
+    mins: 60
+    assists: 0
+    date: 2023-10-14
+    venue: Away
+    score: 3-4
+    result: W
+    opponent: Paulton Rovers Dc
+    team: FC Wilts JPL U15
+  - goals: 0
+    mins: 80
+    assists: 0
+    date: 2023-10-08
+    venue: Home
+    score: 6-3
+    result: W
+    opponent: Larkhall
+    team: AFC Corsham U15
+  - goals: 2
+    mins: 60
+    assists: 0
+    date: 2023-10-07
+    venue: Away
+    score: 3-4
+    result: W
+    opponent: Pjss Bristol
+    team: FC Wilts JPL U15
+  - goals: 3
+    mins: 80
+    assists: 1
+    date: 2023-10-01
+    venue: Away
+    score: 1-7
+    result: W
+    opponent: Trowbridge
+    team: AFC Corsham U15
+  - goals: 1
     mins: 45
-  - date: "2023-09-23"
-    team: "FC Wilts JPL U15"
-    opponent: "Glouster"
-    venue: "Home"
-    result: "W"
-    score: "4-2"
-    goals: 2
-    assists: 1
+    assists: 2
+    date: 2023-09-30
+    venue: Home
+    score: 5-3
+    result: W
+    opponent: Bristol Inner City
+    team: FC Wilts JPL U15
+  - goals: 2
     mins: 60
-  - date: "2023-09-17"
-    team: "AFC Corsham U15"
-    opponent: "Dilton Rovers"
-    venue: "Away"
-    result: "W"
-    score: "1-4"
-    goals: 2
-    assists: 0
+    assists: 1
+    date: 2023-09-23
+    venue: Home
+    score: 4-2
+    result: W
+    opponent: Glouster
+    team: FC Wilts JPL U15
+  - goals: 2
     mins: 80
-  - date: "2023-09-10"
-    team: "AFC Corsham U15"
-    opponent: "Bradford On Avon"
-    venue: "Home"
-    result: "W"
-    score: "5-1"
-    goals: 2
     assists: 0
+    date: 2023-09-17
+    venue: Away
+    score: 1-4
+    result: W
+    opponent: Dilton Rovers
+    team: AFC Corsham U15
+  - goals: 2
     mins: 80
-  - date: "2023-09-05"
-    team: "AFC Corsham U15"
-    opponent: "Melksham"
-    venue: "Away"
-    result: "L"
+    assists: 0
+    date: 2023-09-10
+    venue: Home
+    score: 5-1
+    result: W
+    opponent: Bradford On Avon
+    team: AFC Corsham U15
+  - goals: 0
+    mins: 80
+    assists: 0
+    date: 2023-09-05
+    venue: Away
     score: null
-    goals: 0
-    assists: 0
+    result: L
+    opponent: Melksham
+    team: AFC Corsham U15
+  - goals: 3
     mins: 80
-  - date: "2023-08-31"
-    team: "AFC Corsham U15"
-    opponent: "Corsham U14"
-    venue: "Home"
-    result: "W"
+    assists: 0
+    date: 2023-08-31
+    venue: Home
     score: null
-    goals: 3
-    assists: 0
-    mins: 80
+    result: W
+    opponent: Corsham U14
+    team: AFC Corsham U15
