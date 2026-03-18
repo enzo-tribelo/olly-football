@@ -44,7 +44,7 @@ const matchesCollection = defineCollection({
   schema: z.object({
     matches: z.array(
       z.object({
-        date: z.string(),
+        date: z.coerce.string(),
         team: z.string(),
         opponent: z.string(),
         venue: z.string().nullable().optional(),
