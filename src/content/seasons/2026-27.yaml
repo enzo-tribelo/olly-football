@@ -7,4 +7,11 @@ clubs:
     assists: 0
     mins: 0
     color: "#e63946"
+  - name: "Melksham Town U18"
+    league: "Wilts Senior U18 Floodlight League"
+    apps: 0
+    goals: 0
+    assists: 0
+    mins: 0
+    color: "#457b9d"
 highlights: []

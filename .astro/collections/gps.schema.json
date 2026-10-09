@@ -4,6 +4,9 @@
     "gps": {
       "type": "object",
       "properties": {
+        "ai_performance_summary": {
+          "type": "string"
+        },
         "sessions": {
           "type": "array",
           "items": {
@@ -14,6 +17,24 @@
               },
               "match": {
                 "type": "string"
+              },
+              "our_team": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "result": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "score": {
+                "type": [
+                  "string",
+                  "null"
+                ]
               },
               "session_id": {
                 "type": "string"
