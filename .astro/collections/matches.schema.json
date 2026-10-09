@@ -12,29 +12,51 @@
               "date": {
                 "type": "string"
               },
-              "match": {
+              "team": {
                 "type": "string"
+              },
+              "opponent": {
+                "type": "string"
+              },
+              "venue": {
+                "type": [
+                  "string",
+                  "null"
+                ]
               },
               "result": {
-                "type": "string"
+                "type": "string",
+                "enum": [
+                  "W",
+                  "D",
+                  "L"
+                ]
+              },
+              "score": {
+                "type": [
+                  "string",
+                  "null"
+                ]
               },
               "goals": {
-                "type": "number"
+                "type": "number",
+                "default": 0
               },
               "assists": {
-                "type": "number"
+                "type": "number",
+                "default": 0
               },
-              "standout": {
-                "type": "boolean",
-                "default": true
+              "mins": {
+                "type": [
+                  "number",
+                  "null"
+                ]
               }
             },
             "required": [
-              "date",
-              "match",
-              "result",
-              "goals",
-              "assists"
+              "team",
+              "opponent",
+              "result"
             ],
             "additionalProperties": false
           }

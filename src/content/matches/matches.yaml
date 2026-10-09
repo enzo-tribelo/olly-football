@@ -1,4 +1,13 @@
 matches:
+  - goals: 1
+    mins: 90
+    assists: 1
+    date: 2026-10-08
+    venue: Away
+    score: 3-4
+    result: L
+    opponent: Radstock Town U18
+    team: Melksham Town U18
   - goals: 0
     mins: 45
     assists: 2
