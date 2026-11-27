@@ -1,0 +1,154 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import { footageUi, tr, type Lang } from '../i18n/home';
+import { getEntry } from 'astro:content';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const BASE = import.meta.env.BASE_URL;
+const ui = footageUi(lang);
+
+const footageEntry = await getEntry('footage', 'footage');
+if (!footageEntry) throw new Error('Missing footage content');
+const videos = footageEntry.data;
+
+const typeColors: Record<string, string> = {
+  highlight: 'bg-gold/10 text-gold border-gold/20',
+  match: 'bg-fire/10 text-fire border-fire/20',
+  training: 'bg-blue-500/10 text-blue-400 border-blue-400/20',
+};
+
+const homeHref = lang === 'it' ? `${BASE}it/` : BASE;
+---
+
+<Layout
+  lang={lang}
+  alternates={{ en: 'https://or9.uk/footage/', it: 'https://or9.uk/it/footage/' }}
+  title={ui.title}
+  description={ui.description}
+>
+
+  <Nav current="footage" lang={lang} />
+
+  <main id="main" class="min-h-screen pitch-pattern pt-20 pb-20">
+    <Breadcrumb crumbs={[{ label: ui.profile, href: homeHref }, { label: ui.crumb }]} />
+    <div class="max-w-4xl mx-auto px-6 sm:px-10">
+
+      <!-- Header -->
+      <div class="mb-12">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="h-px w-12 bg-gold"></div>
+          <span class="font-['Oswald'] text-xs uppercase tracking-[0.3em] text-gold">{ui.eyebrow}</span>
+        </div>
+        <h1 class="font-['Oswald'] text-5xl sm:text-6xl lg:text-7xl font-bold uppercase leading-[0.85] tracking-tight mb-4">
+          <span class="text-cream">{ui.watch}</span> <span class="text-gold">Olly</span>
+        </h1>
+        <p class="text-cream-muted text-sm max-w-lg">
+          {ui.intro}
+        </p>
+      </div>
+
+      <!-- Video List — single column, full width -->
+      <div class="space-y-10">
+        {videos.map(v => {
+          const title = tr(lang, v.title);
+          const description = tr(lang, v.description);
+          return (
+          <div class="group">
+            <!-- Thumbnail with play button — click to load iframe -->
+            <button type="button" aria-label={ui.play(title)} class="relative aspect-video w-full rounded-sm overflow-hidden bg-pitch-light cursor-pointer video-container focus:outline-2 focus:outline-gold focus:outline-offset-2" data-video-id={v.id} data-video-title={title}>
+              <img
+                src={`https://img.youtube.com/vi/${v.id}/hqdefault.jpg`}
+                alt={title}
+                class="w-full h-full object-cover"
+                width="480" height="360"
+                loading="lazy"
+              />
+              <div class="absolute inset-0 bg-pitch/30 group-hover:bg-pitch/10 transition-colors flex items-center justify-center">
+                <div class="group-hover:scale-110 transition-transform">
+                  <svg aria-hidden="true" class="w-16 h-11 sm:w-[68px] sm:h-12" viewBox="0 0 68 48"><path d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55C3.97 2.33 2.27 4.81 1.48 7.74.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z" fill="red"/><path d="M45 24L27 14v20" fill="white"/></svg>
+                </div>
+              </div>
+            </button>
+            <!-- Info -->
+            <div class="flex items-center gap-3 mt-4">
+              <span class={`text-xs font-semibold uppercase tracking-wider border px-2 py-0.5 rounded-sm ${typeColors[v.type]}`}>{tr(lang, v.type)}</span>
+              <h3 class="font-['Oswald'] text-lg uppercase tracking-wide text-cream">{title}</h3>
+            </div>
+            <p class="text-xs text-cream-muted mt-1">{description}</p>
+          </div>
+          );
+        })}
+      </div>
+
+      <!-- YouTube CTA -->
+      <div class="mt-16 relative overflow-hidden rounded-sm border border-pitch-line bg-surface-elevated/40">
+        <div class="absolute inset-0 bg-gradient-to-br from-[#ff0000]/5 to-transparent pointer-events-none"></div>
+        <div class="relative flex flex-col sm:flex-row items-center gap-6 p-8 sm:p-10">
+          <!-- YouTube icon -->
+          <div class="shrink-0 w-16 h-16 bg-[#FF0000] rounded-full flex items-center justify-center">
+            <svg aria-hidden="true" class="w-8 h-8" fill="white" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          </div>
+          <!-- Text -->
+          <div class="text-center sm:text-left flex-1">
+            <div class="font-['Oswald'] text-2xl sm:text-3xl uppercase tracking-wide text-cream mb-1">{ui.subscribe}</div>
+            <p class="text-sm text-cream-muted">{ui.subscribeBody}</p>
+          </div>
+          <!-- Button -->
+          <a href="https://www.youtube.com/@or9uk" target="_blank" rel="noopener noreferrer" class="shrink-0 flex items-center gap-2 bg-[#FF0000] hover:bg-[#cc0000] text-white font-['Oswald'] text-sm uppercase tracking-widest px-6 py-3 rounded-sm transition-colors">
+            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+            @or9uk
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</Layout>
+
+<script define:vars={{ playerFallback: ui.playerFallback }}>
+  // Click thumbnail to replace with YouTube iframe — only one plays at a time
+  let activeContainer = null;
+  let activeOriginalHTML = '';
+
+  document.querySelectorAll('.video-container').forEach(container => {
+    const originalHTML = container.innerHTML;
+
+    container.addEventListener('click', () => {
+      const id = container.getAttribute('data-video-id');
+      if (!id) return;
+
+      // If clicking the already-active video, do nothing
+      if (activeContainer === container) return;
+
+      // Stop the currently playing video by restoring its thumbnail
+      if (activeContainer) {
+        activeContainer.innerHTML = activeOriginalHTML;
+        activeContainer.classList.add('cursor-pointer');
+      }
+
+      // Store reference and original HTML
+      activeContainer = container;
+      activeOriginalHTML = originalHTML;
+
+      // Replace with iframe
+      const title = container.getAttribute('data-video-title') || playerFallback;
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+      iframe.setAttribute('title', title);
+      iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+      iframe.setAttribute('allowfullscreen', '');
+      iframe.className = 'w-full h-full absolute inset-0';
+      container.innerHTML = '';
+      container.style.position = 'relative';
+      container.appendChild(iframe);
+      container.classList.remove('cursor-pointer');
+    });
+  });
+</script>

@@ -1,0 +1,619 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import { loadHome } from '../lib/home-data';
+import { homeUi, tr, type Lang } from '../i18n/home';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const BASE = import.meta.env.BASE_URL;
+const ui = homeUi(lang);
+const {
+  profileData,
+  keyMatches,
+  honours,
+  attributes,
+  gpsPerformanceSummary,
+  gpsSummaryFirstSentence,
+  gpsSessionsWithEst,
+  gpsStats,
+  dobYear,
+  dobMonth,
+  age,
+  careerStats,
+  seasonRangeLabel,
+  seasonCount,
+  clubLogos,
+  seasonsWithXG,
+} = await loadHome(BASE);
+
+const position = tr(lang, profileData.position);
+const foot = tr(lang, profileData.foot);
+const nationality = tr(lang, profileData.nationality);
+const monthLabel = ui.monthName(dobMonth);
+
+function fmt(n: number, digits?: number) {
+  const rendered = digits === undefined ? String(n) : n.toFixed(digits);
+  return lang === 'it' ? rendered.replace('.', ',') : rendered;
+}
+
+const description = lang === 'en' && gpsSummaryFirstSentence
+  ? gpsSummaryFirstSentence
+  : ui.description(
+      careerStats.goals,
+      careerStats.assists,
+      careerStats.apps,
+      profileData.current_clubs[0],
+      profileData.current_clubs[1],
+      age,
+    );
+
+const gallery = [
+  { src: 'bicycle-kick.jpg', alt: 'Bicycle kick — match', span: 'md:col-span-2 md:row-span-2' },
+  { src: 'bath-action-1.jpg', alt: 'Bath City U18 vs Cirencester', span: '' },
+  { src: 'number9-back.jpg', alt: 'Number 9 — Bath City', span: '' },
+  { src: 'celebration.jpg', alt: 'Goal celebration — Wiltshire FA', span: 'md:col-span-2' },
+  { src: 'nwyfl-trophy.jpg', alt: 'North Wilts Youth League trophy', span: '' },
+  { src: 'melksham-duel.jpg', alt: 'Melksham Town — senior reserves', span: '' },
+  { src: 'number9-pitch.jpg', alt: 'Number 9 on the pitch', span: '' },
+  { src: 'milan-camp.jpg', alt: 'AC Milan Camp at Villaggio Marzotto, Italy', span: '' },
+  { src: 'cup-winner.jpg', alt: 'Cup winner — AFC Corsham', span: '' },
+  { src: 'beach-football.jpg', alt: 'Beach football — Italy', span: '' },
+  { src: 'wiltshire-team.jpg', alt: 'Wiltshire Schools FA U16 — 3-2 winners vs Gloucestershire', span: 'md:col-span-2' },
+  { src: 'team-huddle.jpg', alt: 'Bath City U18 team huddle before kick-off', span: 'md:col-span-2' },
+  { src: 'rounding-keeper.jpg', alt: 'Olly Robinson rounding the goalkeeper', span: '' },
+  { src: 'aerial-duel.jpg', alt: 'Olly Robinson winning an aerial duel', span: '' },
+  { src: 'match-action-calne.jpg', alt: 'Olly in action for Calne Town Youth', span: '' },
+].map(photo => ({ ...photo, alt: tr(lang, photo.alt) }));
+
+const galleryPhotos = gallery.map(photo => ({ src: photo.src, alt: photo.alt }));
+const lb = { label: ui.lbLabel, close: ui.lbClose, prev: ui.lbPrev, next: ui.lbNext };
+const [firstName, lastName] = profileData.name.split(' ');
+---
+
+<Layout lang={lang} alternates={{ en: 'https://or9.uk/', it: 'https://or9.uk/it/' }} title={ui.title} description={description}>
+
+  <!-- JSON-LD Person -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": profileData.name,
+    "url": "https://or9.uk",
+    "jobTitle": ui.jobTitle(position),
+    "birthDate": profileData.dob,
+    "nationality": [{ "@type": "Country", "name": "United Kingdom" }, { "@type": "Country", "name": "Italy" }],
+    "address": { "@type": "PostalAddress", "addressLocality": profileData.location.split(', ')[0], "addressRegion": profileData.location.split(', ')[1], "addressCountry": "GB" },
+    "sameAs": [
+      profileData.socials.instagram,
+      profileData.socials.x,
+      ...(profileData.socials.youtube ? [profileData.socials.youtube] : []),
+    ],
+    "memberOf": profileData.current_clubs.map(club => ({ "@type": "SportsTeam", "name": club }))
+  })} />
+
+  <!-- HERO -->
+  <section class="relative min-h-[85vh] sm:min-h-screen flex items-center pitch-pattern overflow-hidden">
+    <!-- Dramatic diagonal accent -->
+    <div class="absolute inset-0 bg-gradient-to-br from-pitch via-pitch-light/50 to-transparent"></div>
+    <div class="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-gold/5 to-transparent"></div>
+    
+    <!-- Hero background image -->
+    <div class="absolute right-0 top-0 w-1/2 h-full hidden lg:block">
+      <img src={`${BASE}photos/bicycle-kick.jpg`} alt={tr(lang, 'Olly Robinson bicycle kick in a match')} class="w-full h-full object-cover object-center opacity-20 mask-gradient" width="1280" height="1280" fetchpriority="high" />
+      <div class="absolute inset-0 bg-gradient-to-r from-pitch via-pitch/80 to-transparent"></div>
+    </div>
+    <!-- Giant shirt number -->
+    <div class="absolute -right-20 top-1/2 -translate-y-1/2 font-['Oswald'] text-[40rem] font-bold text-white/[0.02] leading-none select-none hidden lg:block">9</div>
+
+    <Nav current="home" lang={lang} />
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 sm:px-10 pt-20 sm:pt-32 pb-16 sm:pb-20 w-full">
+      <div class="grid lg:grid-cols-[1fr_auto] gap-12 items-end">
+        <div>
+          <div class="flex items-center gap-3 mb-6">
+            <div class="h-px w-12 bg-gold"></div>
+            <span class="font-['Oswald'] text-xs uppercase tracking-[0.3em] text-gold">{position}</span>
+          </div>
+          
+          <h1 class="font-['Oswald'] text-7xl sm:text-8xl lg:text-9xl font-bold uppercase leading-[0.85] tracking-tight mb-4">
+            <span class="text-cream">{firstName}</span><br>
+            <span class="gold-shimmer">{lastName}</span>
+          </h1>
+
+          <div class="flex items-center gap-4 mb-6">
+            <a href={profileData.socials.instagram} target="_blank" rel="noopener noreferrer" class="text-cream-muted hover:text-gold transition-colors" aria-label="Instagram">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+            <a href={profileData.socials.x} target="_blank" rel="noopener noreferrer" class="text-cream-muted hover:text-gold transition-colors" aria-label="X">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            {profileData.socials.youtube && (
+              <a href={profileData.socials.youtube} target="_blank" rel="noopener noreferrer" class="text-cream-muted hover:text-gold transition-colors" aria-label="YouTube">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              </a>
+            )}
+          </div>
+
+          <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-cream-muted mb-8">
+            <span>🎂 {ui.dobLine(monthLabel, dobYear, age)}</span>
+            <span>📏 {profileData.height} / {profileData.weight}</span>
+            <span>🦶 {foot}</span>
+            <span>📍 {profileData.location}</span>
+            <span>🇬🇧🇮🇹 {nationality}</span>
+          </div>
+
+          <p class="text-lg text-cream/80 font-light max-w-xl leading-relaxed italic border-l-2 border-gold/50 pl-5">
+            "<span class="text-gold font-medium not-italic">{fmt(careerStats.goals)} {ui.goalsWord}</span> + <span class="text-gold font-medium not-italic">{fmt(careerStats.assists)} {ui.assistsWord}</span> {ui.quoteTail(careerStats.apps, age)}"
+          </p>
+          <p class="text-xs text-cream-muted mt-2 pl-5 ml-0.5">
+            {seasonRangeLabel}
+          </p>
+        </div>
+
+        <!-- Hero stat cards -->
+        <div>
+          <p class="text-xs text-cream-muted/50 uppercase tracking-widest mb-2 text-right">{seasonRangeLabel}</p>
+          <div class="grid grid-cols-2 gap-3 lg:gap-4">
+          <div class="bg-surface-elevated/80 backdrop-blur border border-pitch-line rounded-sm p-5 text-center">
+            <div class="font-['Oswald'] text-4xl lg:text-5xl font-bold text-gold">{fmt(careerStats.goals)}</div>
+            <div class="text-xs text-cream-muted uppercase tracking-widest mt-1">{ui.goals}</div>
+          </div>
+          <div class="bg-surface-elevated/80 backdrop-blur border border-pitch-line rounded-sm p-5 text-center">
+            <div class="font-['Oswald'] text-4xl lg:text-5xl font-bold text-cream">{fmt(careerStats.assists)}</div>
+            <div class="text-xs text-cream-muted uppercase tracking-widest mt-1">{ui.assists}</div>
+          </div>
+          <div class="bg-surface-elevated/80 backdrop-blur border border-pitch-line rounded-sm p-5 text-center">
+            <div class="font-['Oswald'] text-4xl lg:text-5xl font-bold text-cream">{fmt(careerStats.apps)}</div>
+            <div class="text-xs text-cream-muted uppercase tracking-widest mt-1">{ui.apps}</div>
+          </div>
+          <div class="bg-surface-elevated/80 backdrop-blur border border-pitch-line rounded-sm p-5 text-center">
+            <div class="font-['Oswald'] text-4xl lg:text-5xl font-bold text-amber">{fmt(careerStats.gaPerGame)}</div>
+            <div class="text-xs text-cream-muted uppercase tracking-widest mt-1 cursor-help" title={ui.gaTooltip}>{ui.ga}</div>
+          </div>
+        </div>
+        <!-- Season range label -->
+        <p class="text-xs text-cream-muted/60 uppercase tracking-widest mt-3 text-center">
+          {ui.seasonCount(seasonCount)} &middot; {seasonRangeLabel} &middot; <a href="#seasons" class="underline underline-offset-2 hover:text-cream-muted transition-colors">{ui.viewHistory}</a>
+        </p>
+        </div>
+      </div>
+
+      <div class="mt-12 flex items-center gap-4 text-cream-muted">
+        <span class="text-xs uppercase tracking-widest">{ui.currentClubs}</span>
+        <div class="h-px flex-1 bg-pitch-line"></div>
+        {profileData.current_clubs.map((club, idx) => (
+          <>
+            {clubLogos[club] && <img src={clubLogos[club]} alt="" class="w-6 h-6 object-contain" width="24" height="24" />}
+            <span class="font-['Oswald'] text-sm text-cream">{club}</span>
+            {idx < profileData.current_clubs.length - 1 && <span class="text-pitch-line">·</span>}
+          </>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- TECHNICAL ATTRIBUTES -->
+  <main id="main">
+  <section id="stats" class="relative border-t border-pitch-line">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 py-20">
+      <div class="flex items-center gap-4 mb-12">
+        <span class="font-['Oswald'] text-gold text-xs tracking-[0.3em] uppercase">01</span>
+        <h2 class="font-['Oswald'] text-3xl sm:text-4xl font-bold uppercase tracking-wide">{ui.technical}</h2>
+        <div class="flex-1 h-px bg-pitch-line"></div>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {attributes.map(attr => (
+          <div class="bg-surface-elevated/60 border border-pitch-line rounded-sm p-6 hover:border-gold/30 transition-colors group">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-['Oswald'] text-lg uppercase tracking-wide text-cream">{tr(lang, attr.name)}</h3>
+              <span class="font-['Oswald'] text-2xl font-bold text-gold">{fmt(attr.rating)}<span class="text-cream-muted text-sm">/10</span></span>
+            </div>
+            <div class="w-full bg-pitch-line rounded-full h-2 mb-3">
+              <div class="h-2 rounded-full transition-all duration-1000" style={`width: ${attr.rating * 10}%; background: linear-gradient(90deg, var(--color-gold-dim), var(--color-gold));`}></div>
+            </div>
+            <p class="text-xs text-cream-muted">{tr(lang, attr.note)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- GPS PERFORMANCE -->
+  <section class="relative border-t border-pitch-line bg-surface/50 overflow-hidden">
+    <div class="absolute inset-0 opacity-[0.07] pointer-events-none">
+      <img src={`${BASE}photos/bath-action-2.jpg`} alt="" class="w-full h-full object-cover" loading="lazy" aria-hidden="true" />
+    </div>
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 py-20">
+      <div class="flex items-center gap-4 mb-4">
+        <span class="font-['Oswald'] text-gold text-xs tracking-[0.3em] uppercase">02</span>
+        <h2 class="font-['Oswald'] text-3xl sm:text-4xl font-bold uppercase tracking-wide">{ui.gps}</h2>
+        <div class="flex-1 h-px bg-pitch-line"></div>
+      </div>
+      <p class="text-xs text-cream-muted mb-10">{ui.gpsTracked(gpsStats.matches)}</p>
+
+      <!-- Summary stats -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+        <div class="bg-surface-elevated/60 border border-pitch-line rounded-sm p-5 text-center">
+          <div class="font-['Oswald'] text-3xl font-bold text-gold">{fmt(gpsStats.topSpeed, 1)}</div>
+          <div class="text-xs text-cream-muted uppercase tracking-widest mt-1">{ui.topSpeed}</div>
+        </div>
+        <div class="bg-surface-elevated/60 border border-pitch-line rounded-sm p-5 text-center">
+          <div class="font-['Oswald'] text-3xl font-bold text-cream">{fmt(gpsStats.avgDistance / 1000, 1)}</div>
+          <div class="text-xs text-cream-muted uppercase tracking-widest mt-1">{ui.avgDistance}</div>
+        </div>
+        <div class="bg-surface-elevated/60 border border-pitch-line rounded-sm p-5 text-center">
+          <div class="font-['Oswald'] text-3xl font-bold text-cream">{fmt(gpsStats.avgSprints)}</div>
+          <div class="text-xs text-cream-muted uppercase tracking-widest mt-1">{ui.avgSprints}</div>
+        </div>
+        <div class="bg-surface-elevated/60 border border-pitch-line rounded-sm p-5 text-center">
+          <div class="font-['Oswald'] text-3xl font-bold text-amber">{fmt(gpsStats.avgHighIntensity)}</div>
+          <div class="text-xs text-cream-muted uppercase tracking-widest mt-1">{ui.avgHighIntensity}</div>
+        </div>
+      </div>
+
+      <!-- AI Performance Summary -->
+      {gpsPerformanceSummary && (
+        <div class="mb-8 border-l-2 border-gold/50 pl-5">
+          <p class="text-xs font-['Oswald'] uppercase tracking-[0.2em] text-gold/70 mb-2">{ui.analysis}</p>
+          <p class="text-sm text-cream-muted/80 leading-relaxed italic">{gpsPerformanceSummary}</p>
+        </div>
+      )}
+
+      <!-- Per-match breakdown -->
+      <div class="grid gap-4">
+        {gpsSessionsWithEst.map(s => (
+          <a href={`${BASE}gps/${s.date}/`} class="block bg-surface-elevated/40 border border-pitch-line rounded-sm p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-gold/40 hover:bg-surface-elevated/60 transition-all group cursor-pointer">
+            <div>
+              <div class="font-['Oswald'] text-sm uppercase tracking-wide text-cream group-hover:text-gold transition-colors flex items-center gap-2">
+                {clubLogos[s.match] && <img src={clubLogos[s.match]} alt="" class="w-5 h-5 object-contain" width="20" height="20" loading="lazy" />}
+                {s.match}
+              </div>
+              <div class="text-xs text-cream-muted">
+                {new Date(s.date).toLocaleDateString(ui.locale, { day: 'numeric', month: 'short', year: 'numeric' })}
+                <span class={s.playing_mins < 75 ? 'text-gold' : ''}>{ui.playingMins(s.is_estimate, s.playing_mins)}</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-6 sm:gap-8">
+              <div class="text-center">
+                <div class="font-['Oswald'] text-xl font-bold text-cream">{fmt(s.distance_m / 1000, 1)}<span class="text-sm text-cream-muted">km</span></div>
+              </div>
+              <div class="text-center">
+                <div class="font-['Oswald'] text-xl font-bold text-gold">{fmt(s.max_speed_kph, 1)}<span class="text-sm text-cream-muted">km/h</span></div>
+              </div>
+              <div class="text-center">
+                <div class="font-['Oswald'] text-xl font-bold text-cream">{fmt(s.sprints)}<span class="text-sm text-cream-muted"> spr</span></div>
+              </div>
+              <div class="text-center">
+                <div class="font-['Oswald'] text-xl font-bold text-amber">{fmt(s.high_intensity)}<span class="text-sm text-cream-muted"> HI</span></div>
+              </div>
+              <svg aria-hidden="true" class="w-5 h-5 text-gold/60 group-hover:text-gold group-hover:translate-x-1 transition-all shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      <!-- Link to full GPS page -->
+      <div class="mt-8 text-center">
+        <a href={`${BASE}gps/`} aria-label={ui.viewGpsAria} class="inline-flex items-center gap-2 font-['Oswald'] text-sm uppercase tracking-[0.2em] text-gold hover:text-cream border border-gold/30 hover:border-gold px-6 py-3 rounded-sm transition-colors">
+          {ui.viewGps}
+          <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEASON BY SEASON -->
+  <section id="seasons" class="relative border-t border-pitch-line">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 py-20">
+      <div class="flex items-center gap-4 mb-12">
+        <span class="font-['Oswald'] text-gold text-xs tracking-[0.3em] uppercase">03</span>
+        <h2 class="font-['Oswald'] text-3xl sm:text-4xl font-bold uppercase tracking-wide">{ui.seasons}</h2>
+        <div class="flex-1 h-px bg-pitch-line"></div>
+      </div>
+
+      <div class="space-y-12">
+        {seasonsWithXG.map(s => (
+          <div>
+            <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-6">
+              <span class="font-['Oswald'] text-2xl font-bold text-gold shrink-0 whitespace-nowrap">{s.season}</span>
+              {s.highlights.length > 0 && (
+                <div class="flex flex-wrap gap-2">
+                  {s.highlights.map(h => (
+                    <span class="text-xs font-semibold uppercase tracking-wider bg-gold/10 text-gold border border-gold/20 px-2.5 py-0.5 rounded-sm">{tr(lang, h)}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div class="grid gap-4">
+              {s.clubs.map(club => (
+                <a href={`${BASE}matches/#${(club.name + '-' + s.season).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/-+$/, '')}`} class="block bg-surface-elevated/40 border border-pitch-line rounded-sm overflow-hidden hover:border-gold/20 transition-colors">
+                  <div class="flex flex-col sm:flex-row sm:items-center justify-between p-5 gap-4">
+                    <div class="flex items-center gap-4">
+                      <div class="w-1 h-12 rounded-full" style={`background: ${club.color};`}></div>
+                      {clubLogos[club.name] && (
+                        <img src={clubLogos[club.name]} alt={ui.badge(club.name)} class="w-10 h-10 object-contain" width="40" height="40" loading="lazy" />
+                      )}
+                      <div>
+                        <h4 class="font-['Oswald'] text-lg uppercase tracking-wide">{club.name}</h4>
+                        <p class="text-xs text-cream-muted">{club.league}</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-3 sm:gap-8">
+                      <div class="text-center">
+                        <div class="font-['Oswald'] text-2xl font-bold">{fmt(club.apps)}</div>
+                        <div class="text-xs text-cream-muted uppercase tracking-widest">{ui.apps}</div>
+                      </div>
+                      <div class="text-center">
+                        <div class="font-['Oswald'] text-2xl font-bold text-gold">{fmt(club.goals)}</div>
+                        <div class="text-xs text-cream-muted uppercase tracking-widest">{ui.goals}</div>
+                      </div>
+                      <div class="text-center">
+                        <div class="font-['Oswald'] text-2xl font-bold">{fmt(club.assists)}</div>
+                        <div class="text-xs text-cream-muted uppercase tracking-widest">{ui.assists}</div>
+                      </div>
+                      {club.mins > 0 && (
+                        <div class="text-center hidden sm:block">
+                          <div class="font-['Oswald'] text-2xl font-bold text-cream-muted">{fmt(club.mins)}'</div>
+                          <div class="text-xs text-cream-muted uppercase tracking-widest">{ui.mins}</div>
+                        </div>
+                      )}
+                      <div class="text-center">
+                        <div class="font-['Oswald'] text-2xl font-bold text-amber">{fmt(club.gp90, 2)}</div>
+                        <div class="text-xs text-cream-muted uppercase tracking-widest cursor-help" title={ui.g90Tip}>G/90</div>
+                      </div>
+                      <div class="text-center">
+                        <div class="font-['Oswald'] text-2xl font-bold text-amber">{fmt(club.ap90, 2)}</div>
+                        <div class="text-xs text-cream-muted uppercase tracking-widest cursor-help" title={ui.a90Tip}>A/90</div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- KEY PERFORMANCES -->
+  <section class="relative border-t border-pitch-line bg-surface/50">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 py-20">
+      <div class="flex items-center gap-4 mb-12">
+        <span class="font-['Oswald'] text-gold text-xs tracking-[0.3em] uppercase">04</span>
+        <h2 class="font-['Oswald'] text-3xl sm:text-4xl font-bold uppercase tracking-wide">{ui.standout}</h2>
+        <div class="flex-1 h-px bg-pitch-line"></div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        {keyMatches.map(m => (
+          <div class="bg-surface-elevated border border-pitch-line rounded-sm p-5 hover:border-gold/30 transition-colors">
+            <div class="text-xs text-cream-muted mb-2">{new Date(m.date).toLocaleDateString(ui.locale, { day: 'numeric', month: 'short', year: 'numeric' })}</div>
+            <div class="font-['Oswald'] text-sm uppercase tracking-wide text-cream mb-1">{ui.versus(m.opponent)}</div>
+            <div class="text-xs text-gold font-semibold mb-3">{m.team}{m.score ? ` · ${m.score}` : ''}</div>
+            <div class="flex gap-4">
+              <span class="font-['Oswald'] text-xl font-bold text-gold">{fmt(m.goals)}G</span>
+              {m.assists > 0 && <span class="font-['Oswald'] text-xl font-bold text-cream">{fmt(m.assists)}A</span>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- HONOURS -->
+  <section id="honours" class="relative border-t border-pitch-line">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 py-20">
+      <div class="flex items-center gap-4 mb-12">
+        <span class="font-['Oswald'] text-gold text-xs tracking-[0.3em] uppercase">05</span>
+        <h2 class="font-['Oswald'] text-3xl sm:text-4xl font-bold uppercase tracking-wide">{ui.honours}</h2>
+        <div class="flex-1 h-px bg-pitch-line"></div>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {honours.map(h => (
+          <div class="relative bg-gradient-to-br from-gold/5 to-transparent border border-gold/20 rounded-sm p-6 group hover:border-gold/40 transition-colors">
+            <div class="absolute top-4 right-4 text-gold/20 group-hover:text-gold/40 transition-colors">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 1l2.928 6.856L20 8.588l-5 5.304L16.18 20 10 16.428 3.82 20 5 13.892 0 8.588l7.072-.732L10 1z" clip-rule="evenodd"/></svg>
+            </div>
+            <span class="text-xs text-gold uppercase tracking-widest font-semibold">{h.year}</span>
+            <h3 class="font-['Oswald'] text-lg uppercase tracking-wide text-cream mt-2 mb-1">{tr(lang, h.title)}</h3>
+            <p class="text-xs text-cream-muted">{tr(lang, h.org)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- PLAYER INFO -->
+  <section class="relative border-t border-pitch-line bg-surface/50">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 py-20">
+      <div class="flex items-center gap-4 mb-12">
+        <span class="font-['Oswald'] text-gold text-xs tracking-[0.3em] uppercase">06</span>
+        <h2 class="font-['Oswald'] text-3xl sm:text-4xl font-bold uppercase tracking-wide">{ui.player}</h2>
+        <div class="flex-1 h-px bg-pitch-line"></div>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div>
+          <h3 class="font-['Oswald'] text-xs text-gold uppercase tracking-widest mb-4">{ui.physical}</h3>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-cream-muted">{ui.height}</span><span>{profileData.height}</span></div>
+            <div class="flex justify-between"><span class="text-cream-muted">{ui.weight}</span><span>{profileData.weight}</span></div>
+            <div class="flex justify-between"><span class="text-cream-muted">{ui.foot}</span><span>{foot}</span></div>
+            <div class="flex justify-between"><span class="text-cream-muted">{ui.position}</span><span>{position}</span></div>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-['Oswald'] text-xs text-gold uppercase tracking-widest mb-4">{ui.personal}</h3>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-cream-muted">{ui.dob}</span><span>{monthLabel} {dobYear}</span></div>
+            <div class="flex justify-between"><span class="text-cream-muted">{ui.age}</span><span>{fmt(age)}</span></div>
+            <div class="flex justify-between"><span class="text-cream-muted">{ui.nationality}</span><span>{nationality}</span></div>
+            <div class="flex justify-between"><span class="text-cream-muted">{ui.location}</span><span>{profileData.location}</span></div>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-['Oswald'] text-xs text-gold uppercase tracking-widest mb-4">{ui.clubs}</h3>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between"><span class="text-cream-muted">{ui.academy}</span><span>{profileData.current_clubs[0]}</span></div>
+            <div class="flex justify-between"><span class="text-cream-muted">{ui.dualReg}</span><span>{profileData.current_clubs[1]}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY -->
+  <section id="gallery" class="relative border-t border-pitch-line">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 py-20">
+      <div class="flex items-center gap-4 mb-12">
+        <span class="font-['Oswald'] text-gold text-xs tracking-[0.3em] uppercase">07</span>
+        <h2 class="font-['Oswald'] text-3xl sm:text-4xl font-bold uppercase tracking-wide">{ui.gallery}</h2>
+        <div class="flex-1 h-px bg-pitch-line"></div>
+      </div>
+
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        {gallery.map(photo => (
+          <button data-gallery-index={photo.src} class={`relative overflow-hidden rounded-sm group cursor-pointer ${photo.span}`}>
+            <img src={`${BASE}photos/${photo.src}`} alt={photo.alt} class="w-full h-full object-cover aspect-square group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+            <div class="absolute inset-0 bg-gradient-to-t from-pitch/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+              <span class="absolute bottom-3 left-3 text-xs text-cream font-medium">{photo.alt}</span>
+            </div>
+          </button>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  </main>
+
+  <!-- FOOTER / CONTACT -->
+  <footer class="border-t border-pitch-line">
+    <div class="max-w-7xl mx-auto px-6 sm:px-10 py-12">
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div>
+          <span class="font-['Oswald'] text-2xl font-bold uppercase tracking-wide">{profileData.name}</span>
+          <span class="text-cream-muted text-sm ml-3">{ui.footerTag(age)}</span>
+        </div>
+        <div class="flex items-center gap-6 text-sm text-cream-muted">
+          <a href={lang === 'it' ? `${BASE}it/footage/` : `${BASE}footage/`} class="hover:text-gold transition-colors">📹 {ui.footage}</a>
+          <a href={profileData.socials.instagram} target="_blank" rel="noopener noreferrer" class="hover:text-gold transition-colors">Instagram</a>
+          <a href={profileData.socials.x} target="_blank" rel="noopener noreferrer" class="hover:text-gold transition-colors">𝕏</a>
+          {profileData.socials.youtube && <a href={profileData.socials.youtube} target="_blank" rel="noopener noreferrer" class="hover:text-gold transition-colors">YouTube</a>}
+        </div>
+      </div>
+      <p class="text-center text-cream-muted/40 text-xs mt-8">{ui.builtBy} <a href="https://tribelo.co.uk" target="_blank" rel="noopener noreferrer" class="hover:text-cream-muted/70 transition-colors">tribelo</a></p>
+    </div>
+  </footer>
+
+</Layout>
+
+<script define:vars={{ galleryPhotos, basePath: BASE, lb }}>
+  const modal = document.createElement('div');
+  modal.id = 'lightbox';
+  modal.className = 'fixed inset-0 z-[100] bg-black/95 backdrop-blur-sm hidden items-center justify-center';
+  modal.setAttribute('role', 'dialog');
+  modal.setAttribute('aria-modal', 'true');
+  modal.setAttribute('aria-label', lb.label);
+  modal.innerHTML = `
+    <button id="lb-close" aria-label="${lb.close}" class="absolute top-4 right-4 z-10 w-14 h-14 flex items-center justify-center text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full text-3xl cursor-pointer transition-colors focus:outline-2 focus:outline-gold focus:outline-offset-2">&times;</button>
+    <button id="lb-prev" aria-label="${lb.prev}" class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-10 w-14 h-14 flex items-center justify-center text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full cursor-pointer transition-colors focus:outline-2 focus:outline-gold focus:outline-offset-2">
+      <svg aria-hidden="true" class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+    <button id="lb-next" aria-label="${lb.next}" class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-10 w-14 h-14 flex items-center justify-center text-white/70 hover:text-white bg-white/10 hover:bg-white/20 rounded-full cursor-pointer transition-colors focus:outline-2 focus:outline-gold focus:outline-offset-2">
+      <svg aria-hidden="true" class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+    </button>
+    <img id="lb-img" alt="" class="max-w-[90vw] max-h-[85vh] object-contain select-none" draggable="false" />
+    <div class="absolute bottom-4 left-0 right-0 text-center">
+      <span id="lb-caption" class="text-sm text-white/80"></span>
+      <span id="lb-counter" class="text-xs text-white/50 ml-3"></span>
+    </div>
+  `;
+  document.body.appendChild(modal);
+
+  let currentIndex = 0;
+
+  function showPhoto(idx) {
+    currentIndex = ((idx % galleryPhotos.length) + galleryPhotos.length) % galleryPhotos.length;
+    const photo = galleryPhotos[currentIndex];
+    const img = document.getElementById('lb-img');
+    img.src = `${basePath}photos/${photo.src}`;
+    img.alt = photo.alt;
+    document.getElementById('lb-caption').textContent = photo.alt;
+    document.getElementById('lb-counter').textContent = `${currentIndex + 1} / ${galleryPhotos.length}`;
+  }
+
+  function openLightbox(idx) {
+    showPhoto(idx);
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('[data-gallery-index]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const src = btn.getAttribute('data-gallery-index');
+      const idx = galleryPhotos.findIndex(p => p.src === src);
+      openLightbox(idx >= 0 ? idx : 0);
+    });
+  });
+
+  document.getElementById('lb-close')?.addEventListener('click', closeLightbox);
+  document.getElementById('lb-prev')?.addEventListener('click', () => showPhoto(currentIndex - 1));
+  document.getElementById('lb-next')?.addEventListener('click', () => showPhoto(currentIndex + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (modal.classList.contains('hidden')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') showPhoto(currentIndex - 1);
+    if (e.key === 'ArrowRight') showPhoto(currentIndex + 1);
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeLightbox();
+  });
+
+  let touchStartX = 0;
+  let touchStartY = 0;
+  const lbImg = document.getElementById('lb-img');
+
+  lbImg.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
+
+  lbImg.addEventListener('touchend', (e) => {
+    const dx = touchStartX - e.changedTouches[0].screenX;
+    const dy = touchStartY - e.changedTouches[0].screenY;
+    if (dy < -80 && Math.abs(dy) > Math.abs(dx)) {
+      closeLightbox();
+      return;
+    }
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)) {
+      if (dx > 0) showPhoto(currentIndex + 1);
+      else showPhoto(currentIndex - 1);
+    }
+  }, { passive: true });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.stat-reveal').forEach(el => observer.observe(el));
+</script>
