@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import { loadHome } from '../lib/home-data';
-import { homeUi, tr, type Lang } from '../i18n/home';
+import { homeUi, italianSeo, tr, type Lang } from '../i18n/home';
 
 interface Props {
   lang: Lang;
@@ -40,16 +40,19 @@ function fmt(n: number, digits?: number) {
   return lang === 'it' ? rendered.replace('.', ',') : rendered;
 }
 
-const description = lang === 'en' && gpsSummaryFirstSentence
-  ? gpsSummaryFirstSentence
-  : ui.description(
-      careerStats.goals,
-      careerStats.assists,
-      careerStats.apps,
-      profileData.current_clubs[0],
-      profileData.current_clubs[1],
-      age,
-    );
+const itSeo = lang === 'it' ? italianSeo(profileData) : null;
+const description = itSeo
+  ? itSeo.homeDescription
+  : gpsSummaryFirstSentence
+    ? gpsSummaryFirstSentence
+    : ui.description(
+        careerStats.goals,
+        careerStats.assists,
+        careerStats.apps,
+        profileData.current_clubs[0],
+        profileData.current_clubs[1],
+        age,
+      );
 
 const gallery = [
   { src: 'bicycle-kick.jpg', alt: 'Bicycle kick — match', span: 'md:col-span-2 md:row-span-2' },
@@ -74,7 +77,7 @@ const lb = { label: ui.lbLabel, close: ui.lbClose, prev: ui.lbPrev, next: ui.lbN
 const [firstName, lastName] = profileData.name.split(' ');
 ---
 
-<Layout lang={lang} alternates={{ en: 'https://or9.uk/', it: 'https://or9.uk/it/' }} title={ui.title} description={description}>
+<Layout lang={lang} alternates={{ en: 'https://or9.uk/', it: 'https://or9.uk/it/' }} title={itSeo ? itSeo.homeTitle : ui.title} description={description}>
 
   <!-- JSON-LD Person -->
   <script type="application/ld+json" set:html={JSON.stringify({
@@ -82,9 +85,12 @@ const [firstName, lastName] = profileData.name.split(' ');
     "@type": "Person",
     "name": profileData.name,
     "url": "https://or9.uk",
-    "jobTitle": ui.jobTitle(position),
+    "jobTitle": itSeo?.jobTitle ?? ui.jobTitle(position),
+    ...(itSeo ? { "description": itSeo.homeDescription } : {}),
     "birthDate": profileData.dob,
-    "nationality": [{ "@type": "Country", "name": "United Kingdom" }, { "@type": "Country", "name": "Italy" }],
+    "nationality": itSeo
+      ? [{ "@type": "Country", "name": "Regno Unito" }, { "@type": "Country", "name": "Italia" }]
+      : [{ "@type": "Country", "name": "United Kingdom" }, { "@type": "Country", "name": "Italy" }],
     "address": { "@type": "PostalAddress", "addressLocality": profileData.location.split(', ')[0], "addressRegion": profileData.location.split(', ')[1], "addressCountry": "GB" },
     "sameAs": [
       profileData.socials.instagram,

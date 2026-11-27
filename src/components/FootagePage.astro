@@ -2,7 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Breadcrumb from '../components/Breadcrumb.astro';
-import { footageUi, tr, type Lang } from '../i18n/home';
+import { footageUi, italianSeo, tr, type Lang } from '../i18n/home';
 import { getEntry } from 'astro:content';
 
 interface Props {
@@ -14,8 +14,10 @@ const BASE = import.meta.env.BASE_URL;
 const ui = footageUi(lang);
 
 const footageEntry = await getEntry('footage', 'footage');
-if (!footageEntry) throw new Error('Missing footage content');
+const profileEntry = await getEntry('profile', 'profile');
+if (!footageEntry || !profileEntry) throw new Error('Missing footage or profile content');
 const videos = footageEntry.data;
+const itSeo = lang === 'it' ? italianSeo(profileEntry.data) : null;
 
 const typeColors: Record<string, string> = {
   highlight: 'bg-gold/10 text-gold border-gold/20',
@@ -29,9 +31,24 @@ const homeHref = lang === 'it' ? `${BASE}it/` : BASE;
 <Layout
   lang={lang}
   alternates={{ en: 'https://or9.uk/footage/', it: 'https://or9.uk/it/footage/' }}
-  title={ui.title}
-  description={ui.description}
+  title={itSeo ? itSeo.footageTitle : ui.title}
+  description={itSeo ? itSeo.footageDescription : ui.description}
 >
+
+  {itSeo && (
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": profileEntry.data.name,
+      "url": "https://or9.uk",
+      "jobTitle": itSeo.jobTitle,
+      "description": itSeo.footageDescription,
+      "birthDate": profileEntry.data.dob,
+      "nationality": [{ "@type": "Country", "name": "Regno Unito" }, { "@type": "Country", "name": "Italia" }],
+      "address": { "@type": "PostalAddress", "addressLocality": profileEntry.data.location.split(', ')[0], "addressRegion": profileEntry.data.location.split(', ')[1], "addressCountry": "GB" },
+      "memberOf": profileEntry.data.current_clubs.map(club => ({ "@type": "SportsTeam", "name": club }))
+    })} />
+  )}
 
   <Nav current="footage" lang={lang} />
 
