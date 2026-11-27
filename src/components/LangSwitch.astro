@@ -1,0 +1,42 @@
+---
+import type { Lang } from '../i18n/home';
+
+interface Props {
+  lang: Lang;
+  label: string;
+  floating?: boolean;
+}
+
+const { lang, label, floating = false } = Astro.props;
+const BASE = import.meta.env.BASE_URL;
+---
+
+<div
+  class:list={[
+    "flex items-center shrink-0 text-[11px] font-['Oswald'] uppercase tracking-[0.2em] border border-pitch-line rounded-sm overflow-hidden",
+    floating && 'bg-pitch/90 backdrop-blur-md shadow-lg shadow-black/40',
+  ]}
+  role="group"
+  aria-label={label}
+>
+  <a
+    href={BASE}
+    hreflang="en"
+    lang="en"
+    aria-current={lang === 'en' ? 'page' : undefined}
+    class:list={[
+      'px-2.5 py-1 transition-colors',
+      lang === 'en' ? 'bg-gold text-pitch' : 'text-cream-muted hover:text-gold',
+    ]}
+  >EN</a>
+  <a
+    href={`${BASE}it/`}
+    hreflang="it"
+    lang="it"
+    aria-current={lang === 'it' ? 'page' : undefined}
+    class:list={[
+      'px-2.5 py-1 transition-colors',
+      lang === 'it' ? 'bg-gold text-pitch' : 'text-cream-muted hover:text-gold',
+    ]}
+  >IT</a>
+</div>
