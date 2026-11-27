@@ -32,6 +32,8 @@ const ui = homeUi(lang);
         <link rel="alternate" hreflang="x-default" href={alternates.en} />
         <meta property="og:locale" content={lang === 'it' ? 'it_IT' : 'en_GB'} />
         <meta property="og:locale:alternate" content={lang === 'it' ? 'en_GB' : 'it_IT'} />
+        <meta property="og:image:alt" content={ui.shareImageAlt} />
+        <meta name="twitter:image:alt" content={ui.shareImageAlt} />
       </>
     )}
     <title>{title}</title>

@@ -144,10 +144,9 @@ export function homeUi(lang: Lang) {
     lbPrev: it ? 'Foto precedente' : 'Previous photo',
     lbNext: it ? 'Foto successiva' : 'Next photo',
     description: (goals: number, assists: number, apps: number, club0: string, club1: string, age: number) =>
-      it
-        ? `Olly Robinson — Attaccante. ${goals} gol, ${assists} assist in ${apps} partite giovanili. ${club0}, ${club1}. ${age} anni, Wiltshire.`
-        : `Olly Robinson — Attacking Forward / Striker. ${goals} goals, ${assists} assists in ${apps} youth games. ${club0}, ${club1}. Age ${age}, Wiltshire.`,
-    jobTitle: (position: string) => (it ? `Calciatore — ${position}` : `Footballer — ${position}`),
+      `Olly Robinson — Attacking Forward / Striker. ${goals} goals, ${assists} assists in ${apps} youth games. ${club0}, ${club1}. Age ${age}, Wiltshire.`,
+    jobTitle: (position: string) => `Footballer — ${position}`,
+    shareImageAlt: it ? 'Numero 9 — Bath City' : 'Number 9 — Bath City',
     nav: {
       stats: it ? 'Statistiche' : 'Stats',
       seasons: it ? 'Stagioni' : 'Seasons',
@@ -168,10 +167,8 @@ export function homeUi(lang: Lang) {
 export function footageUi(lang: Lang) {
   const it = lang === 'it';
   return {
-    title: it ? 'Video — Olly Robinson | OR9' : 'Footage — Olly Robinson | OR9',
-    description: it
-      ? 'Video delle partite, sintesi e gol di Olly Robinson — Attaccante. Bath City U18, Melksham Town.'
-      : 'Match footage, highlights and goals for Olly Robinson — Attacking Forward. Bath City U18, Melksham Town.',
+    title: 'Footage — Olly Robinson | OR9',
+    description: 'Match footage, highlights and goals for Olly Robinson — Attacking Forward. Bath City U18, Melksham Town.',
     profile: it ? 'Profilo' : 'Profile',
     crumb: it ? 'Video' : 'Footage',
     eyebrow: it ? 'Video delle partite e sintesi' : 'Match Footage & Highlights',
@@ -185,5 +182,46 @@ export function footageUi(lang: Lang) {
     subscribeBody: it
       ? 'Nuovi spezzoni e gol caricati durante la stagione. Iscriviti per restare aggiornato.'
       : 'New match clips and goals uploaded throughout the season. Subscribe to stay up to date.',
+  };
+}
+
+type SeoProfile = {
+  dob: string;
+  foot: string;
+  position: string;
+  nationality: string;
+  location: string;
+  current_clubs: string[];
+};
+
+/** Italian titles and descriptions built only from profile fields. */
+export function italianSeo(profile: SeoProfile) {
+  const year = profile.dob.match(/^(\d{4})/)?.[1] ?? '';
+  const classe = year ? `classe ${year}` : '';
+  const rightStriker = /striker|forward/i.test(profile.position) && /^right\b/i.test(profile.foot);
+  const dualBritishItalian = /british/i.test(profile.nationality) && /italian/i.test(profile.nationality);
+  const inEngland = /wiltshire|corsham|england/i.test(profile.location);
+  const clubs = profile.current_clubs.filter(Boolean);
+  const clubPhrase = clubs.length >= 2 ? `${clubs[0]} e ${clubs[1]}` : clubs.join(', ');
+  const role = classe ? `attaccante ${classe}` : 'attaccante';
+  const identity = dualBritishItalian
+    ? (inEngland ? 'calciatore italo-inglese con doppia cittadinanza' : 'calciatore con doppia cittadinanza britannica e italiana')
+    : '';
+  const footageIdentity = dualBritishItalian
+    ? (inEngland ? 'Calciatore italo-inglese con doppia cittadinanza' : 'Calciatore con doppia cittadinanza britannica e italiana')
+    : 'Calciatore';
+  const homeDetail = [rightStriker ? 'Punta destro' : '', clubPhrase].filter(Boolean).join(', ');
+  const homeDescription = `Attaccante${classe ? ` ${classe}` : ''}${identity ? `, ${identity}` : ''}.${homeDetail ? ` ${homeDetail}.` : ''}`;
+  const footageLead = rightStriker && classe
+    ? `Video di Olly Robinson, punta destro ${classe}`
+    : `Video di Olly Robinson, ${role}`;
+  const footageDescription = `${footageLead}. ${footageIdentity}${clubPhrase ? `, ${clubPhrase}` : ''}.`;
+
+  return {
+    homeTitle: `Olly Robinson, ${role} | OR9`,
+    homeDescription,
+    footageTitle: classe ? `Video attaccante ${classe} | Olly Robinson` : 'Video — Olly Robinson | OR9',
+    footageDescription,
+    jobTitle: rightStriker ? 'Attaccante, punta destro' : 'Attaccante',
   };
 }
