@@ -4,11 +4,12 @@ import type { Lang } from '../i18n/home';
 interface Props {
   lang: Lang;
   label: string;
+  enHref: string;
+  itHref: string;
   floating?: boolean;
 }
 
-const { lang, label, floating = false } = Astro.props;
-const BASE = import.meta.env.BASE_URL;
+const { lang, label, enHref, itHref, floating = false } = Astro.props;
 ---
 
 <div
@@ -20,7 +21,7 @@ const BASE = import.meta.env.BASE_URL;
   aria-label={label}
 >
   <a
-    href={BASE}
+    href={enHref}
     hreflang="en"
     lang="en"
     aria-current={lang === 'en' ? 'page' : undefined}
@@ -30,7 +31,7 @@ const BASE = import.meta.env.BASE_URL;
     ]}
   >EN</a>
   <a
-    href={`${BASE}it/`}
+    href={itHref}
     hreflang="it"
     lang="it"
     aria-current={lang === 'it' ? 'page' : undefined}

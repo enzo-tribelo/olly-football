@@ -8,11 +8,11 @@ interface Props {
   description?: string;
   ogImage?: string;
   lang?: Lang;
-  /** Emit en/it hreflang alternates. Only the two homepages are translations of each other. */
-  alternates?: boolean;
+  /** Absolute URLs of the English and Italian versions of this page. */
+  alternates?: { en: string; it: string };
 }
 
-const { title, description = "Olly Robinson — Attacking Forward / Striker. 164 goals, 92 assists in 114 youth games. Bath City U18 & Melksham Town.", ogImage, lang = 'en', alternates = false } = Astro.props;
+const { title, description = "Olly Robinson — Attacking Forward / Striker. 164 goals, 92 assists in 114 youth games. Bath City U18 & Melksham Town.", ogImage, lang = 'en', alternates } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, 'https://or9.uk');
 const ogImageURL = ogImage ? new URL(ogImage, 'https://or9.uk').href : new URL('/photos/number9-back.jpg', 'https://or9.uk').href;
 const ui = homeUi(lang);
@@ -27,9 +27,9 @@ const ui = homeUi(lang);
     <link rel="canonical" href={canonicalURL.href} />
     {alternates && (
       <>
-        <link rel="alternate" hreflang="en" href="https://or9.uk/" />
-        <link rel="alternate" hreflang="it" href="https://or9.uk/it/" />
-        <link rel="alternate" hreflang="x-default" href="https://or9.uk/" />
+        <link rel="alternate" hreflang="en" href={alternates.en} />
+        <link rel="alternate" hreflang="it" href={alternates.it} />
+        <link rel="alternate" hreflang="x-default" href={alternates.en} />
         <meta property="og:locale" content={lang === 'it' ? 'it_IT' : 'en_GB'} />
         <meta property="og:locale:alternate" content={lang === 'it' ? 'en_GB' : 'it_IT'} />
       </>

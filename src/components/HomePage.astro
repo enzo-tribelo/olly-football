@@ -74,7 +74,7 @@ const lb = { label: ui.lbLabel, close: ui.lbClose, prev: ui.lbPrev, next: ui.lbN
 const [firstName, lastName] = profileData.name.split(' ');
 ---
 
-<Layout lang={lang} alternates title={ui.title} description={description}>
+<Layout lang={lang} alternates={{ en: 'https://or9.uk/', it: 'https://or9.uk/it/' }} title={ui.title} description={description}>
 
   <!-- JSON-LD Person -->
   <script type="application/ld+json" set:html={JSON.stringify({
@@ -502,7 +502,7 @@ const [firstName, lastName] = profileData.name.split(' ');
           <span class="text-cream-muted text-sm ml-3">{ui.footerTag(age)}</span>
         </div>
         <div class="flex items-center gap-6 text-sm text-cream-muted">
-          <a href={`${BASE}footage/`} class="hover:text-gold transition-colors">📹 {ui.footage}</a>
+          <a href={lang === 'it' ? `${BASE}it/footage/` : `${BASE}footage/`} class="hover:text-gold transition-colors">📹 {ui.footage}</a>
           <a href={profileData.socials.instagram} target="_blank" rel="noopener noreferrer" class="hover:text-gold transition-colors">Instagram</a>
           <a href={profileData.socials.x} target="_blank" rel="noopener noreferrer" class="hover:text-gold transition-colors">𝕏</a>
           {profileData.socials.youtube && <a href={profileData.socials.youtube} target="_blank" rel="noopener noreferrer" class="hover:text-gold transition-colors">YouTube</a>}

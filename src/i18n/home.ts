@@ -55,6 +55,16 @@ const itText: Record<string, string> = {
   'Olly Robinson rounding the goalkeeper': 'Olly Robinson che supera il portiere',
   'Olly Robinson winning an aerial duel': 'Olly Robinson che vince un duello aereo',
   'Olly in action for Calne Town Youth': 'Olly in azione con il Calne Town Youth',
+
+  'Bath City U18 — Highlight Reel Dec 6': 'Bath City U18 — Sintesi del 6 dicembre',
+  'Highlight Reel — March 2026': 'Sintesi — marzo 2026',
+  'Melksham Town — Assist': 'Melksham Town — Assist',
+  'Melksham Town U18 — Clip': 'Melksham Town U18 — Spezzone',
+  'Bath City U18 vs Yeovil College — Goal 1': 'Bath City U18 contro Yeovil College — Gol 1',
+  'Won 6-1 · November 2025': 'Vittoria 6-1 · novembre 2025',
+  highlight: 'sintesi',
+  match: 'partita',
+  training: 'allenamento',
 };
 
 export function tr(lang: Lang, text: string): string {
@@ -150,6 +160,30 @@ export function homeUi(lang: Lang) {
       language: it ? 'Lingua' : 'Language',
       copied: it ? 'Link copiato!' : 'Link copied!',
       skip: it ? 'Vai al contenuto' : 'Skip to content',
+      share: it ? 'Condividi questa pagina' : 'Share this page',
     },
+  };
+}
+
+export function footageUi(lang: Lang) {
+  const it = lang === 'it';
+  return {
+    title: it ? 'Video — Olly Robinson | OR9' : 'Footage — Olly Robinson | OR9',
+    description: it
+      ? 'Video delle partite, sintesi e gol di Olly Robinson — Attaccante. Bath City U18, Melksham Town.'
+      : 'Match footage, highlights and goals for Olly Robinson — Attacking Forward. Bath City U18, Melksham Town.',
+    profile: it ? 'Profilo' : 'Profile',
+    crumb: it ? 'Video' : 'Footage',
+    eyebrow: it ? 'Video delle partite e sintesi' : 'Match Footage & Highlights',
+    watch: it ? 'Guarda' : 'Watch',
+    intro: it
+      ? 'Sintesi delle partite, gol e spezzoni di torneo.'
+      : 'Match highlights, goals and tournament clips.',
+    play: (title: string) => (it ? `Riproduci il video: ${title}` : `Play video: ${title}`),
+    playerFallback: it ? 'Lettore video' : 'Video player',
+    subscribe: it ? 'Iscriviti su YouTube' : 'Subscribe on YouTube',
+    subscribeBody: it
+      ? 'Nuovi spezzoni e gol caricati durante la stagione. Iscriviti per restare aggiornato.'
+      : 'New match clips and goals uploaded throughout the season. Subscribe to stay up to date.',
   };
 }
